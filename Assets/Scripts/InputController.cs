@@ -32,9 +32,11 @@ public class InputController : MonoBehaviour
     void Update()
     {
         // Get vertical and horizontal input vectors
-        movementMotor.Move(Input.GetAxisRaw(xMovAxis), Input.GetAxisRaw(yMovAxis));
+        if (movementMotor != null)
+            movementMotor.Move(Input.GetAxisRaw(xMovAxis), Input.GetAxisRaw(yMovAxis));
 
-        cameraMotor.Move(Input.GetAxisRaw(xCamAxis), Input.GetAxisRaw(yCamAxis));
+        if (cameraMotor != null)
+            cameraMotor.Move(Input.GetAxisRaw(xCamAxis), Input.GetAxisRaw(yCamAxis));
 
         //// Abilities
         //// Up

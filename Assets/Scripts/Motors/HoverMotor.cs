@@ -23,7 +23,7 @@ public class HoverMotor : Motor
     void FixedUpdate()
     {
         // Apply Gravity
-        rb.AddForce(gravityVector * Time.fixedDeltaTime, ForceMode.Force);
+        rb.AddForce(gravityVector * Time.fixedDeltaTime, ForceMode.Impulse);
 
         ApplyInputForce();
         ApplyHoverForce();
@@ -31,9 +31,9 @@ public class HoverMotor : Motor
 
     void ApplyInputForce()
     {
-        Vector3 inputForce = (transform.forward * inputVector.x) 
-            + (transform.right * inputVector.y) * moveForce;
-        rb.AddForce(inputForce * Time.fixedDeltaTime, ForceMode.Force);
+        Vector3 inputForce = (transform.forward * inputVector.y) 
+            + (transform.right * inputVector.x);
+        rb.AddForce(inputForce * moveForce * Time.fixedDeltaTime, ForceMode.Impulse);
     }
 
     void ApplyHoverForce()
@@ -44,7 +44,7 @@ public class HoverMotor : Motor
         {
             float distanceToGround = hitInfo.distance;
             float force = Utilities.MapValues(distanceToGround, hoverHeight, 0f, 0f, hoverForce);
-            rb.AddForce(Vector3.up * force * Time.fixedDeltaTime, ForceMode.Force);
+            rb.AddForce(Vector3.up * force * Time.fixedDeltaTime, ForceMode.Impulse);
         }
     }
 
