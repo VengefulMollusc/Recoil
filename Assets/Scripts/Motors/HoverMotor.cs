@@ -5,10 +5,12 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class HoverMotor : Motor
 {
+    [SerializeField] private float maxSpeed = 20f;
     [SerializeField] private float moveForce = 10f;
-    [SerializeField] private float hoverHeight = 20f;
-    [SerializeField] private float hoverForce = 10f;
+    [SerializeField] private float hoverHeight = 5f;
+    [SerializeField] private float hoverForce = 20f;
     [SerializeField] private float gravityForce = 10f;
+    [SerializeField] private float dampenForceFactor = 0.4f;
 
     private Rigidbody rb;
     private Vector2 inputVector;
@@ -18,6 +20,9 @@ public class HoverMotor : Motor
     {
         rb = GetComponent<Rigidbody>();
         gravityVector = Vector3.down * gravityForce;
+
+        // sqr maxspeed for comparisons later
+        maxSpeed *= maxSpeed;
     }
 
     void FixedUpdate()
@@ -26,6 +31,8 @@ public class HoverMotor : Motor
         rb.AddForce(gravityVector * Time.fixedDeltaTime, ForceMode.Impulse);
 
         ApplyInputForce();
+        DampenMovement();
+
         ApplyHoverForce();
     }
 
@@ -34,6 +41,16 @@ public class HoverMotor : Motor
         Vector3 inputForce = (transform.forward * inputVector.y) 
             + (transform.right * inputVector.x);
         rb.AddForce(inputForce * moveForce * Time.fixedDeltaTime, ForceMode.Impulse);
+    }
+
+    void DampenMovement()
+    {
+        //if (inputVector != Vector2.zero)
+        //    return;
+
+        Vector3 flatVel = Vector3.ProjectOnPlane(rb.velocity, Vector3.up);
+        float dampenForce = Utilities.MapValues(flatVel.sqrMagnitude, 0f, maxSpeed, 0.1f, moveForce * dampenForceFactor);
+        rb.AddForce(-flatVel.normalized * dampenForce * Time.deltaTime, ForceMode.Impulse);
     }
 
     void ApplyHoverForce()
