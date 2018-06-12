@@ -8,7 +8,7 @@ public class HoverMotor : Motor
     [SerializeField] private float moveForce = 10f;
     [SerializeField] private float hoverHeight = 20f;
     [SerializeField] private float hoverForce = 10f;
-    [SerializeField] private float gravityForce = 5f;
+    [SerializeField] private float gravityForce = 10f;
 
     private Rigidbody rb;
     private Vector2 inputVector;
@@ -23,7 +23,7 @@ public class HoverMotor : Motor
     void FixedUpdate()
     {
         // Apply Gravity
-        rb.AddForce(gravityVector, ForceMode.Force);
+        rb.AddForce(gravityVector * Time.fixedDeltaTime, ForceMode.Force);
 
         ApplyInputForce();
         ApplyHoverForce();
@@ -31,8 +31,9 @@ public class HoverMotor : Motor
 
     void ApplyInputForce()
     {
-        Vector3 inputForce = (transform.forward * inputVector.x) + (transform.right * inputVector.y) * moveForce;
-        rb.AddForce(inputForce, ForceMode.Force);
+        Vector3 inputForce = (transform.forward * inputVector.x) 
+            + (transform.right * inputVector.y) * moveForce;
+        rb.AddForce(inputForce * Time.fixedDeltaTime, ForceMode.Force);
     }
 
     void ApplyHoverForce()
@@ -43,7 +44,7 @@ public class HoverMotor : Motor
         {
             float distanceToGround = hitInfo.distance;
             float force = Utilities.MapValues(distanceToGround, hoverHeight, 0f, 0f, hoverForce);
-            rb.AddForce(Vector3.up * force, ForceMode.Force);
+            rb.AddForce(Vector3.up * force * Time.fixedDeltaTime, ForceMode.Force);
         }
     }
 
