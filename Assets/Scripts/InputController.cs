@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class InputController : MonoBehaviour
 {
-    [SerializeField] private Motor movementMotor;
-    [SerializeField] private Motor cameraMotor;
+    [SerializeField] private Motor motor;
 
     [Header("Control Settings")]
     [SerializeField]
@@ -32,39 +31,39 @@ public class InputController : MonoBehaviour
     void Update()
     {
         // Get vertical and horizontal input vectors
-        if (movementMotor != null)
-            movementMotor.Move(Input.GetAxisRaw(xMovAxis), Input.GetAxisRaw(yMovAxis));
-
-        if (cameraMotor != null)
-            cameraMotor.Move(Input.GetAxisRaw(xCamAxis), Input.GetAxisRaw(yCamAxis));
+        if (motor != null)
+        {
+            motor.Move(Input.GetAxisRaw(xMovAxis), Input.GetAxisRaw(yMovAxis));
+            motor.MoveCamera(Input.GetAxisRaw(xCamAxis), Input.GetAxisRaw(yCamAxis));
+        }
 
         //// Abilities
         //// Up
         //if (Input.GetKeyDown(upAbility))
-        //    movementMotor.UseUpAbility(true);
+        //    motor.UseUpAbility(true);
 
         //if (Input.GetKeyUp(upAbility))
-        //    movementMotor.UseUpAbility(false);
+        //    motor.UseUpAbility(false);
 
         //// Down
         //if (Input.GetKeyDown(downAbility))
-        //    movementMotor.UseDownAbility(true);
+        //    motor.UseDownAbility(true);
 
         //if (Input.GetKeyUp(downAbility))
-        //    movementMotor.UseDownAbility(false);
+        //    motor.UseDownAbility(false);
 
         //// Left
         //if (Input.GetKeyDown(leftAbility))
-        //    movementMotor.UseLeftAbility(true);
+        //    motor.UseLeftAbility(true);
 
         //if (Input.GetKeyUp(leftAbility))
-        //    movementMotor.UseLeftAbility(false);
+        //    motor.UseLeftAbility(false);
 
         //// Right
         //if (Input.GetKeyDown(rightAbility))
-        //    movementMotor.UseRightAbility(true);
+        //    motor.UseRightAbility(true);
 
         //if (Input.GetKeyUp(rightAbility))
-        //    movementMotor.UseRightAbility(false);
+        //    motor.UseRightAbility(false);
     }
 }

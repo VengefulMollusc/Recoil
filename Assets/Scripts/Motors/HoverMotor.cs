@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class HoverMotor : Motor
 {
+    [Header("Movement")]
     [SerializeField] private float maxSpeed = 20f;
     [SerializeField] private float moveForce = 10f;
     [SerializeField] private float hoverHeight = 5f;
@@ -12,8 +13,12 @@ public class HoverMotor : Motor
     [SerializeField] private float gravityForce = 10f;
     [SerializeField] private float dampenForceFactor = 0.4f;
 
+    [Header("Camera")]
+    [SerializeField] private float turnSpeed = 1f;
+
     private Rigidbody rb;
-    private Vector2 inputVector;
+    private Vector2 moveInputVector;
+    private Vector2 turnInputVector;
     private Vector3 gravityVector;
 
     void Start()
@@ -30,27 +35,48 @@ public class HoverMotor : Motor
         // Apply Gravity
         rb.AddForce(gravityVector * Time.fixedDeltaTime, ForceMode.Impulse);
 
-        ApplyInputForce();
+        ApplyMovementForce();
         DampenMovement();
+
+        ApplyTurningForce();
+        DampenTurning();
 
         ApplyHoverForce();
     }
 
-    void ApplyInputForce()
+    void ApplyMovementForce()
     {
-        Vector3 inputForce = (transform.forward * inputVector.y) 
-            + (transform.right * inputVector.x);
+        if (moveInputVector == Vector2.zero)
+            return;
+
+        Vector3 inputForce = (transform.forward * moveInputVector.y) 
+            + (transform.right * moveInputVector.x);
         rb.AddForce(inputForce * moveForce * Time.fixedDeltaTime, ForceMode.Impulse);
     }
 
     void DampenMovement()
     {
-        //if (inputVector != Vector2.zero)
+        //if (moveInputVector != Vector2.zero)
         //    return;
 
         Vector3 flatVel = Vector3.ProjectOnPlane(rb.velocity, Vector3.up);
         float dampenForce = Utilities.MapValues(flatVel.sqrMagnitude, 0f, maxSpeed, 0.1f, moveForce * dampenForceFactor);
-        rb.AddForce(-flatVel.normalized * dampenForce * Time.deltaTime, ForceMode.Impulse);
+        rb.AddForce(-flatVel.normalized * dampenForce * Time.fixedDeltaTime, ForceMode.Impulse);
+    }
+
+    void ApplyTurningForce()
+    {
+        if (turnInputVector == Vector2.zero)
+            return;
+
+        Vector3 torque = (transform.up * turnInputVector.x * turnSpeed) + (transform.right * turnInputVector.y * turnSpeed);
+
+        rb.AddTorque(torque * Time.fixedDeltaTime, ForceMode.Impulse);
+    }
+
+    void DampenTurning()
+    {
+        
     }
 
     void ApplyHoverForce()
@@ -67,8 +93,13 @@ public class HoverMotor : Motor
 
     public override void Move(float x, float y)
     {
-        inputVector = new Vector2(x, y);
-        if (inputVector.sqrMagnitude > 1f)
-            inputVector.Normalize();
+        moveInputVector = new Vector2(x, y);
+        if (moveInputVector.sqrMagnitude > 1f)
+            moveInputVector.Normalize();
+    }
+
+    public override void MoveCamera(float x, float y)
+    {
+        turnInputVector = new Vector2(x, y);
     }
 }
