@@ -69,7 +69,9 @@ public class HoverMotor : MonoBehaviour
     {
         hoverHeight = Mathf.Clamp(hoverHeight + (change * heightChangeRate * Time.deltaTime), 
             minHoverHeight, maxHoverHeight);
-        Debug.Log(hoverHeight);
+
+        // boost hover force in direction of change
+        rb.AddForce(Vector3.up * change * 2f * Time.deltaTime, ForceMode.Impulse);
     }
 
     void FixedUpdate()
