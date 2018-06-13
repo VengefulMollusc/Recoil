@@ -115,8 +115,8 @@ public class HoverMotor : Motor
         float dot = Vector3.Dot(forward, Vector3.up);
         if (Mathf.Abs(dot) > rotationLimit)
         {
-            Vector3 correctionTorque = Vector3.Cross(Vector3.up, forward).normalized * rotationCorrectionStrength * dot * Time.fixedDeltaTime;
-            rb.AddTorque(correctionTorque, ForceMode.Impulse);
+            Vector3 correctionTorque = Vector3.Cross(Vector3.up, forward).normalized * rotationCorrectionStrength * dot;
+            rb.AddTorque(correctionTorque * Time.fixedDeltaTime, ForceMode.Impulse);
         }
     }
 
