@@ -12,12 +12,13 @@ public class HoverMotor : Motor
     [SerializeField] private float hoverForce = 20f;
     [SerializeField] private float gravityForce = 10f;
     [SerializeField] private float dampenForceFactor = 0.1f;
+    [SerializeField] private float leanStrength = 0.5f;
 
     [Header("Turning")]
     [SerializeField] private float turnSpeed = 4f;
     [SerializeField] private float baseAngularDrag = 4f;
     [SerializeField] private float turningAngularDrag = 2f;
-    //[SerializeField] private float gyroCorrectionStrength = 4f;
+    [SerializeField] private float gyroCorrectionStrength = 6f;
 
     private Rigidbody rb;
     private Vector2 moveInputVector;
@@ -59,6 +60,10 @@ public class HoverMotor : Motor
         Vector3 inputForce = (transform.forward * moveInputVector.y) 
             + (transform.right * moveInputVector.x);
         rb.AddForce(inputForce * moveForce * Time.fixedDeltaTime, ForceMode.Impulse);
+
+        // lean slightly to match left/right movement
+        Vector3 leanTorque = transform.forward * -moveInputVector.x * leanStrength;
+        rb.AddTorque(leanTorque * Time.fixedDeltaTime, ForceMode.Impulse);
     }
 
     void DampenHorMovement()
@@ -97,12 +102,13 @@ public class HoverMotor : Motor
 
     void GyroCorrection()
     {
+        // TODO: use full correction torque when upside down
         // rotate around transform.forward until transform.up is closest to V3.up
         Vector3 projectionPlaneNormal = Vector3.Cross(Vector3.up, transform.forward);
-        Vector3 projectedVector = Vector3.ProjectOnPlane(transform.up, projectionPlaneNormal).normalized;
+        //Vector3 projectedVector = Vector3.ProjectOnPlane(transform.up, projectionPlaneNormal).normalized;
         //float angle = Vector3.Angle(transform.up, projectedVector);
         float dot = Vector3.Dot(transform.up, projectionPlaneNormal);
-        Vector3 torque = transform.forward * Time.fixedDeltaTime * (dot * turnSpeed);
+        Vector3 torque = transform.forward * Time.fixedDeltaTime * (dot * gyroCorrectionStrength);
         rb.AddTorque(torque, ForceMode.Impulse);
     }
 
