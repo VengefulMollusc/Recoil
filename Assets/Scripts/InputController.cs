@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InputController : MonoBehaviour
 {
-    [SerializeField] private Motor motor;
+    private HoverMotor motor;
 
     [Header("Control Settings")]
     [SerializeField]
@@ -16,15 +16,11 @@ public class InputController : MonoBehaviour
     [SerializeField]
     private string yCamAxis = "LookY";
 
-    private KeyCode upAbility = KeyCode.I;
-    private KeyCode downAbility = KeyCode.K;
-    private KeyCode leftAbility = KeyCode.J;
-    private KeyCode rightAbility = KeyCode.L;
-
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        motor = GetComponent<HoverMotor>();
     }
 
     // Update is called once per frame
@@ -35,35 +31,12 @@ public class InputController : MonoBehaviour
         {
             motor.Move(Input.GetAxisRaw(xMovAxis), Input.GetAxisRaw(yMovAxis));
             motor.MoveCamera(Input.GetAxisRaw(xCamAxis), Input.GetAxisRaw(yCamAxis));
+
+            if (Input.GetKey(KeyCode.R))
+                motor.ChangeHeight(1f);
+
+            if (Input.GetKey(KeyCode.F))
+                motor.ChangeHeight(-1f);
         }
-
-        //// Abilities
-        //// Up
-        //if (Input.GetKeyDown(upAbility))
-        //    motor.UseUpAbility(true);
-
-        //if (Input.GetKeyUp(upAbility))
-        //    motor.UseUpAbility(false);
-
-        //// Down
-        //if (Input.GetKeyDown(downAbility))
-        //    motor.UseDownAbility(true);
-
-        //if (Input.GetKeyUp(downAbility))
-        //    motor.UseDownAbility(false);
-
-        //// Left
-        //if (Input.GetKeyDown(leftAbility))
-        //    motor.UseLeftAbility(true);
-
-        //if (Input.GetKeyUp(leftAbility))
-        //    motor.UseLeftAbility(false);
-
-        //// Right
-        //if (Input.GetKeyDown(rightAbility))
-        //    motor.UseRightAbility(true);
-
-        //if (Input.GetKeyUp(rightAbility))
-        //    motor.UseRightAbility(false);
     }
 }

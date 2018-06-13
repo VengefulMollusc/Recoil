@@ -1,16 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Security.Principal;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class HoverMotor : Motor
+public class HoverMotor : MonoBehaviour
 {
     [Header("Movement")]
     [SerializeField] private float maxSpeed = 20f;
     [SerializeField] private float moveForce = 10f;
-    [SerializeField] private float hoverHeight = 5f;
-    [SerializeField] private float hoverForce = 20f;
-    [SerializeField] private float gravityForce = 10f;
     [SerializeField] private float dampenForceFactor = 0.1f;
     [SerializeField] private float leanStrength = 0.5f;
 
@@ -18,6 +16,16 @@ public class HoverMotor : Motor
     [SerializeField] private float turnSpeed = 4f;
     [SerializeField] private float baseAngularDrag = 4f;
     [SerializeField] private float turningAngularDrag = 2f;
+
+    [Header("Hover")]
+    [SerializeField] private float hoverHeight = 15f;
+    [SerializeField] private float minHoverHeight = 10f;
+    [SerializeField] private float maxHoverHeight = 20f;
+    [SerializeField] private float heightChangeRate = 10f;
+    [SerializeField] private float hoverForce = 20f;
+    [SerializeField] private float gravityForce = 10f;
+
+    [Header("Gyro")]
     [SerializeField] private float gyroCorrectionStrength = 6f;
     [SerializeField] private float rotationLimit = 0.6f;
     [SerializeField] private float rotationCorrectionStrength = 4f;
@@ -45,16 +53,23 @@ public class HoverMotor : Motor
         right = transform.right;
     }
 
-    public override void Move(float x, float y)
+    public void Move(float x, float y)
     {
         moveInputVector = new Vector2(x, y);
         if (moveInputVector.sqrMagnitude > 1f)
             moveInputVector.Normalize();
     }
 
-    public override void MoveCamera(float x, float y)
+    public void MoveCamera(float x, float y)
     {
         turnInputVector = new Vector2(x, y);
+    }
+
+    public void ChangeHeight(float change)
+    {
+        hoverHeight = Mathf.Clamp(hoverHeight + (change * heightChangeRate * Time.deltaTime), 
+            minHoverHeight, maxHoverHeight);
+        Debug.Log(hoverHeight);
     }
 
     void FixedUpdate()
