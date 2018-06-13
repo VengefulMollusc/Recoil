@@ -19,6 +19,7 @@ public class HoverMotor : Motor
     [SerializeField] private float baseAngularDrag = 4f;
     [SerializeField] private float turningAngularDrag = 2f;
     [SerializeField] private float gyroCorrectionStrength = 6f;
+    [SerializeField] private float rotationLimit = 85f;
 
     private Rigidbody rb;
     private Vector2 moveInputVector;
@@ -72,6 +73,9 @@ public class HoverMotor : Motor
 
     void DampenHorMovement()
     {
+        if (moveInputVector != Vector2.zero)
+            return;
+
         Vector3 flatVel = Vector3.ProjectOnPlane(rb.velocity, Vector3.up);
         float dampenForce = Utilities.MapValues(flatVel.sqrMagnitude, 0f, maxSpeed, 0.1f, moveForce * dampenForceFactor);
         rb.AddForce(-flatVel.normalized * dampenForce * Time.fixedDeltaTime, ForceMode.Impulse);
@@ -111,7 +115,12 @@ public class HoverMotor : Motor
         Vector3 projectionPlaneNormal = Vector3.Cross(Vector3.up, transform.forward);
         //Vector3 projectedVector = Vector3.ProjectOnPlane(transform.up, projectionPlaneNormal).normalized;
         //float angle = Vector3.Angle(transform.up, projectedVector);
+
         float dot = Vector3.Dot(transform.up, projectionPlaneNormal);
+
+        if (Vector3.Dot(transform.up, Vector3.up) < 0f)
+            dot = dot < 0f ? -1f : 1f;
+
         Vector3 torque = transform.forward * Time.fixedDeltaTime * (dot * gyroCorrectionStrength);
         rb.AddTorque(torque, ForceMode.Impulse);
     }
