@@ -22,7 +22,7 @@ public class HoverMotor : MonoBehaviour
     [SerializeField] private float minHoverHeight = 10f;
     [SerializeField] private float maxHoverHeight = 20f;
     [SerializeField] private float heightChangeRate = 10f;
-    [SerializeField] private float hoverForce = 20f;
+    [SerializeField] private float hoverForce = 30f;
     [SerializeField] private float gravityForce = 10f;
 
     [Header("Gyro")]

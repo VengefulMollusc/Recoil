@@ -469,7 +469,7 @@ MonoBehaviour:
   minHoverHeight: 10
   maxHoverHeight: 20
   heightChangeRate: 10
-  hoverForce: 20
+  hoverForce: 30
   gravityForce: 10
   gyroCorrectionStrength: 6
   rotationLimit: 0.6
