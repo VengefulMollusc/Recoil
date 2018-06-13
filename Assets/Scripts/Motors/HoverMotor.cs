@@ -69,7 +69,7 @@ public class HoverMotor : Motor
 
         // Movement
         ApplyMovementForce();
-        DampenHorMovement();
+        DampenMovement();
 
         // Turning
         ApplyTurningForce();
@@ -98,7 +98,7 @@ public class HoverMotor : Motor
         rb.AddTorque(leanTorque * Time.fixedDeltaTime, ForceMode.Impulse);
     }
 
-    void DampenHorMovement()
+    void DampenMovement()
     {
         if (moveInputVector != Vector2.zero)
             return;
