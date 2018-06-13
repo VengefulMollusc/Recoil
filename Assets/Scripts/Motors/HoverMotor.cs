@@ -9,7 +9,7 @@ public class HoverMotor : MonoBehaviour
     [Header("Movement")]
     [SerializeField] private float maxSpeed = 20f;
     [SerializeField] private float moveForce = 10f;
-    [SerializeField] private float dampenForceFactor = 0.1f;
+    //[SerializeField] private float dampenForceFactor = 0.1f;
     [SerializeField] private float leanStrength = 0.5f;
 
     [Header("Turning")]
@@ -88,7 +88,7 @@ public class HoverMotor : MonoBehaviour
 
         // Movement
         ApplyMovementForce();
-        DampenMovement();
+        //DampenMovement();
 
         // Turning
         ApplyTurningForce();
@@ -119,16 +119,16 @@ public class HoverMotor : MonoBehaviour
         rb.AddTorque(leanTorque * Time.fixedDeltaTime, ForceMode.Impulse);
     }
 
-    void DampenMovement()
-    {
-        // Dampens horizontal movement slightly to limit speed
-        if (moveInputVector != Vector2.zero)
-            return;
+    //void DampenMovement()
+    //{
+    //    // Dampens horizontal movement slightly to limit speed
+    //    if (moveInputVector != Vector2.zero)
+    //        return;
 
-        Vector3 flatVel = Vector3.ProjectOnPlane(rb.velocity, Vector3.up);
-        float dampenForce = Utilities.MapValues(flatVel.sqrMagnitude, 0f, maxSpeed, 0.1f, moveForce * dampenForceFactor);
-        rb.AddForce(-flatVel.normalized * dampenForce * Time.fixedDeltaTime, ForceMode.Impulse);
-    }
+    //    Vector3 flatVel = Vector3.ProjectOnPlane(rb.velocity, Vector3.up);
+    //    float dampenForce = Utilities.MapValues(flatVel.sqrMagnitude, 0f, maxSpeed, 0.1f, moveForce * dampenForceFactor);
+    //    rb.AddForce(-flatVel.normalized * dampenForce * Time.fixedDeltaTime, ForceMode.Impulse);
+    //}
 
     void ApplyTurningForce()
     {
