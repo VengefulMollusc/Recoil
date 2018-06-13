@@ -6,7 +6,8 @@ using UnityEngine;
 public class HoverMotor : Motor
 {
     [Header("Movement")]
-    [SerializeField] private float maxSpeed = 20f;
+    [SerializeField]
+    private float maxSpeed = 20f;
     [SerializeField] private float moveForce = 10f;
     [SerializeField] private float hoverHeight = 5f;
     [SerializeField] private float hoverForce = 20f;
@@ -15,16 +16,21 @@ public class HoverMotor : Motor
     [SerializeField] private float leanStrength = 0.5f;
 
     [Header("Turning")]
-    [SerializeField] private float turnSpeed = 4f;
+    [SerializeField]
+    private float turnSpeed = 4f;
     [SerializeField] private float baseAngularDrag = 4f;
     [SerializeField] private float turningAngularDrag = 2f;
     [SerializeField] private float gyroCorrectionStrength = 6f;
-    [SerializeField] private float rotationLimit = 85f;
+    [SerializeField] private float rotationLimitFromVertical = 10f;
 
     private Rigidbody rb;
     private Vector2 moveInputVector;
     private Vector2 turnInputVector;
     private Vector3 gravityVector;
+
+    private Vector3 forward;
+    private Vector3 up;
+    private Vector3 right;
 
     void Start()
     {
@@ -33,10 +39,20 @@ public class HoverMotor : Motor
 
         // sqr maxspeed for comparisons later
         maxSpeed *= maxSpeed;
+
+        // update transform variables
+        forward = transform.forward;
+        up = transform.up;
+        right = transform.right;
     }
 
     void FixedUpdate()
     {
+        // update transform variables
+        forward = transform.forward;
+        up = transform.up;
+        right = transform.right;
+
         // Apply Gravity
         rb.AddForce(gravityVector * Time.fixedDeltaTime, ForceMode.Impulse);
 
@@ -58,16 +74,16 @@ public class HoverMotor : Motor
         if (moveInputVector == Vector2.zero)
             return;
 
-        Vector3 forward = Vector3.ProjectOnPlane(transform.forward, Vector3.up).normalized;
-        Quaternion rot = Quaternion.FromToRotation(Vector3.forward, forward);
-        Vector3 right = rot * Vector3.right;
+        Vector3 forwardFlat = Vector3.ProjectOnPlane(forward, Vector3.up).normalized;
+        Quaternion rot = Quaternion.FromToRotation(Vector3.forward, forwardFlat);
+        Vector3 rightFlat = rot * Vector3.right;
 
-        Vector3 inputForce = (forward * moveInputVector.y) 
-            + (right * moveInputVector.x);
+        Vector3 inputForce = (forwardFlat * moveInputVector.y)
+            + (rightFlat * moveInputVector.x);
         rb.AddForce(inputForce * moveForce * Time.fixedDeltaTime, ForceMode.Impulse);
 
         // lean slightly to match left/right movement
-        Vector3 leanTorque = forward * -moveInputVector.x * leanStrength;
+        Vector3 leanTorque = forwardFlat * -moveInputVector.x * leanStrength;
         rb.AddTorque(leanTorque * Time.fixedDeltaTime, ForceMode.Impulse);
     }
 
@@ -86,14 +102,22 @@ public class HoverMotor : Motor
         if (turnInputVector == Vector2.zero)
             return;
 
-        Vector3 torque = (transform.up * turnInputVector.x * turnSpeed) + (transform.right * -turnInputVector.y * turnSpeed);
+        Vector3 torque = (up * turnInputVector.x * turnSpeed) + (right * -turnInputVector.y * turnSpeed);
 
         rb.AddTorque(torque * Time.fixedDeltaTime, ForceMode.Impulse);
     }
 
     void DampenTurning()
     {
+        // Apply angular drag value based on input state
         rb.angularDrag = (turnInputVector == Vector2.zero) ? baseAngularDrag : turningAngularDrag;
+
+        // check against vertical rotation limit
+        float angle = Vector3.Angle(Vector3.up, forward);
+        if (angle < rotationLimitFromVertical || angle > 180f - rotationLimitFromVertical)
+        {
+            Vector3 rotationAxis = Vector3.Cross(Vector3.up, forward);
+        }
     }
 
     void ApplyHoverForce()
@@ -111,14 +135,14 @@ public class HoverMotor : Motor
     void GyroCorrection()
     {
         // rotate around transform.forward until transform.up is closest to V3.up
-        Vector3 projectionPlaneNormal = Vector3.Cross(Vector3.up, transform.forward);
+        Vector3 projectionPlaneNormal = Vector3.Cross(Vector3.up, forward);
 
-        float dot = Vector3.Dot(transform.up, projectionPlaneNormal);
+        float dot = Vector3.Dot(up, projectionPlaneNormal);
 
-        if (transform.up.y < 0f)
+        if (up.y < 0f)
             dot = dot < 0f ? -1f : 1f;
 
-        Vector3 torque = transform.forward * Time.fixedDeltaTime * (dot * gyroCorrectionStrength);
+        Vector3 torque = forward * Time.fixedDeltaTime * (dot * gyroCorrectionStrength);
         rb.AddTorque(torque, ForceMode.Impulse);
     }
 
