@@ -21,6 +21,7 @@ public class HoverMotor : MonoBehaviour
     [SerializeField] private float hoverHeight = 15f;
     [SerializeField] private float minHoverHeight = 10f;
     [SerializeField] private float maxHoverHeight = 20f;
+    [SerializeField] private float heightChangeForce = 3f;
     [SerializeField] private float heightChangeRate = 10f;
     [SerializeField] private float hoverForce = 30f;
     [SerializeField] private float gravityForce = 10f;
@@ -71,7 +72,7 @@ public class HoverMotor : MonoBehaviour
             minHoverHeight, maxHoverHeight);
 
         // boost hover force in direction of change
-        rb.AddForce(Vector3.up * change * 3f * Time.deltaTime, ForceMode.Impulse);
+        rb.AddForce(Vector3.up * change * heightChangeForce * Time.deltaTime, ForceMode.Impulse);
     }
 
     void FixedUpdate()
