@@ -11,10 +11,13 @@ public class HoverMotor : Motor
     [SerializeField] private float hoverHeight = 5f;
     [SerializeField] private float hoverForce = 20f;
     [SerializeField] private float gravityForce = 10f;
-    [SerializeField] private float dampenForceFactor = 0.4f;
+    [SerializeField] private float dampenForceFactor = 0.1f;
 
-    [Header("Camera")]
-    [SerializeField] private float turnSpeed = 1f;
+    [Header("Turning")]
+    [SerializeField] private float turnSpeed = 4f;
+    [SerializeField] private float baseAngularDrag = 4f;
+    [SerializeField] private float turningAngularDrag = 2f;
+    //[SerializeField] private float gyroCorrectionStrength = 4f;
 
     private Rigidbody rb;
     private Vector2 moveInputVector;
@@ -35,13 +38,17 @@ public class HoverMotor : Motor
         // Apply Gravity
         rb.AddForce(gravityVector * Time.fixedDeltaTime, ForceMode.Impulse);
 
+        // Movement
         ApplyMovementForce();
-        DampenMovement();
+        DampenHorMovement();
 
+        // Turning
         ApplyTurningForce();
         DampenTurning();
 
+        // Hover force and gyro correction
         ApplyHoverForce();
+        GyroCorrection();
     }
 
     void ApplyMovementForce()
@@ -54,11 +61,8 @@ public class HoverMotor : Motor
         rb.AddForce(inputForce * moveForce * Time.fixedDeltaTime, ForceMode.Impulse);
     }
 
-    void DampenMovement()
+    void DampenHorMovement()
     {
-        //if (moveInputVector != Vector2.zero)
-        //    return;
-
         Vector3 flatVel = Vector3.ProjectOnPlane(rb.velocity, Vector3.up);
         float dampenForce = Utilities.MapValues(flatVel.sqrMagnitude, 0f, maxSpeed, 0.1f, moveForce * dampenForceFactor);
         rb.AddForce(-flatVel.normalized * dampenForce * Time.fixedDeltaTime, ForceMode.Impulse);
@@ -76,7 +80,7 @@ public class HoverMotor : Motor
 
     void DampenTurning()
     {
-        
+        rb.angularDrag = (turnInputVector == Vector2.zero) ? baseAngularDrag : turningAngularDrag;
     }
 
     void ApplyHoverForce()
@@ -89,6 +93,17 @@ public class HoverMotor : Motor
             float force = Utilities.MapValues(distanceToGround, hoverHeight, 0f, 0f, hoverForce);
             rb.AddForce(Vector3.up * force * Time.fixedDeltaTime, ForceMode.Impulse);
         }
+    }
+
+    void GyroCorrection()
+    {
+        // rotate around transform.forward until transform.up is closest to V3.up
+        Vector3 projectionPlaneNormal = Vector3.Cross(Vector3.up, transform.forward);
+        Vector3 projectedVector = Vector3.ProjectOnPlane(transform.up, projectionPlaneNormal).normalized;
+        //float angle = Vector3.Angle(transform.up, projectedVector);
+        float dot = Vector3.Dot(transform.up, projectionPlaneNormal);
+        Vector3 torque = transform.forward * Time.fixedDeltaTime * (dot * turnSpeed);
+        rb.AddTorque(torque, ForceMode.Impulse);
     }
 
     public override void Move(float x, float y)
