@@ -71,7 +71,7 @@ public class HoverMotor : MonoBehaviour
             minHoverHeight, maxHoverHeight);
 
         // boost hover force in direction of change
-        rb.AddForce(Vector3.up * change * 2f * Time.deltaTime, ForceMode.Impulse);
+        rb.AddForce(Vector3.up * change * 3f * Time.deltaTime, ForceMode.Impulse);
     }
 
     void FixedUpdate()
