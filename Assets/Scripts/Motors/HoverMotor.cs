@@ -110,15 +110,12 @@ public class HoverMotor : Motor
 
     void GyroCorrection()
     {
-        // TODO: use full correction torque when upside down
         // rotate around transform.forward until transform.up is closest to V3.up
         Vector3 projectionPlaneNormal = Vector3.Cross(Vector3.up, transform.forward);
-        //Vector3 projectedVector = Vector3.ProjectOnPlane(transform.up, projectionPlaneNormal).normalized;
-        //float angle = Vector3.Angle(transform.up, projectedVector);
 
         float dot = Vector3.Dot(transform.up, projectionPlaneNormal);
 
-        if (Vector3.Dot(transform.up, Vector3.up) < 0f)
+        if (transform.up.y < 0f)
             dot = dot < 0f ? -1f : 1f;
 
         Vector3 torque = transform.forward * Time.fixedDeltaTime * (dot * gyroCorrectionStrength);
