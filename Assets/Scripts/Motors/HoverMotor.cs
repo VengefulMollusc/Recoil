@@ -160,8 +160,13 @@ public class HoverMotor : MonoBehaviour
         float verticalDot = Vector3.Dot(forward, Vector3.up);
         if (Mathf.Abs(verticalDot) > rotationLimit)
         {
+            float correctionStrength = Utilities.MapValues(Mathf.Abs(verticalDot), rotationLimit, 1f, 0f, 1f);
+            if (verticalDot < 0f)
+                correctionStrength *= -1;
+
             Vector3 correctionTorque = Vector3.Cross(Vector3.up, forward).normalized * rotationCorrectionStrength *
-                                       verticalDot;
+                                       correctionStrength;
+
             rb.AddTorque(correctionTorque * Time.fixedDeltaTime, ForceMode.Impulse);
         }
         else
