@@ -464,9 +464,13 @@ MonoBehaviour:
   hoverForce: 20
   gravityForce: 10
   dampenForceFactor: 0.1
+  leanStrength: 0.5
   turnSpeed: 4
   baseAngularDrag: 4
   turningAngularDrag: 2
+  gyroCorrectionStrength: 6
+  rotationLimit: 0.6
+  rotationCorrectionStrength: 4
 --- !u!54 &2114547387
 Rigidbody:
   m_ObjectHideFlags: 0

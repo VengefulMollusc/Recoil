@@ -6,8 +6,7 @@ using UnityEngine;
 public class HoverMotor : Motor
 {
     [Header("Movement")]
-    [SerializeField]
-    private float maxSpeed = 20f;
+    [SerializeField] private float maxSpeed = 20f;
     [SerializeField] private float moveForce = 10f;
     [SerializeField] private float hoverHeight = 5f;
     [SerializeField] private float hoverForce = 20f;
@@ -16,12 +15,12 @@ public class HoverMotor : Motor
     [SerializeField] private float leanStrength = 0.5f;
 
     [Header("Turning")]
-    [SerializeField]
-    private float turnSpeed = 4f;
+    [SerializeField] private float turnSpeed = 4f;
     [SerializeField] private float baseAngularDrag = 4f;
     [SerializeField] private float turningAngularDrag = 2f;
     [SerializeField] private float gyroCorrectionStrength = 6f;
-    [SerializeField] private float rotationLimitFromVertical = 10f;
+    [SerializeField] private float rotationLimit = 0.6f;
+    [SerializeField] private float rotationCorrectionStrength = 4f;
 
     private Rigidbody rb;
     private Vector2 moveInputVector;
@@ -113,10 +112,11 @@ public class HoverMotor : Motor
         rb.angularDrag = (turnInputVector == Vector2.zero) ? baseAngularDrag : turningAngularDrag;
 
         // check against vertical rotation limit
-        float angle = Vector3.Angle(Vector3.up, forward);
-        if (angle < rotationLimitFromVertical || angle > 180f - rotationLimitFromVertical)
+        float dot = Vector3.Dot(forward, Vector3.up);
+        if (Mathf.Abs(dot) > rotationLimit)
         {
-            Vector3 rotationAxis = Vector3.Cross(Vector3.up, forward);
+            Vector3 correctionTorque = Vector3.Cross(Vector3.up, forward) * rotationCorrectionStrength * dot * Time.fixedDeltaTime;
+            rb.AddTorque(correctionTorque, ForceMode.Impulse);
         }
     }
 
@@ -142,8 +142,8 @@ public class HoverMotor : Motor
         if (up.y < 0f)
             dot = dot < 0f ? -1f : 1f;
 
-        Vector3 torque = forward * Time.fixedDeltaTime * (dot * gyroCorrectionStrength);
-        rb.AddTorque(torque, ForceMode.Impulse);
+        Vector3 gyroTorque = forward * Time.fixedDeltaTime * (dot * gyroCorrectionStrength);
+        rb.AddTorque(gyroTorque, ForceMode.Impulse);
     }
 
     public override void Move(float x, float y)
