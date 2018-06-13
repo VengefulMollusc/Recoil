@@ -45,10 +45,10 @@ public class HoverMotor : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         gravityVector = Vector3.down * gravityForce;
 
-        // sqr maxspeed for comparisons later
+        // sqr maxspeed for cheaper comparisons later
         maxSpeed *= maxSpeed;
 
-        // update transform variables
+        // update cached transform variables
         forward = transform.forward;
         up = transform.up;
         right = transform.right;
@@ -68,6 +68,7 @@ public class HoverMotor : MonoBehaviour
 
     public void ChangeHeight(float change)
     {
+        // Change hover height between limits
         hoverHeight = Mathf.Clamp(hoverHeight + (change * heightChangeRate * Time.deltaTime), 
             minHoverHeight, maxHoverHeight);
 
@@ -77,7 +78,7 @@ public class HoverMotor : MonoBehaviour
 
     void FixedUpdate()
     {
-        // update transform variables
+        // update cached transform variables
         forward = transform.forward;
         up = transform.up;
         right = transform.right;
@@ -100,9 +101,11 @@ public class HoverMotor : MonoBehaviour
 
     void ApplyMovementForce()
     {
+        // Apply force to move tank
         if (moveInputVector == Vector2.zero)
             return;
 
+        // Get movement axes relative to global axes rather than local vertical look direction
         Vector3 forwardFlat = Vector3.ProjectOnPlane(forward, Vector3.up).normalized;
         Quaternion rot = Quaternion.FromToRotation(Vector3.forward, forwardFlat);
         Vector3 rightFlat = rot * Vector3.right;
@@ -118,6 +121,7 @@ public class HoverMotor : MonoBehaviour
 
     void DampenMovement()
     {
+        // Dampens horizontal movement slightly to limit speed
         if (moveInputVector != Vector2.zero)
             return;
 
@@ -128,6 +132,7 @@ public class HoverMotor : MonoBehaviour
 
     void ApplyTurningForce()
     {
+        // Apply torque to rotate facing direction
         if (turnInputVector == Vector2.zero)
             return;
 
@@ -144,7 +149,7 @@ public class HoverMotor : MonoBehaviour
 
     void ApplyHoverForce()
     {
-        // raycast down and apply hover force
+        // raycast down and apply hover force relative to height
         RaycastHit hitInfo;
         if (Physics.Raycast(transform.position, Vector3.down, out hitInfo, hoverHeight))
         {
@@ -160,6 +165,8 @@ public class HoverMotor : MonoBehaviour
         float verticalDot = Vector3.Dot(forward, Vector3.up);
         if (Mathf.Abs(verticalDot) > rotationLimit)
         {
+            // correct vertical rotation
+            // map correction strength to 0-1
             float correctionStrength = Utilities.MapValues(Mathf.Abs(verticalDot), rotationLimit, 1f, 0f, 1f);
             if (verticalDot < 0f)
                 correctionStrength *= -1;
@@ -171,6 +178,7 @@ public class HoverMotor : MonoBehaviour
         }
         else
         {
+            // Correct gyro
             // rotate around transform.forward until transform.up is closest to V3.up
             Vector3 projectionPlaneNormal = Vector3.Cross(Vector3.up, forward);
 
