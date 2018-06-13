@@ -57,12 +57,16 @@ public class HoverMotor : Motor
         if (moveInputVector == Vector2.zero)
             return;
 
-        Vector3 inputForce = (transform.forward * moveInputVector.y) 
-            + (transform.right * moveInputVector.x);
+        Vector3 forward = Vector3.ProjectOnPlane(transform.forward, Vector3.up).normalized;
+        Quaternion rot = Quaternion.FromToRotation(Vector3.forward, forward);
+        Vector3 right = rot * Vector3.right;
+
+        Vector3 inputForce = (forward * moveInputVector.y) 
+            + (right * moveInputVector.x);
         rb.AddForce(inputForce * moveForce * Time.fixedDeltaTime, ForceMode.Impulse);
 
         // lean slightly to match left/right movement
-        Vector3 leanTorque = transform.forward * -moveInputVector.x * leanStrength;
+        Vector3 leanTorque = forward * -moveInputVector.x * leanStrength;
         rb.AddTorque(leanTorque * Time.fixedDeltaTime, ForceMode.Impulse);
     }
 
@@ -78,7 +82,7 @@ public class HoverMotor : Motor
         if (turnInputVector == Vector2.zero)
             return;
 
-        Vector3 torque = (transform.up * turnInputVector.x * turnSpeed) + (transform.right * turnInputVector.y * turnSpeed);
+        Vector3 torque = (transform.up * turnInputVector.x * turnSpeed) + (transform.right * -turnInputVector.y * turnSpeed);
 
         rb.AddTorque(torque * Time.fixedDeltaTime, ForceMode.Impulse);
     }
