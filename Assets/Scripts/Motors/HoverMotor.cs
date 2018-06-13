@@ -45,6 +45,18 @@ public class HoverMotor : Motor
         right = transform.right;
     }
 
+    public override void Move(float x, float y)
+    {
+        moveInputVector = new Vector2(x, y);
+        if (moveInputVector.sqrMagnitude > 1f)
+            moveInputVector.Normalize();
+    }
+
+    public override void MoveCamera(float x, float y)
+    {
+        turnInputVector = new Vector2(x, y);
+    }
+
     void FixedUpdate()
     {
         // update transform variables
@@ -110,14 +122,6 @@ public class HoverMotor : Motor
     {
         // Apply angular drag value based on input state
         rb.angularDrag = (turnInputVector == Vector2.zero) ? baseAngularDrag : turningAngularDrag;
-
-        // check against vertical rotation limit
-        float dot = Vector3.Dot(forward, Vector3.up);
-        if (Mathf.Abs(dot) > rotationLimit)
-        {
-            Vector3 correctionTorque = Vector3.Cross(Vector3.up, forward).normalized * rotationCorrectionStrength * dot;
-            rb.AddTorque(correctionTorque * Time.fixedDeltaTime, ForceMode.Impulse);
-        }
     }
 
     void ApplyHoverForce()
@@ -134,27 +138,26 @@ public class HoverMotor : Motor
 
     void GyroCorrection()
     {
-        // rotate around transform.forward until transform.up is closest to V3.up
-        Vector3 projectionPlaneNormal = Vector3.Cross(Vector3.up, forward);
+        // check against vertical rotation limit
+        float verticalDot = Vector3.Dot(forward, Vector3.up);
+        if (Mathf.Abs(verticalDot) > rotationLimit)
+        {
+            Vector3 correctionTorque = Vector3.Cross(Vector3.up, forward).normalized * rotationCorrectionStrength *
+                                       verticalDot;
+            rb.AddTorque(correctionTorque * Time.fixedDeltaTime, ForceMode.Impulse);
+        }
+        else
+        {
+            // rotate around transform.forward until transform.up is closest to V3.up
+            Vector3 projectionPlaneNormal = Vector3.Cross(Vector3.up, forward);
 
-        float dot = Vector3.Dot(up, projectionPlaneNormal);
+            float gyroDot = Vector3.Dot(up, projectionPlaneNormal);
 
-        if (up.y < 0f)
-            dot = dot < 0f ? -1f : 1f;
+            if (up.y < 0f)
+                gyroDot = gyroDot < 0f ? -1f : 1f;
 
-        Vector3 gyroTorque = forward * Time.fixedDeltaTime * (dot * gyroCorrectionStrength);
-        rb.AddTorque(gyroTorque, ForceMode.Impulse);
-    }
-
-    public override void Move(float x, float y)
-    {
-        moveInputVector = new Vector2(x, y);
-        if (moveInputVector.sqrMagnitude > 1f)
-            moveInputVector.Normalize();
-    }
-
-    public override void MoveCamera(float x, float y)
-    {
-        turnInputVector = new Vector2(x, y);
+            Vector3 gyroTorque = forward * Time.fixedDeltaTime * (gyroDot * gyroCorrectionStrength);
+            rb.AddTorque(gyroTorque, ForceMode.Impulse);
+        }
     }
 }
