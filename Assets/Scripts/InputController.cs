@@ -29,14 +29,20 @@ public class InputController : MonoBehaviour
         // Get vertical and horizontal input vectors
         if (motor != null)
         {
+            // Apply movement and rotation
             motor.Move(Input.GetAxisRaw(xMovAxis), Input.GetAxisRaw(yMovAxis));
             motor.MoveCamera(Input.GetAxisRaw(xCamAxis), Input.GetAxisRaw(yCamAxis));
 
+            // Height change buttons
             if (Input.GetKey(KeyCode.R))
                 motor.ChangeHeight(1f);
 
             if (Input.GetKey(KeyCode.F))
                 motor.ChangeHeight(-1f);
+
+            // Boost
+            if (Input.GetKey(KeyCode.LeftShift))
+                motor.Boost();
         }
     }
 }

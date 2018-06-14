@@ -11,6 +11,7 @@ public class HoverMotor : MonoBehaviour
     [SerializeField] private float moveForce = 10f;
     //[SerializeField] private float dampenForceFactor = 0.1f;
     [SerializeField] private float leanStrength = 0.5f;
+    [SerializeField] private float boostForceMultiplier = 2f;
 
     [Header("Turning")]
     [SerializeField] private float turnSpeed = 4f;
@@ -74,6 +75,13 @@ public class HoverMotor : MonoBehaviour
 
         // boost hover force in direction of change
         rb.AddForce(Vector3.up * change * heightChangeForce * Time.deltaTime, ForceMode.Impulse);
+    }
+
+    public void Boost()
+    {
+        // TODO: cache flattened directions?
+        Vector3 forwardFlat = Vector3.ProjectOnPlane(forward, Vector3.up).normalized;
+        rb.AddForce(forwardFlat * moveForce * boostForceMultiplier * Time.deltaTime, ForceMode.Impulse);
     }
 
     void FixedUpdate()
@@ -165,7 +173,7 @@ public class HoverMotor : MonoBehaviour
         float verticalDot = Vector3.Dot(forward, Vector3.up);
         if (Mathf.Abs(verticalDot) > rotationLimit)
         {
-            // correct vertical rotation
+            // Vertical rotation correction
             // map correction strength to 0-1
             float correctionStrength = Utilities.MapValues(Mathf.Abs(verticalDot), rotationLimit, 1f, 0f, 1f);
             if (verticalDot < 0f)
