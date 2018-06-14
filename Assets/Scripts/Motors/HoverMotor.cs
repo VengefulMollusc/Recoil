@@ -7,22 +7,26 @@ using UnityEngine;
 public class HoverMotor : MonoBehaviour
 {
     [Header("General")]
-    [SerializeField] private float verticalDrag = 0.01f;
+    [SerializeField]
+    private float verticalDrag = 0.01f;
     [SerializeField] private float gravityForce = 10f;
 
     [Header("Movement")]
-    [SerializeField] private float maxSpeed = 20f;
+    [SerializeField]
+    private float maxSpeed = 20f;
     [SerializeField] private float moveForce = 10f;
     [SerializeField] private float leanStrength = 0.5f;
     [SerializeField] private float boostForceMultiplier = 2f;
 
     [Header("Turning")]
-    [SerializeField] private float turnSpeed = 4f;
+    [SerializeField]
+    private float turnSpeed = 4f;
     [SerializeField] private float baseAngularDrag = 4f;
     [SerializeField] private float turningAngularDrag = 2f;
 
     [Header("Hover")]
-    [SerializeField] private float hoverHeight = 15f;
+    [SerializeField]
+    private float hoverHeight = 15f;
     [SerializeField] private float minHoverHeight = 10f;
     [SerializeField] private float maxHoverHeight = 20f;
     [SerializeField] private float heightChangeForce = 3f;
@@ -30,7 +34,8 @@ public class HoverMotor : MonoBehaviour
     [SerializeField] private float hoverForce = 30f;
 
     [Header("Gyro")]
-    [SerializeField] private float gyroCorrectionStrength = 6f;
+    [SerializeField]
+    private float gyroCorrectionStrength = 6f;
     [SerializeField] private float rotationLimit = 0.6f;
     [SerializeField] private float rotationCorrectionStrength = 4f;
 
@@ -38,6 +43,8 @@ public class HoverMotor : MonoBehaviour
     private Vector2 moveInputVector;
     private Vector2 turnInputVector;
     private Vector3 gravityVector;
+
+    private bool boosting;
 
     // Cached direction variables
     private Vector3 up;
@@ -85,16 +92,16 @@ public class HoverMotor : MonoBehaviour
     public void ChangeHeight(float change)
     {
         // Change hover height between limits
-        hoverHeight = Mathf.Clamp(hoverHeight + (change * heightChangeRate * Time.deltaTime), 
+        hoverHeight = Mathf.Clamp(hoverHeight + (change * heightChangeRate * Time.deltaTime),
             minHoverHeight, maxHoverHeight);
 
         // boost hover force in direction of change
         rb.AddForce(Vector3.up * change * heightChangeForce * Time.deltaTime, ForceMode.Impulse);
     }
 
-    public void Boost()
+    public void Boost(bool isBoosting)
     {
-        rb.AddForce(forwardFlat * moveForce * boostForceMultiplier * Time.deltaTime, ForceMode.Impulse);
+        boosting = isBoosting;
     }
 
     void FixedUpdate()
@@ -105,7 +112,10 @@ public class HoverMotor : MonoBehaviour
         rb.AddForce(gravityVector * Time.fixedDeltaTime, ForceMode.Impulse);
 
         // Movement
-        ApplyMovementForce();
+        if (boosting)
+            ApplyBoost();
+        else
+            ApplyMovementForce();
 
         // Turning
         ApplyTurningForce();
@@ -129,6 +139,11 @@ public class HoverMotor : MonoBehaviour
         // lean slightly to match left/right movement
         Vector3 leanTorque = forwardFlat * -moveInputVector.x * leanStrength;
         rb.AddTorque(leanTorque * Time.fixedDeltaTime, ForceMode.Impulse);
+    }
+
+    void ApplyBoost()
+    {
+        rb.AddForce(forward * moveForce * boostForceMultiplier * Time.fixedDeltaTime, ForceMode.Impulse);
     }
 
     void ApplyTurningForce()
@@ -159,7 +174,7 @@ public class HoverMotor : MonoBehaviour
             rb.AddForce(Vector3.up * force * Time.fixedDeltaTime, ForceMode.Impulse);
         }
 
-        // TODO: apply vertical momentum drag
+        // apply vertical momentum drag
         Vector3 velocity = rb.velocity;
         velocity.y *= 1f - verticalDrag;
         rb.velocity = velocity;

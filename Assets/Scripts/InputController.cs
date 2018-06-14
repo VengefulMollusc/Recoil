@@ -41,8 +41,10 @@ public class InputController : MonoBehaviour
                 motor.ChangeHeight(-1f);
 
             // Boost
-            if (Input.GetKey(KeyCode.LeftShift))
-                motor.Boost();
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+                motor.Boost(true);
+            if (Input.GetKeyUp(KeyCode.LeftShift))
+                motor.Boost(false);
         }
     }
 }
