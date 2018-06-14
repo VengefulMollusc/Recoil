@@ -143,11 +143,13 @@ public class HoverMotor : MonoBehaviour
 
     void ApplyBoost()
     {
+        // TODO: Recharging boost meter
         rb.AddForce(forward * moveForce * boostForceMultiplier * Time.fixedDeltaTime, ForceMode.Impulse);
     }
 
     void ApplyTurningForce()
     {
+        // TODO: tweak this for smooth controller/mouse input
         // Apply torque to rotate facing direction
         if (turnInputVector == Vector2.zero)
             return;
