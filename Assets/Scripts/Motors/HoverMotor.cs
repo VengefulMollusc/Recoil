@@ -37,9 +37,12 @@ public class HoverMotor : MonoBehaviour
     private Vector2 turnInputVector;
     private Vector3 gravityVector;
 
-    private Vector3 forward;
+    // Cached direction variables
     private Vector3 up;
+    private Vector3 forward;
+    private Vector3 forwardFlat;
     private Vector3 right;
+    private Vector3 rightFlat;
 
     void Start()
     {
@@ -49,10 +52,20 @@ public class HoverMotor : MonoBehaviour
         // sqr maxspeed for cheaper comparisons later
         maxSpeed *= maxSpeed;
 
+        UpdateDirectionVariables();
+    }
+
+    void UpdateDirectionVariables()
+    {
         // update cached transform variables
         forward = transform.forward;
         up = transform.up;
         right = transform.right;
+
+        // Get movement axes relative to global axes rather than local vertical look direction
+        forwardFlat = Vector3.ProjectOnPlane(forward, Vector3.up).normalized;
+        Quaternion rot = Quaternion.FromToRotation(Vector3.forward, forwardFlat);
+        rightFlat = rot * Vector3.right;
     }
 
     public void Move(float x, float y)
@@ -79,17 +92,12 @@ public class HoverMotor : MonoBehaviour
 
     public void Boost()
     {
-        // TODO: cache flattened directions?
-        Vector3 forwardFlat = Vector3.ProjectOnPlane(forward, Vector3.up).normalized;
         rb.AddForce(forwardFlat * moveForce * boostForceMultiplier * Time.deltaTime, ForceMode.Impulse);
     }
 
     void FixedUpdate()
     {
-        // update cached transform variables
-        forward = transform.forward;
-        up = transform.up;
-        right = transform.right;
+        UpdateDirectionVariables();
 
         // Apply Gravity
         rb.AddForce(gravityVector * Time.fixedDeltaTime, ForceMode.Impulse);
@@ -112,11 +120,6 @@ public class HoverMotor : MonoBehaviour
         // Apply force to move tank
         if (moveInputVector == Vector2.zero)
             return;
-
-        // Get movement axes relative to global axes rather than local vertical look direction
-        Vector3 forwardFlat = Vector3.ProjectOnPlane(forward, Vector3.up).normalized;
-        Quaternion rot = Quaternion.FromToRotation(Vector3.forward, forwardFlat);
-        Vector3 rightFlat = rot * Vector3.right;
 
         Vector3 inputForce = (forwardFlat * moveInputVector.y)
             + (rightFlat * moveInputVector.x);
