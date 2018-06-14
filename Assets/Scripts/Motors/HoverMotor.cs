@@ -134,8 +134,6 @@ public class HoverMotor : MonoBehaviour
         // Hover force and gyro correction
         ApplyHoverForce();
         GyroCorrection();
-
-        Debug.Log(boostState);
     }
 
     void ApplyMovementForce()
