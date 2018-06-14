@@ -170,7 +170,7 @@ public class HoverMotor : MonoBehaviour
         if (Physics.Raycast(transform.position, Vector3.down, out hitInfo, hoverHeight))
         {
             float distanceToGround = hitInfo.distance;
-            float force = Utilities.MapValues(distanceToGround, hoverHeight, 0f, 0f, hoverForce);
+            float force = Utilities.MapValues(distanceToGround, hoverHeight, 0f, 0f, boosting ? hoverForce * boostForceMultiplier : hoverForce);
             rb.AddForce(Vector3.up * force * Time.fixedDeltaTime, ForceMode.Impulse);
         }
 
