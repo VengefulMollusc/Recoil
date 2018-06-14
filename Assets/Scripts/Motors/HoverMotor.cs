@@ -6,10 +6,13 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class HoverMotor : MonoBehaviour
 {
+    [Header("General")]
+    [SerializeField] private float verticalDrag = 0.01f;
+    [SerializeField] private float gravityForce = 10f;
+
     [Header("Movement")]
     [SerializeField] private float maxSpeed = 20f;
     [SerializeField] private float moveForce = 10f;
-    //[SerializeField] private float dampenForceFactor = 0.1f;
     [SerializeField] private float leanStrength = 0.5f;
     [SerializeField] private float boostForceMultiplier = 2f;
 
@@ -25,7 +28,6 @@ public class HoverMotor : MonoBehaviour
     [SerializeField] private float heightChangeForce = 3f;
     [SerializeField] private float heightChangeRate = 10f;
     [SerializeField] private float hoverForce = 30f;
-    [SerializeField] private float gravityForce = 10f;
 
     [Header("Gyro")]
     [SerializeField] private float gyroCorrectionStrength = 6f;
@@ -104,7 +106,6 @@ public class HoverMotor : MonoBehaviour
 
         // Movement
         ApplyMovementForce();
-        //DampenMovement();
 
         // Turning
         ApplyTurningForce();
@@ -129,17 +130,6 @@ public class HoverMotor : MonoBehaviour
         Vector3 leanTorque = forwardFlat * -moveInputVector.x * leanStrength;
         rb.AddTorque(leanTorque * Time.fixedDeltaTime, ForceMode.Impulse);
     }
-
-    //void DampenMovement()
-    //{
-    //    // Dampens horizontal movement slightly to limit speed
-    //    if (moveInputVector != Vector2.zero)
-    //        return;
-
-    //    Vector3 flatVel = Vector3.ProjectOnPlane(rb.velocity, Vector3.up);
-    //    float dampenForce = Utilities.MapValues(flatVel.sqrMagnitude, 0f, maxSpeed, 0.1f, moveForce * dampenForceFactor);
-    //    rb.AddForce(-flatVel.normalized * dampenForce * Time.fixedDeltaTime, ForceMode.Impulse);
-    //}
 
     void ApplyTurningForce()
     {
@@ -168,6 +158,11 @@ public class HoverMotor : MonoBehaviour
             float force = Utilities.MapValues(distanceToGround, hoverHeight, 0f, 0f, hoverForce);
             rb.AddForce(Vector3.up * force * Time.fixedDeltaTime, ForceMode.Impulse);
         }
+
+        // TODO: apply vertical momentum drag
+        Vector3 velocity = rb.velocity;
+        velocity.y *= 1f - verticalDrag;
+        rb.velocity = velocity;
     }
 
     void GyroCorrection()
