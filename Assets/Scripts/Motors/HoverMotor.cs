@@ -16,13 +16,19 @@ public class HoverMotor : MonoBehaviour
     private float maxSpeed = 20f;
     [SerializeField] private float moveForce = 10f;
     [SerializeField] private float leanStrength = 0.5f;
-    [SerializeField] private float boostForceMultiplier = 2f;
 
     [Header("Turning")]
     [SerializeField]
     private float turnSpeed = 4f;
     [SerializeField] private float baseAngularDrag = 4f;
     [SerializeField] private float turningAngularDrag = 2f;
+
+    [Header("Boost")]
+    [SerializeField]
+    private float boostForceMultiplier = 2f;
+    [SerializeField] private float boostTime = 1.5f;
+    [SerializeField] private float boostRechargeTime = 3f;
+    [SerializeField] private float boostRechargeDelay = 1.5f;
 
     [Header("Hover")]
     [SerializeField]
@@ -45,6 +51,7 @@ public class HoverMotor : MonoBehaviour
     private Vector3 gravityVector;
 
     private bool boosting;
+    private float boostState;
 
     // Cached direction variables
     private Vector3 up;
@@ -101,7 +108,10 @@ public class HoverMotor : MonoBehaviour
 
     public void Boost(bool isBoosting)
     {
-        boosting = isBoosting;
+        if (boosting && !isBoosting)
+            StartCoroutine(RechargeBoost());
+        else
+            boosting = isBoosting && boostState < boostTime;
     }
 
     void FixedUpdate()
@@ -124,6 +134,8 @@ public class HoverMotor : MonoBehaviour
         // Hover force and gyro correction
         ApplyHoverForce();
         GyroCorrection();
+
+        Debug.Log(boostState);
     }
 
     void ApplyMovementForce()
@@ -145,6 +157,28 @@ public class HoverMotor : MonoBehaviour
     {
         // TODO: Recharging boost meter
         rb.AddForce(forward * moveForce * boostForceMultiplier * Time.fixedDeltaTime, ForceMode.Impulse);
+
+        boostState += Time.fixedDeltaTime;
+        if (boostState > boostTime)
+            StartCoroutine(RechargeBoost());
+    }
+
+    private IEnumerator RechargeBoost()
+    {
+        boosting = false;
+
+        yield return new WaitForSeconds(boostRechargeDelay);
+
+        float rechargeRate = boostTime / boostRechargeTime;
+
+        while (boostState > 0f && !boosting)
+        {
+            boostState -= Time.deltaTime * rechargeRate;
+            yield return 0;
+        }
+
+        if (!boosting)
+            boostState = 0f;
     }
 
     void ApplyTurningForce()
