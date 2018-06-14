@@ -155,22 +155,30 @@ public class HoverMotor : MonoBehaviour
 
     void ApplyBoost()
     {
-        // TODO: Recharging boost meter
+        // Add boost force
         rb.AddForce(forward * moveForce * boostForceMultiplier * Time.fixedDeltaTime, ForceMode.Impulse);
 
+        // track boost state and begin recharge if limit is hit
         boostState += Time.fixedDeltaTime;
-        if (boostState > boostTime)
+        if (boostState >= boostTime)
+        {
+            boostState = boostTime;
             StartCoroutine(RechargeBoost());
+        }
     }
 
+    // Recharges boost value after a delay
     private IEnumerator RechargeBoost()
     {
         boosting = false;
 
+        // wait for the recharge delay
         yield return new WaitForSeconds(boostRechargeDelay);
 
+        // calculate recharge rate based on time
         float rechargeRate = boostTime / boostRechargeTime;
 
+        // Recharge boost
         while (boostState > 0f && !boosting)
         {
             boostState -= Time.deltaTime * rechargeRate;
