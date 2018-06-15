@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 54771881071511200}
   - component: {fileID: 114307386745630548}
   - component: {fileID: 114089555154068090}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HoverTank
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 20899796743609286}
   - component: {fileID: 124831846775423674}
   - component: {fileID: 81298510961571748}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -217,20 +217,26 @@ MonoBehaviour:
   gravityForce: 10
   maxSpeed: 20
   moveForce: 20
-  leanStrength: 0.5
-  boostForceMultiplier: 2
+  leanStrength: 1
   turnSpeed: 4
   baseAngularDrag: 4
   turningAngularDrag: 2
+  boostForceMultiplier: 2
+  boostTime: 1.5
+  boostRechargeTime: 3
+  boostRechargeDelay: 1.5
   hoverHeight: 15
   minHoverHeight: 10
   maxHoverHeight: 20
   heightChangeForce: 3
   heightChangeRate: 10
   hoverForce: 30
+  raycastMask:
+    serializedVersion: 2
+    m_Bits: 1
   gyroCorrectionStrength: 6
   rotationLimit: 0.6
-  rotationCorrectionStrength: 4
+  rotationCorrectionStrength: 10
 --- !u!124 &124831846775423674
 Behaviour:
   m_ObjectHideFlags: 1

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Security.Principal;
+using UnityEditor;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -38,6 +39,7 @@ public class HoverMotor : MonoBehaviour
     [SerializeField] private float heightChangeForce = 3f;
     [SerializeField] private float heightChangeRate = 10f;
     [SerializeField] private float hoverForce = 30f;
+    [SerializeField] private LayerMask raycastMask;
 
     [Header("Gyro")]
     [SerializeField]
@@ -52,6 +54,8 @@ public class HoverMotor : MonoBehaviour
 
     private bool boosting;
     private float boostState;
+
+    //private bool isHoverTrigger;
 
     // Cached direction variables
     private Vector3 up;
@@ -134,6 +138,8 @@ public class HoverMotor : MonoBehaviour
         // Hover force and gyro correction
         ApplyHoverForce();
         GyroCorrection();
+
+        //isHoverTrigger = false;
     }
 
     void ApplyMovementForce()
@@ -209,12 +215,22 @@ public class HoverMotor : MonoBehaviour
     {
         // raycast down and apply hover force relative to height
         RaycastHit hitInfo;
-        if (Physics.Raycast(transform.position, Vector3.down, out hitInfo, hoverHeight))
+        if (Physics.Raycast(transform.position, Vector3.down, out hitInfo, hoverHeight, raycastMask))
         {
             float distanceToGround = hitInfo.distance;
             float force = Utilities.MapValues(distanceToGround, hoverHeight, 0f, 0f, boosting ? hoverForce * boostForceMultiplier : hoverForce);
             rb.AddForce(Vector3.up * force * Time.fixedDeltaTime, ForceMode.Impulse);
         }
+
+        //float radius = 1.5f;
+        //Vector3 origin = transform.position + (Vector3.up * radius * 2f);
+        //RaycastHit hitInfo;
+        //if (Physics.SphereCast(origin, radius, Vector3.down, out hitInfo, hoverHeight, raycastMask))
+        //{
+        //    float distanceToGround = hitInfo.distance;
+        //    float force = Utilities.MapValues(distanceToGround, hoverHeight, 0f, 0f, boosting ? hoverForce * boostForceMultiplier : hoverForce);
+        //    rb.AddForce(Vector3.up * force * Time.fixedDeltaTime, ForceMode.Impulse);
+        //}
 
         // apply vertical momentum drag
         Vector3 velocity = rb.velocity;
@@ -254,4 +270,9 @@ public class HoverMotor : MonoBehaviour
             rb.AddTorque(gyroTorque, ForceMode.Impulse);
         }
     }
+
+    //void OnTriggerStay(Collider col)
+    //{
+    //    isHoverTrigger = true;
+    //}
 }
