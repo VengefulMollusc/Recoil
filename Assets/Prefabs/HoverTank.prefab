@@ -231,9 +231,10 @@ MonoBehaviour:
   heightChangeForce: 3
   heightChangeRate: 10
   hoverForce: 30
-  raycastMask:
+  spherecastMask:
     serializedVersion: 2
     m_Bits: 1
+  sphereCastRadius: 40
   gyroCorrectionStrength: 6
   rotationLimit: 0.6
   rotationCorrectionStrength: 10

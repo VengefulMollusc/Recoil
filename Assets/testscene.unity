@@ -8065,8 +8065,8 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 114307386745630548, guid: 32cf82f8b398ff64b9f11d95d1bf80d7,
         type: 2}
-      propertyPath: leanStrength
-      value: 1
+      propertyPath: sphereCastRadius
+      value: 40
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 32cf82f8b398ff64b9f11d95d1bf80d7, type: 2}

@@ -32,14 +32,14 @@ public class HoverMotor : MonoBehaviour
     [SerializeField] private float boostRechargeDelay = 1.5f;
 
     [Header("Hover")]
-    [SerializeField]
-    private float hoverHeight = 15f;
+    [SerializeField] private float hoverHeight = 15f;
     [SerializeField] private float minHoverHeight = 10f;
     [SerializeField] private float maxHoverHeight = 20f;
     [SerializeField] private float heightChangeForce = 3f;
     [SerializeField] private float heightChangeRate = 10f;
     [SerializeField] private float hoverForce = 30f;
-    [SerializeField] private LayerMask raycastMask;
+    [SerializeField] private LayerMask spherecastMask;
+    [SerializeField] private float sphereCastRadius = 10f;
 
     [Header("Gyro")]
     [SerializeField]
@@ -54,8 +54,6 @@ public class HoverMotor : MonoBehaviour
 
     private bool boosting;
     private float boostState;
-
-    //private bool isHoverTrigger;
 
     // Cached direction variables
     private Vector3 up;
@@ -138,8 +136,6 @@ public class HoverMotor : MonoBehaviour
         // Hover force and gyro correction
         ApplyHoverForce();
         GyroCorrection();
-
-        //isHoverTrigger = false;
     }
 
     void ApplyMovementForce()
@@ -213,24 +209,15 @@ public class HoverMotor : MonoBehaviour
 
     void ApplyHoverForce()
     {
-        // raycast down and apply hover force relative to height
+        // spherecast down and apply hover force relative to height
+        Vector3 origin = transform.position + (Vector3.up * sphereCastRadius);
         RaycastHit hitInfo;
-        if (Physics.Raycast(transform.position, Vector3.down, out hitInfo, hoverHeight, raycastMask))
+        if (Physics.SphereCast(origin, sphereCastRadius, Vector3.down, out hitInfo, hoverHeight, spherecastMask))
         {
             float distanceToGround = hitInfo.distance;
             float force = Utilities.MapValues(distanceToGround, hoverHeight, 0f, 0f, boosting ? hoverForce * boostForceMultiplier : hoverForce);
             rb.AddForce(Vector3.up * force * Time.fixedDeltaTime, ForceMode.Impulse);
         }
-
-        //float radius = 1.5f;
-        //Vector3 origin = transform.position + (Vector3.up * radius * 2f);
-        //RaycastHit hitInfo;
-        //if (Physics.SphereCast(origin, radius, Vector3.down, out hitInfo, hoverHeight, raycastMask))
-        //{
-        //    float distanceToGround = hitInfo.distance;
-        //    float force = Utilities.MapValues(distanceToGround, hoverHeight, 0f, 0f, boosting ? hoverForce * boostForceMultiplier : hoverForce);
-        //    rb.AddForce(Vector3.up * force * Time.fixedDeltaTime, ForceMode.Impulse);
-        //}
 
         // apply vertical momentum drag
         Vector3 velocity = rb.velocity;
@@ -271,8 +258,11 @@ public class HoverMotor : MonoBehaviour
         }
     }
 
-    //void OnTriggerStay(Collider col)
-    //{
-    //    isHoverTrigger = true;
-    //}
+
+    void OnDrawGizmosSelected()
+    {
+        Vector3 origin = transform.position;
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(origin + (Vector3.up * sphereCastRadius) + (Vector3.down * hoverHeight), sphereCastRadius);
+    }
 }
