@@ -54,6 +54,7 @@ public class HoverMotor : MonoBehaviour
 
     private bool boosting;
     private float boostState;
+    private float boostHoverForceMultiplier;
 
     // Cached direction variables
     private Vector3 up;
@@ -69,6 +70,8 @@ public class HoverMotor : MonoBehaviour
 
         // sqr maxspeed for cheaper comparisons later
         maxSpeed *= maxSpeed;
+
+        boostHoverForceMultiplier = 1f;
 
         UpdateDirectionVariables();
     }
@@ -158,6 +161,10 @@ public class HoverMotor : MonoBehaviour
         // Add boost force
         rb.AddForce(forward * moveForce * boostForceMultiplier * Time.fixedDeltaTime, ForceMode.Impulse);
 
+        // Calculate extra hover force based on facing direction
+        float dot = Vector3.Dot(Vector3.down, forward);
+        boostHoverForceMultiplier = Utilities.MapValues(dot, -0.5f, 0.5f, 1f, boostForceMultiplier, true);
+
         // track boost state and begin recharge if limit is hit
         boostState += Time.fixedDeltaTime;
         if (boostState >= boostTime)
@@ -171,6 +178,7 @@ public class HoverMotor : MonoBehaviour
     private IEnumerator RechargeBoost()
     {
         boosting = false;
+        boostHoverForceMultiplier = 1f;
 
         // wait for the recharge delay
         yield return new WaitForSeconds(boostRechargeDelay);
@@ -215,7 +223,7 @@ public class HoverMotor : MonoBehaviour
         if (Physics.SphereCast(origin, sphereCastRadius, Vector3.down, out hitInfo, hoverHeight, spherecastMask))
         {
             float distanceToGround = hitInfo.distance;
-            float force = Utilities.MapValues(distanceToGround, hoverHeight, 0f, 0f, boosting ? hoverForce * boostForceMultiplier : hoverForce);
+            float force = Utilities.MapValues(distanceToGround, hoverHeight, 0f, 0f, boosting ? hoverForce * boostHoverForceMultiplier : hoverForce);
             rb.AddForce(Vector3.up * force * Time.fixedDeltaTime, ForceMode.Impulse);
         }
 
@@ -258,7 +266,7 @@ public class HoverMotor : MonoBehaviour
         }
     }
 
-
+    // Scene Only
     void OnDrawGizmosSelected()
     {
         Vector3 origin = transform.position;
