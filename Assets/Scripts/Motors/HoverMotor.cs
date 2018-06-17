@@ -161,6 +161,7 @@ public class HoverMotor : MonoBehaviour
         // Add boost force
         rb.AddForce(forward * moveForce * boostForceMultiplier * Time.fixedDeltaTime, ForceMode.Impulse);
 
+        // TODO: look at this again with sloping terrain. May want to remove entirely or make relative to ground slope as well
         // Calculate extra hover force based on facing direction
         float dot = Vector3.Dot(Vector3.down, forward);
         boostHoverForceMultiplier = Utilities.MapValues(dot, -0.5f, 0.5f, 1f, boostForceMultiplier, true);
