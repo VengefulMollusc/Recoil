@@ -233,7 +233,7 @@ MonoBehaviour:
   maxHoverHeight: 20
   heightChangeForce: 3
   heightChangeRate: 10
-  hoverForce: 30
+  hoverForce: 40
   spherecastMask:
     serializedVersion: 2
     m_Bits: 1
