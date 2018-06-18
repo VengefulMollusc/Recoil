@@ -99,7 +99,10 @@ public class HoverMotor : MonoBehaviour
 
     public void MoveCamera(float x, float y)
     {
+        // TODO: tweak this for smooth controller/mouse input
         turnInputVector = new Vector2(x, y);
+        if (turnInputVector.sqrMagnitude > 1f)
+            turnInputVector.Normalize();
     }
 
     public void ChangeHeight(float change)
@@ -201,7 +204,6 @@ public class HoverMotor : MonoBehaviour
 
     void ApplyTurningForce()
     {
-        // TODO: tweak this for smooth controller/mouse input
         // Apply torque to rotate facing direction
         if (turnInputVector == Vector2.zero)
             return;
@@ -247,6 +249,7 @@ public class HoverMotor : MonoBehaviour
             if (verticalDot < 0f)
                 correctionStrength *= -1;
 
+            // TODO: tweak rotationCorrectionStrength
             Vector3 correctionTorque = Vector3.Cross(Vector3.up, forward).normalized * rotationCorrectionStrength *
                                        correctionStrength;
 
@@ -254,6 +257,7 @@ public class HoverMotor : MonoBehaviour
         }
         else
         {
+            // TODO: give this at least a little overlap with the rotation correction
             // Correct gyro
             // rotate around transform.forward until transform.up is closest to V3.up
             Vector3 projectionPlaneNormal = Vector3.Cross(Vector3.up, forward);
