@@ -23,8 +23,8 @@ GameObject:
   - component: {fileID: 65636369046753252}
   - component: {fileID: 23745507175609882}
   - component: {fileID: 54771881071511200}
-  - component: {fileID: 114307386745630548}
   - component: {fileID: 114089555154068090}
+  - component: {fileID: 114307386745630548}
   m_Layer: 8
   m_Name: HoverTank
   m_TagString: Untagged
@@ -202,6 +202,9 @@ MonoBehaviour:
   yMovAxis: Vertical
   xCamAxis: LookX
   yCamAxis: LookY
+  boostKey: 304
+  increaseHeightKey: 114
+  decreaseHeightKey: 102
 --- !u!114 &114307386745630548
 MonoBehaviour:
   m_ObjectHideFlags: 1

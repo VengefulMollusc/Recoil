@@ -6,7 +6,7 @@ public class InputController : MonoBehaviour
 {
     private HoverMotor motor;
 
-    [Header("Control Settings")]
+    [Header("Axes")]
     [SerializeField]
     private string xMovAxis = "Horizontal";
     [SerializeField]
@@ -15,6 +15,14 @@ public class InputController : MonoBehaviour
     private string xCamAxis = "LookX";
     [SerializeField]
     private string yCamAxis = "LookY";
+
+    [Header("Buttons")]
+    [SerializeField]
+    private KeyCode boostKey = KeyCode.LeftShift;
+    [SerializeField]
+    private KeyCode increaseHeightKey = KeyCode.R;
+    [SerializeField]
+    private KeyCode decreaseHeightKey = KeyCode.F;
 
     void Start()
     {
@@ -34,16 +42,16 @@ public class InputController : MonoBehaviour
             motor.MoveCamera(Input.GetAxisRaw(xCamAxis), Input.GetAxisRaw(yCamAxis));
 
             // Height change buttons
-            if (Input.GetKey(KeyCode.R))
+            if (Input.GetKey(increaseHeightKey))
                 motor.ChangeHeight(1f);
 
-            if (Input.GetKey(KeyCode.F))
+            if (Input.GetKey(decreaseHeightKey))
                 motor.ChangeHeight(-1f);
 
             // Boost
-            if (Input.GetKeyDown(KeyCode.LeftShift))
+            if (Input.GetKeyDown(boostKey))
                 motor.Boost(true);
-            if (Input.GetKeyUp(KeyCode.LeftShift))
+            if (Input.GetKeyUp(boostKey))
                 motor.Boost(false);
         }
     }
