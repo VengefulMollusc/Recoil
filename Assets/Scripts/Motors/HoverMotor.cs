@@ -249,8 +249,7 @@ public class HoverMotor : MonoBehaviour
             float correctionStrength = Utilities.MapValues(Mathf.Abs(verticalDot), rotationLimit, 1f, 0f, 1f);
             if (verticalDot < 0f)
                 correctionStrength *= -1;
-
-            // TODO: tweak rotationCorrectionStrength
+            
             Vector3 correctionTorque = Vector3.Cross(Vector3.up, forward).normalized * rotationCorrectionStrength *
                                        correctionStrength;
 
@@ -260,7 +259,6 @@ public class HoverMotor : MonoBehaviour
         // Correct gyro
         if (Mathf.Abs(verticalDot) < gyroRotationLimit)
         {
-            // TODO: give this at least a little overlap with the rotation correction
             // rotate around transform.forward until transform.up is closest to V3.up
             Vector3 projectionPlaneNormal = Vector3.Cross(Vector3.up, forward);
 
