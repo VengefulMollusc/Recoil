@@ -58,7 +58,8 @@ public class HoverMotor : MonoBehaviour
     private float boostState;
     private float boostHoverForceMultiplier;
 
-    // Cached direction variables
+    // Cached variables
+    private Vector3 position;
     private Vector3 up;
     private Vector3 forward;
     private Vector3 forwardFlat;
@@ -75,12 +76,13 @@ public class HoverMotor : MonoBehaviour
 
         boostHoverForceMultiplier = 1f;
 
-        UpdateDirectionVariables();
+        UpdateVariables();
     }
 
-    void UpdateDirectionVariables()
+    void UpdateVariables()
     {
         // update cached transform variables
+        position = transform.position;
         forward = transform.forward;
         up = transform.up;
         right = transform.right;
@@ -126,7 +128,7 @@ public class HoverMotor : MonoBehaviour
 
     void FixedUpdate()
     {
-        UpdateDirectionVariables();
+        UpdateVariables();
 
         // Apply Gravity
         rb.AddForce(gravityVector * Time.fixedDeltaTime, ForceMode.Impulse);
@@ -212,6 +214,7 @@ public class HoverMotor : MonoBehaviour
         Vector3 torque = (up * turnInputVector.x * turnSpeed) + (right * -turnInputVector.y * turnSpeed);
 
         rb.AddTorque(torque * Time.fixedDeltaTime, ForceMode.Impulse);
+
     }
 
     void DampenTurning()
@@ -223,13 +226,24 @@ public class HoverMotor : MonoBehaviour
     void ApplyHoverForce()
     {
         // spherecast down and apply hover force relative to height
-        Vector3 origin = transform.position + (Vector3.up * sphereCastRadius);
+        Vector3 origin = position + (Vector3.up * sphereCastRadius);
         RaycastHit hitInfo;
         if (Physics.SphereCast(origin, sphereCastRadius, Vector3.down, out hitInfo, hoverHeight, spherecastMask))
         {
             float distanceToGround = hitInfo.distance;
             float force = Utilities.MapValues(distanceToGround, hoverHeight, 0f, 0f, boosting ? hoverForce * boostHoverForceMultiplier : hoverForce);
             rb.AddForce(Vector3.up * force * Time.fixedDeltaTime, ForceMode.Impulse);
+        }
+
+        // Apply force away from surface if flat against it (to stop sticking to vertical surfaces)
+        // raycast up/down for short distance
+        if (Physics.Raycast(position, -up, 3f, spherecastMask))
+        {
+            rb.AddForce(up * hoverForce * Time.fixedDeltaTime);
+        }
+        else if (Physics.Raycast(position, up, 3f, spherecastMask))
+        {
+            rb.AddForce(-up * hoverForce * Time.fixedDeltaTime);
         }
 
         // apply vertical momentum drag
@@ -275,7 +289,7 @@ public class HoverMotor : MonoBehaviour
     // Scene Only
     void OnDrawGizmosSelected()
     {
-        Vector3 origin = transform.position;
+        Vector3 origin = position;
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(origin + (Vector3.up * sphereCastRadius) + (Vector3.down * hoverHeight), sphereCastRadius);
     }
