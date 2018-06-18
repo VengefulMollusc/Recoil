@@ -44,7 +44,8 @@ public class HoverMotor : MonoBehaviour
 
     [Header("Gyro")]
     [SerializeField]
-    private float gyroCorrectionStrength = 6f;
+    private float gyroRotationLimit = 0.7f;
+    [SerializeField] private float gyroCorrectionStrength = 6f;
     [SerializeField] private float rotationLimit = 0.6f;
     [SerializeField] private float rotationCorrectionStrength = 4f;
 
@@ -255,10 +256,11 @@ public class HoverMotor : MonoBehaviour
 
             rb.AddTorque(correctionTorque * Time.fixedDeltaTime, ForceMode.Impulse);
         }
-        else
+
+        // Correct gyro
+        if (Mathf.Abs(verticalDot) < gyroRotationLimit)
         {
             // TODO: give this at least a little overlap with the rotation correction
-            // Correct gyro
             // rotate around transform.forward until transform.up is closest to V3.up
             Vector3 projectionPlaneNormal = Vector3.Cross(Vector3.up, forward);
 

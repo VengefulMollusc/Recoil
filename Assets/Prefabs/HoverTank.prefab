@@ -238,9 +238,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   sphereCastRadius: 40
+  gyroRotationLimit: 0.7
   gyroCorrectionStrength: 6
   rotationLimit: 0.6
-  rotationCorrectionStrength: 10
+  rotationCorrectionStrength: 4
 --- !u!124 &124831846775423674
 Behaviour:
   m_ObjectHideFlags: 1
