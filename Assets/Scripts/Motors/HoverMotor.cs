@@ -32,7 +32,8 @@ public class HoverMotor : MonoBehaviour
     [SerializeField] private float boostRechargeDelay = 1.5f;
 
     [Header("Hover")]
-    [SerializeField] private float hoverHeight = 15f;
+    [SerializeField]
+    private float hoverHeight = 15f;
     [SerializeField] private float minHoverHeight = 10f;
     [SerializeField] private float maxHoverHeight = 20f;
     [SerializeField] private float heightChangeForce = 3f;
