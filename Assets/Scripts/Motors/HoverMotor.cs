@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using System.Security.Principal;
 using UnityEditor;
 using UnityEngine;
@@ -58,6 +59,10 @@ public class HoverMotor : MonoBehaviour
     private float boostState;
     private float boostHoverForceMultiplier;
 
+    private List<Collider> bumperColliders;
+    private float bumperColliderRadius;
+    private float bumperCollRadiusSqrd;
+
     // Cached variables
     private Vector3 position;
     private Vector3 up;
@@ -70,6 +75,10 @@ public class HoverMotor : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         gravityVector = Vector3.down * gravityForce;
+
+        bumperColliders = new List<Collider>();
+        bumperColliderRadius = GetComponent<SphereCollider>().radius;
+        bumperCollRadiusSqrd = bumperColliderRadius * bumperColliderRadius;
 
         // sqr maxspeed for cheaper comparisons later
         maxSpeed *= maxSpeed;
@@ -147,6 +156,9 @@ public class HoverMotor : MonoBehaviour
         ApplyHoverForce();
         ApplyBumperForce();
         GyroCorrection();
+
+        // reset bumper collider list
+        bumperColliders = new List<Collider>();
     }
 
     void ApplyMovementForce()
@@ -231,6 +243,7 @@ public class HoverMotor : MonoBehaviour
         RaycastHit hitInfo;
         if (Physics.SphereCast(origin, sphereCastRadius, Vector3.down, out hitInfo, hoverHeight, raycastMask))
         {
+            // TODO: replace MapValues where can with hitinfo.dist/hoverheight calculations etc
             float force = Utilities.MapValues(hitInfo.distance, hoverHeight, 0f, 0f, boosting ? hoverForce * boostHoverForceMultiplier : hoverForce);
             rb.AddForce(Vector3.up * force * Time.fixedDeltaTime, ForceMode.Impulse);
         }
@@ -243,18 +256,18 @@ public class HoverMotor : MonoBehaviour
 
     void ApplyBumperForce()
     {
-        // Apply hover force away from surface if flat against it (to stop sticking to vertical surfaces)
-        // raycast up/down for short distance
-        RaycastHit hitInfo;
-        if (Physics.Raycast(position, -up, out hitInfo, 3f, raycastMask))
+        // Apply hover force away from near surfaces
+        if (bumperColliders.Count > 0)
         {
-            float force = Utilities.MapValues(hitInfo.distance, 3f, 0f, 0f, hoverForce);
-            rb.AddForce(up * force * Time.fixedDeltaTime, ForceMode.Impulse);
-        }
-        else if (Physics.Raycast(position, up, out hitInfo, 3f, raycastMask))
-        {
-            float force = Utilities.MapValues(hitInfo.distance, 3f, 0f, 0f, hoverForce);
-            rb.AddForce(-up * force * Time.fixedDeltaTime, ForceMode.Impulse);
+            Vector3 bumperForce = Vector3.zero;
+            foreach (Collider col in bumperColliders)
+            {
+                Vector3 toClosestPoint = col.ClosestPoint(position) - position;
+                float distRatio = 1 - (toClosestPoint.sqrMagnitude / bumperCollRadiusSqrd);
+                bumperForce -= toClosestPoint.normalized * distRatio * hoverForce;
+            }
+
+            rb.AddForce(bumperForce * Time.fixedDeltaTime, ForceMode.Impulse);
         }
     }
 
@@ -269,7 +282,7 @@ public class HoverMotor : MonoBehaviour
             float correctionStrength = Utilities.MapValues(Mathf.Abs(verticalDot), rotationLimit, 1f, 0f, 1f);
             if (verticalDot < 0f)
                 correctionStrength *= -1;
-            
+
             Vector3 correctionTorque = Vector3.Cross(Vector3.up, forward).normalized * rotationCorrectionStrength *
                                        correctionStrength;
 
@@ -290,6 +303,12 @@ public class HoverMotor : MonoBehaviour
             Vector3 gyroTorque = forward * Time.fixedDeltaTime * (gyroDot * gyroCorrectionStrength);
             rb.AddTorque(gyroTorque, ForceMode.Impulse);
         }
+    }
+
+    void OnTriggerStay(Collider col)
+    {
+        if (!col.isTrigger && !bumperColliders.Contains(col))
+            bumperColliders.Add(col);
     }
 
     // Scene Only
