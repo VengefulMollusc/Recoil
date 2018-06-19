@@ -235,16 +235,12 @@ public class HoverMotor : MonoBehaviour
             rb.AddForce(Vector3.up * force * Time.fixedDeltaTime, ForceMode.Impulse);
         }
 
-        // Apply force away from surface if flat against it (to stop sticking to vertical surfaces)
+        // Apply hover force away from surface if flat against it (to stop sticking to vertical surfaces)
         // raycast up/down for short distance
         if (Physics.Raycast(position, -up, 3f, spherecastMask))
-        {
-            rb.AddForce(up * hoverForce * Time.fixedDeltaTime);
-        }
+            rb.AddForce(up * hoverForce * Time.fixedDeltaTime, ForceMode.Impulse);
         else if (Physics.Raycast(position, up, 3f, spherecastMask))
-        {
-            rb.AddForce(-up * hoverForce * Time.fixedDeltaTime);
-        }
+            rb.AddForce(-up * hoverForce * Time.fixedDeltaTime, ForceMode.Impulse);
 
         // apply vertical momentum drag
         Vector3 velocity = rb.velocity;
