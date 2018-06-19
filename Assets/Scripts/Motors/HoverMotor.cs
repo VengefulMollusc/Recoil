@@ -243,8 +243,9 @@ public class HoverMotor : MonoBehaviour
         RaycastHit hitInfo;
         if (Physics.SphereCast(origin, sphereCastRadius, Vector3.down, out hitInfo, hoverHeight, raycastMask))
         {
-            // TODO: replace MapValues where can with hitinfo.dist/hoverheight calculations etc
-            float force = Utilities.MapValues(hitInfo.distance, hoverHeight, 0f, 0f, boosting ? hoverForce * boostHoverForceMultiplier : hoverForce);
+            // Apply hover force
+            float force = (1 - hitInfo.distance / hoverHeight) *
+                       (boosting ? hoverForce * boostHoverForceMultiplier : hoverForce);
             rb.AddForce(Vector3.up * force * Time.fixedDeltaTime, ForceMode.Impulse);
         }
 
@@ -263,7 +264,7 @@ public class HoverMotor : MonoBehaviour
             foreach (Collider col in bumperColliders)
             {
                 Vector3 toClosestPoint = col.ClosestPoint(position) - position;
-                float distRatio = 1 - (toClosestPoint.sqrMagnitude / bumperCollRadiusSqrd);
+                float distRatio = 1 - toClosestPoint.sqrMagnitude / bumperCollRadiusSqrd;
                 bumperForce -= toClosestPoint.normalized * distRatio * hoverForce;
             }
 
