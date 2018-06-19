@@ -143,8 +143,9 @@ public class HoverMotor : MonoBehaviour
         ApplyTurningForce();
         DampenTurning();
 
-        // Hover force and gyro correction
+        // Hover force, bumper forces and gyro correction
         ApplyHoverForce();
+        ApplyBumperForce();
         GyroCorrection();
     }
 
@@ -234,8 +235,17 @@ public class HoverMotor : MonoBehaviour
             rb.AddForce(Vector3.up * force * Time.fixedDeltaTime, ForceMode.Impulse);
         }
 
+        // apply vertical momentum drag
+        Vector3 velocity = rb.velocity;
+        velocity.y *= 1f - verticalDrag;
+        rb.velocity = velocity;
+    }
+
+    void ApplyBumperForce()
+    {
         // Apply hover force away from surface if flat against it (to stop sticking to vertical surfaces)
         // raycast up/down for short distance
+        RaycastHit hitInfo;
         if (Physics.Raycast(position, -up, out hitInfo, 3f, raycastMask))
         {
             float force = Utilities.MapValues(hitInfo.distance, 3f, 0f, 0f, hoverForce);
@@ -246,11 +256,6 @@ public class HoverMotor : MonoBehaviour
             float force = Utilities.MapValues(hitInfo.distance, 3f, 0f, 0f, hoverForce);
             rb.AddForce(-up * force * Time.fixedDeltaTime, ForceMode.Impulse);
         }
-
-        // apply vertical momentum drag
-        Vector3 velocity = rb.velocity;
-        velocity.y *= 1f - verticalDrag;
-        rb.velocity = velocity;
     }
 
     void GyroCorrection()
