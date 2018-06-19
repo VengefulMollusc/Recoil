@@ -39,7 +39,7 @@ public class HoverMotor : MonoBehaviour
     [SerializeField] private float heightChangeForce = 3f;
     [SerializeField] private float heightChangeRate = 10f;
     [SerializeField] private float hoverForce = 30f;
-    [SerializeField] private LayerMask spherecastMask;
+    [SerializeField] private LayerMask raycastMask;
     [SerializeField] private float sphereCastRadius = 10f;
 
     [Header("Gyro")]
@@ -228,19 +228,24 @@ public class HoverMotor : MonoBehaviour
         // spherecast down and apply hover force relative to height
         Vector3 origin = position + (Vector3.up * sphereCastRadius);
         RaycastHit hitInfo;
-        if (Physics.SphereCast(origin, sphereCastRadius, Vector3.down, out hitInfo, hoverHeight, spherecastMask))
+        if (Physics.SphereCast(origin, sphereCastRadius, Vector3.down, out hitInfo, hoverHeight, raycastMask))
         {
-            float distanceToGround = hitInfo.distance;
-            float force = Utilities.MapValues(distanceToGround, hoverHeight, 0f, 0f, boosting ? hoverForce * boostHoverForceMultiplier : hoverForce);
+            float force = Utilities.MapValues(hitInfo.distance, hoverHeight, 0f, 0f, boosting ? hoverForce * boostHoverForceMultiplier : hoverForce);
             rb.AddForce(Vector3.up * force * Time.fixedDeltaTime, ForceMode.Impulse);
         }
 
         // Apply hover force away from surface if flat against it (to stop sticking to vertical surfaces)
         // raycast up/down for short distance
-        if (Physics.Raycast(position, -up, 3f, spherecastMask))
-            rb.AddForce(up * hoverForce * Time.fixedDeltaTime, ForceMode.Impulse);
-        else if (Physics.Raycast(position, up, 3f, spherecastMask))
-            rb.AddForce(-up * hoverForce * Time.fixedDeltaTime, ForceMode.Impulse);
+        if (Physics.Raycast(position, -up, out hitInfo, 3f, raycastMask))
+        {
+            float force = Utilities.MapValues(hitInfo.distance, 3f, 0f, 0f, hoverForce);
+            rb.AddForce(up * force * Time.fixedDeltaTime, ForceMode.Impulse);
+        }
+        else if (Physics.Raycast(position, up, out hitInfo, 3f, raycastMask))
+        {
+            float force = Utilities.MapValues(hitInfo.distance, 3f, 0f, 0f, hoverForce);
+            rb.AddForce(-up * force * Time.fixedDeltaTime, ForceMode.Impulse);
+        }
 
         // apply vertical momentum drag
         Vector3 velocity = rb.velocity;
