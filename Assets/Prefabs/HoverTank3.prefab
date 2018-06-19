@@ -26,7 +26,7 @@ GameObject:
   - component: {fileID: 114046097406454780}
   - component: {fileID: 114823834796332608}
   - component: {fileID: 135055120569449770}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HoverTank3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -71,7 +71,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1054013353523638}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalPosition: {x: 0, y: 10, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4495668689419440}
