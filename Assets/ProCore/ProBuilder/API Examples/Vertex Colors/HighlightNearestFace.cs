@@ -4,7 +4,7 @@ using ProBuilder2.Common;
 
 /**
  *	Move a sphere around the surface of a ProBuilder mesh, changing the
- *	vertex color of the nearest face.
+ *	vertex colour of the nearest face.
  *
  *	Scene setup:  Create a Unity Sphere primitive in a new scene, then attach
  *	this script to the sphere.  Press 'Play'
@@ -88,7 +88,7 @@ public class HighlightNearestFace : MonoBehaviour
 		// the pb_Object.SetColors(Color[] colors); function instead.
 		target.SetFaceColor(nearest, Color.blue);
 
-		// Apply the stored vertex color array to the Unity mesh.
+		// Apply the stored vertex colour array to the Unity mesh.
 		target.RefreshColors();
 	}
 

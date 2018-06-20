@@ -250,13 +250,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1272853039}
-  m_LocalRotation: {x: -0.6916064, y: -0.010437468, z: 0.009920923, w: -0.7221311}
-  m_LocalPosition: {x: -2.4140744, y: 935.6039, z: -41.280125}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 900, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &1926648402
 GameObject:
   m_ObjectHideFlags: 0
@@ -285,6 +285,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 420f6b2c43c8e47469109a7e68fc997b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  drawMode: 1
   mapWidth: 100
   mapHeight: 100
   noiseScale: 30
@@ -294,6 +295,13 @@ MonoBehaviour:
   seed: 4
   offset: {x: 0, y: 0}
   autoUpdate: 1
+  regions:
+  - name: Water
+    height: 0.4
+    colour: {r: 0.21950692, g: 0.66946363, b: 0.85294116, a: 0}
+  - name: Land
+    height: 1
+    colour: {r: 0.20841485, g: 0.8014706, b: 0.12964964, a: 0}
 --- !u!4 &1926648404
 Transform:
   m_ObjectHideFlags: 0

@@ -18,7 +18,7 @@ namespace ProBuilder2.Examples
 			// Create a new ProBuilder cube to work with.
 			pb = pb_ShapeGenerator.CubeGenerator(Vector3.one);
 
-			// Cycle through each unique vertex in the cube (8 total), and assign a color
+			// Cycle through each unique vertex in the cube (8 total), and assign a colour
 			// to the index in the sharedIndices array.
 			int si_len = pb.sharedIndices.Length;
 			Color[] vertexColors = new Color[si_len];
@@ -28,7 +28,7 @@ namespace ProBuilder2.Examples
 			}
 
 			// Now go through each face (vertex colors are stored the pb_Face class) and
-			// assign the pre-calculated index color to each index in the triangles array.
+			// assign the pre-calculated index colour to each index in the triangles array.
 			Color[] colors = pb.colors;
 
 			for(int CurSharedIndex = 0; CurSharedIndex < pb.sharedIndices.Length; CurSharedIndex++)
@@ -48,7 +48,7 @@ namespace ProBuilder2.Examples
 
 		/**
 		 * Convert HSV to RGB.
-		 *  http://www.cs.rit.edu/~ncs/color/t_convert.html
+		 *  http://www.cs.rit.edu/~ncs/colour/t_convert.html
 		 *	r,g,b values are from 0 to 1
 		 *	h = [0,360], s = [0,1], v = [0,1]
 		 *	if s == 0, then h = -1 (undefined)

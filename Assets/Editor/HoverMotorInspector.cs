@@ -12,7 +12,7 @@ public class HoverMotorInspector : Editor
     //    HoverMotor motor = target as HoverMotor;
     //    float hoverHeight = motor.hoverHeight;
     //    Vector3 origin = motor.transform.position;
-    //    Handles.color = Color.red;
+    //    Handles.colour = Color.red;
     //    float size = motor.sphereCastRadius * 2f;
 
     //    //Handles.SphereHandleCap(0, origin + (Vector3.up * motor.sphereCastRadius), Quaternion.identity, size, EventType.Repaint);
@@ -32,13 +32,13 @@ public class HoverMotorInspector : Editor
     //    HoverMotor motor = target as HoverMotor;
     //    float hoverHeight = motor.hoverHeight;
     //    Vector3 origin = motor.transform.position;
-    //    Handles.color = Color.red;
+    //    Handles.colour = Color.red;
     //    float size = motor.sphereCastRadius;
 
     //    //    //Handles.SphereHandleCap(0, origin + (Vector3.up * motor.sphereCastRadius), Quaternion.identity, size, EventType.Repaint);
     //    //    Handles.SphereHandleCap(0, origin + (Vector3.up * motor.sphereCastRadius) + (Vector3.down * hoverHeight), Quaternion.identity, size, EventType.Repaint);
 
-    //    Gizmos.color = Color.red;
+    //    Gizmos.colour = Color.red;
     //    Gizmos.DrawWireSphere(origin + (Vector3.up * size) + (Vector3.down * hoverHeight), size);
     //}
 }

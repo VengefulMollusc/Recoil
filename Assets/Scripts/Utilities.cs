@@ -131,11 +131,11 @@ public class Utilities : MonoBehaviour {
         return (controlNet + chord) / 2;
     }
 
-    //public static Color ChangeColorBrightness(Color color, float correctionFactor)
+    //public static Color ChangeColorBrightness(Color colour, float correctionFactor)
     //{
-    //    float red = color.r;
-    //    float green = color.g;
-    //    float blue =color.b;
+    //    float red = colour.r;
+    //    float green = colour.g;
+    //    float blue = colour.b;
 
     //    if (correctionFactor < 0)
     //    {
@@ -151,7 +151,7 @@ public class Utilities : MonoBehaviour {
     //        blue = (255 - blue) * correctionFactor + blue;
     //    }
 
-    //    return new Color((int)red, (int)green, (int)blue, color.a);
+    //    return new Color((int)red, (int)green, (int)blue, colour.a);
     //}
 
 
