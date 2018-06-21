@@ -14,8 +14,8 @@ MonoBehaviour:
   autoUpdate: 1
   uniformScale: 5
   useFlatShading: 0
-  useFalloff: 1
-  meshHeightMultiplier: 9.9
+  useFalloff: 0
+  meshHeightMultiplier: 15.4
   meshHeightCurve:
     serializedVersion: 2
     m_Curve:
@@ -26,16 +26,10 @@ MonoBehaviour:
       outSlope: 0
       tangentMode: 0
     - serializedVersion: 2
-      time: 0.40279657
-      value: 0.0017606765
-      inSlope: 0.085080035
-      outSlope: 0.085080035
-      tangentMode: 0
-    - serializedVersion: 2
-      time: 1.088966
-      value: 1.1981717
-      inSlope: 2.5325046
-      outSlope: 2.5325046
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
