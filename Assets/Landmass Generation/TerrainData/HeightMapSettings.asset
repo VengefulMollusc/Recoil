@@ -8,15 +8,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69d0b57391132574a95420e3684b41ec, type: 3}
-  m_Name: DefaultTerrain
+  m_Script: {fileID: 11500000, guid: 993edd743d6ec2f49af5c45163f8cdfe, type: 3}
+  m_Name: HeightMapSettings
   m_EditorClassIdentifier: 
   autoUpdate: 1
-  uniformScale: 5
-  useFlatShading: 1
+  noiseSettings:
+    normaliseMode: 1
+    scale: 50
+    octaves: 6
+    persistance: 0.6
+    lacunarity: 2
+    seed: 23
+    offset: {x: 0, y: 0}
   useFalloff: 0
-  meshHeightMultiplier: 15.4
-  meshHeightCurve:
+  heightMultiplier: 50
+  heightCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 2
@@ -24,6 +30,12 @@ MonoBehaviour:
       value: 0
       inSlope: 0
       outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.3746726
+      value: 0.33884802
+      inSlope: 0.88334084
+      outSlope: 0.88334084
       tangentMode: 0
     - serializedVersion: 2
       time: 1
