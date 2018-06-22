@@ -239,9 +239,9 @@ public class HoverMotor : MonoBehaviour
     void ApplyHoverForce()
     {
         // spherecast down and apply hover force relative to height
-        Vector3 origin = position + (Vector3.up * sphereCastRadius);
+        Vector3 sphereCastOrigin = position + (Vector3.up * sphereCastRadius);
         RaycastHit hitInfo;
-        if (Physics.SphereCast(origin, sphereCastRadius, Vector3.down, out hitInfo, hoverHeight, raycastMask))
+        if (Physics.SphereCast(sphereCastOrigin, sphereCastRadius, Vector3.down, out hitInfo, hoverHeight, raycastMask))
         {
             // Apply hover force
             float force = (1 - hitInfo.distance / hoverHeight) *
