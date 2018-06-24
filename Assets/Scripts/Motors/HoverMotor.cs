@@ -33,15 +33,17 @@ public class HoverMotor : MonoBehaviour
     [SerializeField] private float boostRechargeDelay = 1.5f;
 
     [Header("Hover")]
-    [SerializeField]
-    private float hoverHeight = 15f;
+    public float hoverHeight = 15f;
     [SerializeField] private float minHoverHeight = 10f;
     [SerializeField] private float maxHoverHeight = 20f;
     [SerializeField] private float heightChangeForce = 3f;
     [SerializeField] private float heightChangeRate = 10f;
     [SerializeField] private float hoverForce = 30f;
     [SerializeField] private LayerMask raycastMask;
-    [SerializeField] private float sphereCastRadius = 10f;
+
+    //[SerializeField] private float sphereCastRadius = 10f;
+    public List<Vector3> raycastDirections;
+    public float rayCastHeightModifier = 2f;
 
     [Header("Gyro")]
     [SerializeField]
@@ -86,6 +88,11 @@ public class HoverMotor : MonoBehaviour
         boostHoverForceMultiplier = 1f;
 
         UpdateVariables();
+
+        foreach (Vector3 ray in raycastDirections)
+        {
+            ray.Normalize();
+        }
     }
 
     void UpdateVariables()
@@ -154,7 +161,7 @@ public class HoverMotor : MonoBehaviour
 
         // Hover force, bumper forces and gyro correction
         ApplyHoverForce();
-        ApplyBumperForce();
+        //ApplyBumperForce();
         GyroCorrection();
 
         // reset bumper collider list
@@ -238,15 +245,37 @@ public class HoverMotor : MonoBehaviour
 
     void ApplyHoverForce()
     {
-        // spherecast down and apply hover force relative to height
-        Vector3 sphereCastOrigin = position + (Vector3.up * sphereCastRadius);
-        RaycastHit hitInfo;
-        if (Physics.SphereCast(sphereCastOrigin, sphereCastRadius, Vector3.down, out hitInfo, hoverHeight, raycastMask))
+        //// spherecast down and apply hover force relative to height
+        //Vector3 sphereCastOrigin = position + (Vector3.up * sphereCastRadius);
+        //RaycastHit hitInfo;
+        //if (Physics.SphereCast(sphereCastOrigin, sphereCastRadius, Vector3.down, out hitInfo, hoverHeight, raycastMask))
+        //{
+        //    // Apply hover force
+        //    float force = (1 - hitInfo.distance / hoverHeight) *
+        //               (boosting ? hoverForce * boostHoverForceMultiplier : hoverForce);
+        //    rb.AddForce(Vector3.up * force * Time.fixedDeltaTime, ForceMode.Impulse);
+        //}
+
+        // raycast and apply hover force
+        float maxHoverForce = 0f;
+        Vector3 origin = position + (Vector3.up * rayCastHeightModifier);
+        foreach (Vector3 ray in raycastDirections)
         {
-            // Apply hover force
-            float force = (1 - hitInfo.distance / hoverHeight) *
-                       (boosting ? hoverForce * boostHoverForceMultiplier : hoverForce);
-            rb.AddForce(Vector3.up * force * Time.fixedDeltaTime, ForceMode.Impulse);
+            RaycastHit hitInfo;
+            float dot = (1f + Vector3.Dot(Vector3.up, ray)) * 2f;
+            float rayLength = hoverHeight + (hoverHeight * dot);
+            if (Physics.Raycast(origin, ray, out hitInfo, rayLength, raycastMask))
+            {
+                float force = (1 - (hitInfo.distance - rayCastHeightModifier) / (rayLength - rayCastHeightModifier)) *
+                               (boosting ? hoverForce * boostHoverForceMultiplier : hoverForce);
+                if (force > maxHoverForce)
+                    maxHoverForce = force;
+            }
+        }
+
+        if (maxHoverForce > 0f)
+        {
+            rb.AddForce(Vector3.up * maxHoverForce * Time.fixedDeltaTime, ForceMode.Impulse);
         }
 
         // apply vertical momentum drag
@@ -255,22 +284,22 @@ public class HoverMotor : MonoBehaviour
         rb.velocity = velocity;
     }
 
-    void ApplyBumperForce()
-    {
-        // Apply hover force away from near surfaces
-        if (bumperColliders.Count > 0)
-        {
-            Vector3 bumperForce = Vector3.zero;
-            foreach (Collider col in bumperColliders)
-            {
-                Vector3 toClosestPoint = col.ClosestPoint(position) - position;
-                float distRatio = 1 - toClosestPoint.sqrMagnitude / bumperCollRadiusSqrd;
-                bumperForce -= toClosestPoint.normalized * distRatio * hoverForce;
-            }
+    //void ApplyBumperForce()
+    //{
+    //    // Apply hover force away from near surfaces
+    //    if (bumperColliders.Count > 0)
+    //    {
+    //        Vector3 bumperForce = Vector3.zero;
+    //        foreach (Collider col in bumperColliders)
+    //        {
+    //            Vector3 toClosestPoint = col.ClosestPoint(position) - position;
+    //            float distRatio = 1 - toClosestPoint.sqrMagnitude / bumperCollRadiusSqrd;
+    //            bumperForce -= toClosestPoint.normalized * distRatio * hoverForce;
+    //        }
 
-            rb.AddForce(bumperForce * Time.fixedDeltaTime, ForceMode.Impulse);
-        }
-    }
+    //        rb.AddForce(bumperForce * Time.fixedDeltaTime, ForceMode.Impulse);
+    //    }
+    //}
 
     void GyroCorrection()
     {
@@ -306,17 +335,19 @@ public class HoverMotor : MonoBehaviour
         }
     }
 
-    void OnTriggerStay(Collider col)
-    {
-        if (!col.isTrigger && !bumperColliders.Contains(col))
-            bumperColliders.Add(col);
-    }
+    //void OnTriggerStay(Collider col)
+    //{
+    //    if (!col.isTrigger && !bumperColliders.Contains(col))
+    //    {
+    //        bumperColliders.Add(col);
+    //    }
+    //}
 
-    // Scene Only
-    void OnDrawGizmosSelected()
-    {
-        Vector3 origin = position;
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(origin + (Vector3.up * sphereCastRadius) + (Vector3.down * hoverHeight), sphereCastRadius);
-    }
+    //// Scene Only
+    //void OnDrawGizmosSelected()
+    //{
+    //    Vector3 origin = position;
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawWireSphere(origin + (Vector3.up * sphereCastRadius) + (Vector3.down * hoverHeight), sphereCastRadius);
+    //}
 }

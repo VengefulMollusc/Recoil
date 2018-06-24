@@ -7,25 +7,25 @@ using System.Collections.Generic;
 public class HoverMotorInspector : Editor
 {
 
-    //void OnSceneGUI()
-    //{
-    //    HoverMotor motor = target as HoverMotor;
-    //    float hoverHeight = motor.hoverHeight;
-    //    Vector3 origin = motor.transform.position;
-    //    Handles.colour = Color.red;
-    //    float size = motor.sphereCastRadius * 2f;
+    void OnSceneGUI()
+    {
+        HoverMotor motor = target as HoverMotor;
+        float hoverHeight = motor.hoverHeight;
+        Vector3 origin = motor.transform.position + (Vector3.up * motor.rayCastHeightModifier);
+        Handles.color = Color.red;
+        //float size = motor.sphereCastRadius * 2f;
 
-    //    //Handles.SphereHandleCap(0, origin + (Vector3.up * motor.sphereCastRadius), Quaternion.identity, size, EventType.Repaint);
-    //    Handles.SphereHandleCap(0, origin + (Vector3.up * motor.sphereCastRadius) + (Vector3.down * hoverHeight), Quaternion.identity, size, EventType.Repaint);
+        //Handles.SphereHandleCap(0, origin + (Vector3.up * motor.sphereCastRadius), Quaternion.identity, size, EventType.Repaint);
+        //Handles.SphereHandleCap(0, origin + (Vector3.up * motor.sphereCastRadius) + (Vector3.down * hoverHeight), Quaternion.identity, size, EventType.Repaint);
 
-    //    //List<Vector3> directions = motor.raycastDirections;
-    //    //foreach (Vector3 ray in directions)
-    //    //{
-    //    //    float dot = 1f + Vector3.Dot(Vector3.up, ray);
-    //    //    float rayLength = hoverHeight + (hoverHeight * dot);
-    //    //    Handles.DrawLine(origin, origin + (ray.normalized * rayLength));
-    //    //}
-    //}
+        List<Vector3> directions = motor.raycastDirections;
+        foreach (Vector3 ray in directions)
+        {
+            float dot = (1f + Vector3.Dot(Vector3.up, ray.normalized)) * 2f;
+            float rayLength = hoverHeight + (hoverHeight * dot);
+            Handles.DrawLine(origin, origin + (ray.normalized * rayLength));
+        }
+    }
 
     //void OnDrawGizmosSelected()
     //{

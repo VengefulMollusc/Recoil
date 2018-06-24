@@ -241,6 +241,20 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   sphereCastRadius: 40
+  raycastDirections:
+  - {x: 0, y: -1, z: 0}
+  - {x: 1, y: -1, z: 0}
+  - {x: -1, y: -1, z: 0}
+  - {x: 0, y: -1, z: 1}
+  - {x: 0, y: -1, z: -1}
+  - {x: 0.5, y: -0.35, z: 0.5}
+  - {x: -0.5, y: -0.35, z: 0.5}
+  - {x: 0.5, y: -0.35, z: -0.5}
+  - {x: -0.5, y: -0.35, z: -0.5}
+  - {x: 1, y: -0.25, z: 0}
+  - {x: -1, y: -0.25, z: 0}
+  - {x: 0, y: -0.25, z: 1}
+  - {x: 0, y: -0.25, z: -1}
   gyroRotationLimit: 0.7
   gyroCorrectionStrength: 6
   rotationLimit: 0.6
