@@ -21,7 +21,7 @@ public class HoverMotorInspector : Editor
         List<Vector3> directions = motor.raycastDirections;
         foreach (Vector3 ray in directions)
         {
-            float dot = (1f + Vector3.Dot(Vector3.up, ray.normalized)) * 2f;
+            float dot = (1f + Vector3.Dot(Vector3.up, ray.normalized)) * motor.rayCastHorizontalLengthModifier;
             float rayLength = hoverHeight + (hoverHeight * dot);
             Handles.DrawLine(origin, origin + (ray.normalized * rayLength));
         }

@@ -40,10 +40,9 @@ public class HoverMotor : MonoBehaviour
     [SerializeField] private float heightChangeRate = 10f;
     [SerializeField] private float hoverForce = 30f;
     [SerializeField] private LayerMask raycastMask;
-
-    //[SerializeField] private float sphereCastRadius = 10f;
     public List<Vector3> raycastDirections;
     public float rayCastHeightModifier = 2f;
+    public float rayCastHorizontalLengthModifier = 2.5f;
 
     [Header("Gyro")]
     [SerializeField]
@@ -248,7 +247,7 @@ public class HoverMotor : MonoBehaviour
         foreach (Vector3 ray in raycastDirections)
         {
             RaycastHit hitInfo;
-            float dot = (1f + Vector3.Dot(Vector3.up, ray)) * 2f;
+            float dot = (1f + Vector3.Dot(Vector3.up, ray)) * rayCastHorizontalLengthModifier;
             float rayLength = hoverHeight + (hoverHeight * dot);
             if (Physics.Raycast(origin, ray, out hitInfo, rayLength, raycastMask))
             {
@@ -277,6 +276,7 @@ public class HoverMotor : MonoBehaviour
         if (!useBumperForce)
             return;
 
+        // if trigger collider is colliding
         List<Vector3> rays = new List<Vector3>()
         {
             forward,
@@ -287,6 +287,7 @@ public class HoverMotor : MonoBehaviour
             -up
         };
         Vector3 bumperForce = Vector3.zero;
+        // raycast in relative cardinal directions and average force
         foreach (Vector3 ray in rays)
         {
             RaycastHit hitInfo;
@@ -298,20 +299,6 @@ public class HoverMotor : MonoBehaviour
         }
         if (bumperForce != Vector3.zero)
             rb.AddForce(bumperForce * Time.fixedDeltaTime, ForceMode.Impulse);
-
-        //// Apply hover force away from near surfaces
-        //if (bumperColliders.Count > 0)
-        //{
-        //    Vector3 bumperForce = Vector3.zero;
-        //    foreach (Collider col in bumperColliders)
-        //    {
-        //        Vector3 toClosestPoint = col.ClosestPoint(position) - position;
-        //        float distRatio = 1 - toClosestPoint.sqrMagnitude / bumperCollRadiusSqrd;
-        //        bumperForce -= toClosestPoint.normalized * distRatio * hoverForce;
-        //    }
-
-        //    rb.AddForce(bumperForce * Time.fixedDeltaTime, ForceMode.Impulse);
-        //}
     }
 
     void GyroCorrection()
