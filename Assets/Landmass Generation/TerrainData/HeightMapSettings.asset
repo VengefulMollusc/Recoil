@@ -19,7 +19,7 @@ MonoBehaviour:
     persistance: 0.5
     lacunarity: 2
     seed: 12
-    offset: {x: 0, y: 0}
+    offset: {x: 0, y: -200}
   useFalloff: 0
   heightMultiplier: 200
   heightCurve:
@@ -32,14 +32,14 @@ MonoBehaviour:
       outSlope: 0
       tangentMode: 0
     - serializedVersion: 2
-      time: 0.5150565
-      value: 0.41137654
-      inSlope: 0.26598984
-      outSlope: 0.26598984
+      time: 0.5079908
+      value: 0.39429376
+      inSlope: 0.3048554
+      outSlope: 0.3048554
       tangentMode: 0
     - serializedVersion: 2
-      time: 1.1096096
-      value: 1.3332886
+      time: 1.181429
+      value: 1.1749605
       inSlope: 2.9970207
       outSlope: 2.9970207
       tangentMode: 0
