@@ -61,9 +61,8 @@ public class HoverMotor : MonoBehaviour
     private float boostState;
     private float boostHoverForceMultiplier;
 
-    private List<Collider> bumperColliders;
+    private bool useBumperForce;
     private float bumperColliderRadius;
-    private float bumperCollRadiusSqrd;
 
     // Cached variables
     private Vector3 position;
@@ -78,9 +77,7 @@ public class HoverMotor : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         gravityVector = Vector3.down * gravityForce;
 
-        bumperColliders = new List<Collider>();
         bumperColliderRadius = GetComponent<SphereCollider>().radius;
-        bumperCollRadiusSqrd = bumperColliderRadius * bumperColliderRadius;
 
         // sqr maxspeed for cheaper comparisons later
         maxSpeed *= maxSpeed;
@@ -161,11 +158,11 @@ public class HoverMotor : MonoBehaviour
 
         // Hover force, bumper forces and gyro correction
         ApplyHoverForce();
-        //ApplyBumperForce();
+        ApplyBumperForce();
         GyroCorrection();
 
-        // reset bumper collider list
-        bumperColliders = new List<Collider>();
+        // reset variables
+        useBumperForce = false;
     }
 
     void ApplyMovementForce()
@@ -245,17 +242,6 @@ public class HoverMotor : MonoBehaviour
 
     void ApplyHoverForce()
     {
-        //// spherecast down and apply hover force relative to height
-        //Vector3 sphereCastOrigin = position + (Vector3.up * sphereCastRadius);
-        //RaycastHit hitInfo;
-        //if (Physics.SphereCast(sphereCastOrigin, sphereCastRadius, Vector3.down, out hitInfo, hoverHeight, raycastMask))
-        //{
-        //    // Apply hover force
-        //    float force = (1 - hitInfo.distance / hoverHeight) *
-        //               (boosting ? hoverForce * boostHoverForceMultiplier : hoverForce);
-        //    rb.AddForce(Vector3.up * force * Time.fixedDeltaTime, ForceMode.Impulse);
-        //}
-
         // raycast and apply hover force
         float maxHoverForce = 0f;
         Vector3 origin = position + (Vector3.up * rayCastHeightModifier);
@@ -266,13 +252,15 @@ public class HoverMotor : MonoBehaviour
             float rayLength = hoverHeight + (hoverHeight * dot);
             if (Physics.Raycast(origin, ray, out hitInfo, rayLength, raycastMask))
             {
-                float force = (1 - (hitInfo.distance - rayCastHeightModifier) / (rayLength - rayCastHeightModifier)) *
-                               (boosting ? hoverForce * boostHoverForceMultiplier : hoverForce);
-                if (force > maxHoverForce)
-                    maxHoverForce = force;
+                if (hitInfo.distance > rayCastHeightModifier) // this check to make sure raycasts ending above player collider dont trigger hover
+                {
+                    float force = (1 - (hitInfo.distance - rayCastHeightModifier) / (rayLength - rayCastHeightModifier)) *
+                                  (boosting ? hoverForce * boostHoverForceMultiplier : hoverForce);
+                    if (force > maxHoverForce)
+                        maxHoverForce = force;
+                }
             }
         }
-
         if (maxHoverForce > 0f)
         {
             rb.AddForce(Vector3.up * maxHoverForce * Time.fixedDeltaTime, ForceMode.Impulse);
@@ -284,22 +272,47 @@ public class HoverMotor : MonoBehaviour
         rb.velocity = velocity;
     }
 
-    //void ApplyBumperForce()
-    //{
-    //    // Apply hover force away from near surfaces
-    //    if (bumperColliders.Count > 0)
-    //    {
-    //        Vector3 bumperForce = Vector3.zero;
-    //        foreach (Collider col in bumperColliders)
-    //        {
-    //            Vector3 toClosestPoint = col.ClosestPoint(position) - position;
-    //            float distRatio = 1 - toClosestPoint.sqrMagnitude / bumperCollRadiusSqrd;
-    //            bumperForce -= toClosestPoint.normalized * distRatio * hoverForce;
-    //        }
+    void ApplyBumperForce()
+    {
+        if (!useBumperForce)
+            return;
 
-    //        rb.AddForce(bumperForce * Time.fixedDeltaTime, ForceMode.Impulse);
-    //    }
-    //}
+        List<Vector3> rays = new List<Vector3>()
+        {
+            forward,
+            -forward,
+            right,
+            -right,
+            up,
+            -up
+        };
+        Vector3 bumperForce = Vector3.zero;
+        foreach (Vector3 ray in rays)
+        {
+            RaycastHit hitInfo;
+            if (Physics.Raycast(position, ray, out hitInfo, bumperColliderRadius, raycastMask))
+            {
+                float force = (1 - hitInfo.distance / bumperColliderRadius) * hoverForce;
+                bumperForce -= ray * force * 2f;
+            }
+        }
+        if (bumperForce != Vector3.zero)
+            rb.AddForce(bumperForce * Time.fixedDeltaTime, ForceMode.Impulse);
+
+        //// Apply hover force away from near surfaces
+        //if (bumperColliders.Count > 0)
+        //{
+        //    Vector3 bumperForce = Vector3.zero;
+        //    foreach (Collider col in bumperColliders)
+        //    {
+        //        Vector3 toClosestPoint = col.ClosestPoint(position) - position;
+        //        float distRatio = 1 - toClosestPoint.sqrMagnitude / bumperCollRadiusSqrd;
+        //        bumperForce -= toClosestPoint.normalized * distRatio * hoverForce;
+        //    }
+
+        //    rb.AddForce(bumperForce * Time.fixedDeltaTime, ForceMode.Impulse);
+        //}
+    }
 
     void GyroCorrection()
     {
@@ -335,19 +348,11 @@ public class HoverMotor : MonoBehaviour
         }
     }
 
-    //void OnTriggerStay(Collider col)
-    //{
-    //    if (!col.isTrigger && !bumperColliders.Contains(col))
-    //    {
-    //        bumperColliders.Add(col);
-    //    }
-    //}
-
-    //// Scene Only
-    //void OnDrawGizmosSelected()
-    //{
-    //    Vector3 origin = position;
-    //    Gizmos.color = Color.red;
-    //    Gizmos.DrawWireSphere(origin + (Vector3.up * sphereCastRadius) + (Vector3.down * hoverHeight), sphereCastRadius);
-    //}
+    void OnTriggerStay(Collider col)
+    {
+        if (!col.isTrigger)
+        {
+            useBumperForce = true;
+        }
+    }
 }
