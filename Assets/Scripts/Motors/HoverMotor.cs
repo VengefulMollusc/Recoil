@@ -247,10 +247,14 @@ public class HoverMotor : MonoBehaviour
         foreach (Vector3 ray in raycastDirections)
         {
             RaycastHit hitInfo;
-            float verticalSpread = hoverHeight * (1f + Vector3.Dot(Vector3.up, ray)) * rayCastHorizontalLengthModifier;
-            Vector3 inputVector3 = (forwardFlat * moveInputVector.y)
-                                 + (rightFlat * moveInputVector.x);
-            float movementSpread = hoverHeight * (1f + Vector3.Dot(inputVector3, ray)) * 0.5f * rayCastHorizontalLengthModifier;
+            float verticalSpread = (1f + Vector3.Dot(Vector3.up, ray)) * hoverHeight * rayCastHorizontalLengthModifier;
+
+            Vector3 movementVector = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+            float movementDot = Vector3.Dot(movementVector, ray);
+            if (movementDot < 0f)
+                movementDot = 0f;
+            float movementSpread = movementDot * hoverHeight * 0.02f * rayCastHorizontalLengthModifier;
+
             float rayLength = hoverHeight + verticalSpread + movementSpread;
             if (Physics.Raycast(origin, ray, out hitInfo, rayLength, raycastMask))
             {
