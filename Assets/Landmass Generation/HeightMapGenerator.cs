@@ -19,6 +19,8 @@ public static class HeightMapGenerator {
             {
                 values[i, j] *= heightCurve_threadSafe.Evaluate(values[i, j]) * settings.heightMultiplier;
 
+                // TODO: apply global falloff map here
+
                 if (values[i, j] > maxValue)
                 {
                     maxValue = values[i, j];

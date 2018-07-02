@@ -23,9 +23,8 @@ public class TerrainGenerator : MonoBehaviour
     float meshWorldSize;
     int chunksVisibleInViewDst;
 
-    // set size generation
-    public bool generateFixedSizeTerrain;
-    public int fixedTerrainSize;
+    private bool generateFixedSizeTerrain;
+    private int fixedTerrainSize;
 
     Dictionary<Vector2, TerrainChunk> terrainChunkDictionary = new Dictionary<Vector2, TerrainChunk>();
     List<TerrainChunk> visibleTerrainChunks = new List<TerrainChunk>();
@@ -39,6 +38,9 @@ public class TerrainGenerator : MonoBehaviour
         meshWorldSize = meshSettings.meshWorldSize;
         chunksVisibleInViewDst = Mathf.RoundToInt(maxViewDist / meshWorldSize);
 
+        generateFixedSizeTerrain = meshSettings.generateFixedSizeTerrain;
+        fixedTerrainSize = meshSettings.fixedTerrainSize;
+        
         UpdateVisibleChunks();
     }
 

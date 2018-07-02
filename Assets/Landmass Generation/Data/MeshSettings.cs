@@ -18,6 +18,10 @@ public class MeshSettings : UpdatableData
     [Range(0, numSupportedFlatShadedChunkSizes - 1)]
     public int flatShadedChunkSizeIndex;
 
+    // set size generation
+    public bool generateFixedSizeTerrain;
+    public int fixedTerrainSize;
+
 
     // num of vertices per line of a mesh rendered at LOD = 0 (including border vertices used for calculating normals)
     public int numVertsPerLine
