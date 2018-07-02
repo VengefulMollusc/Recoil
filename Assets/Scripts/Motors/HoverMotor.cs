@@ -247,8 +247,11 @@ public class HoverMotor : MonoBehaviour
         foreach (Vector3 ray in raycastDirections)
         {
             RaycastHit hitInfo;
-            float upDot = (1f + Vector3.Dot(Vector3.up, ray)) * rayCastHorizontalLengthModifier;
-            float rayLength = hoverHeight + (hoverHeight * upDot);
+            float verticalSpread = hoverHeight * (1f + Vector3.Dot(Vector3.up, ray)) * rayCastHorizontalLengthModifier;
+            Vector3 inputVector3 = (forwardFlat * moveInputVector.y)
+                                 + (rightFlat * moveInputVector.x);
+            float movementSpread = hoverHeight * (1f + Vector3.Dot(inputVector3, ray)) * 0.5f * rayCastHorizontalLengthModifier;
+            float rayLength = hoverHeight + verticalSpread + movementSpread;
             if (Physics.Raycast(origin, ray, out hitInfo, rayLength, raycastMask))
             {
                 if (hitInfo.distance > rayCastHeightModifier) // this check to make sure raycasts ending above player collider dont trigger hover
