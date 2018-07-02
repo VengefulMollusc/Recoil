@@ -16,3 +16,5 @@ MonoBehaviour:
   useFlatShading: 0
   chunkSizeIndex: 2
   flatShadedChunkSizeIndex: 0
+  generateFixedSizeTerrain: 1
+  fixedTerrainSize: 1
