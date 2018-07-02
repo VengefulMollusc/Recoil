@@ -26,6 +26,7 @@ public class TerrainGenerator : MonoBehaviour
     private bool generateFixedSizeTerrain;
     private int fixedTerrainSize;
     private int numVertsPerLine;
+    private int falloffMapSize;
     private float[,] falloffMap;
 
     Dictionary<Vector2, TerrainChunk> terrainChunkDictionary = new Dictionary<Vector2, TerrainChunk>();
@@ -43,9 +44,10 @@ public class TerrainGenerator : MonoBehaviour
         generateFixedSizeTerrain = meshSettings.generateFixedSizeTerrain;
         fixedTerrainSize = meshSettings.fixedTerrainSize;
         numVertsPerLine = meshSettings.numVertsPerLine;
+        falloffMapSize = numVertsPerLine * (fixedTerrainSize * 2 + 1);
 
         if (heightMapSettings.useFalloff)
-            falloffMap = FalloffGenerator.GenerateFalloffMap(numVertsPerLine * ((fixedTerrainSize * 2) + 1));
+            falloffMap = FalloffGenerator.GenerateFalloffMap(falloffMapSize);
 
         UpdateVisibleChunks();
     }
@@ -119,7 +121,7 @@ public class TerrainGenerator : MonoBehaviour
                     colliderLODIndex, transform, viewer, mapMaterial);
 
                 if (generateFixedSizeTerrain && heightMapSettings.useFalloff)
-                    newChunk.UseFalloffMap(falloffMap, numVertsPerLine * (x + fixedTerrainSize), numVertsPerLine * (y + fixedTerrainSize));
+                    newChunk.UseFalloffMap(falloffMap, numVertsPerLine * (x + fixedTerrainSize), falloffMapSize - (numVertsPerLine * (y + fixedTerrainSize + 1)));
 
                 terrainChunkDictionary.Add(viewedChunkCoord, newChunk);
                 newChunk.onVisibilityChanged += OnTerrainChunkVisibilityChanged;
