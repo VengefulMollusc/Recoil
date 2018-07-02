@@ -14,6 +14,8 @@ public class TerrainChunk
     private MeshFilter meshFilter;
     private MeshCollider meshCollider;
 
+    private Rigidbody rigidBody;
+
     private LODInfo[] detailLevels;
     private LODMesh[] lodMeshes;
     private int colliderLODIndex;
@@ -45,6 +47,8 @@ public class TerrainChunk
         meshRenderer = meshObject.AddComponent<MeshRenderer>();
         meshFilter = meshObject.AddComponent<MeshFilter>();
         meshCollider = meshObject.AddComponent<MeshCollider>();
+        rigidBody = meshObject.AddComponent<Rigidbody>();
+        rigidBody.isKinematic = true;
         meshRenderer.material = material;
 
         meshObject.transform.position = new Vector3(position.x, 0, position.y);
