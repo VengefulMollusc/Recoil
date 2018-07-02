@@ -73,9 +73,9 @@ public class TerrainGenerator : MonoBehaviour
                 visibleTerrainChunks[i].UpdateTerrainChunk();
             }
 
-            for (int y = -fixedTerrainSize; y < fixedTerrainSize; y++)
+            for (int y = -fixedTerrainSize; y <= fixedTerrainSize; y++)
             {
-                for (int x = -fixedTerrainSize; x < fixedTerrainSize; x++)
+                for (int x = -fixedTerrainSize; x <= fixedTerrainSize; x++)
                 {
                     Vector2 viewedChunkCoord = new Vector2(x, y);
                     if (!alreadyUpdatedChunkCoords.Contains(viewedChunkCoord))

@@ -177,7 +177,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!43 &604380034
+--- !u!43 &443730430
 Mesh:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -447,7 +447,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 748298191}
-  m_Mesh: {fileID: 604380034}
+  m_Mesh: {fileID: 443730430}
 --- !u!4 &748298194
 Transform:
   m_ObjectHideFlags: 0
@@ -701,7 +701,7 @@ MonoBehaviour:
   viewer: {fileID: 2065105563}
   mapMaterial: {fileID: 2100000, guid: 3c70e9d85aa9cc3478a472f32c89b9fd, type: 2}
   generateFixedSizeTerrain: 1
-  fixedTerrainSize: 3
+  fixedTerrainSize: 2
 --- !u!114 &1926648407
 MonoBehaviour:
   m_ObjectHideFlags: 0
