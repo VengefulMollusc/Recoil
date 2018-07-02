@@ -319,7 +319,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 748298191}
-  m_Mesh: {fileID: 1826689873}
+  m_Mesh: {fileID: 1928118640}
 --- !u!4 &748298194
 Transform:
   m_ObjectHideFlags: 0
@@ -518,7 +518,72 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
---- !u!43 &1826689873
+--- !u!1 &1926648402
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1926648404}
+  - component: {fileID: 1926648406}
+  - component: {fileID: 1926648407}
+  m_Layer: 0
+  m_Name: Map Generator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1926648404
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1926648402}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1926648406
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1926648402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9746ccfbf63d8f74998fed0731bd7867, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  colliderLODIndex: 0
+  detailLevels:
+  - lod: 0
+    visibleDistThreshold: 400
+  - lod: 1
+    visibleDistThreshold: 600
+  - lod: 3
+    visibleDistThreshold: 800
+  meshSettings: {fileID: 11400000, guid: 05655c8a63f4f244884aa02f179f397f, type: 2}
+  heightMapSettings: {fileID: 11400000, guid: 43777388e6d9a85479dbc91887d2252c, type: 2}
+  textureSettings: {fileID: 11400000, guid: be57d2d96ac32164eae70681efaa5621, type: 2}
+  viewer: {fileID: 2065105563}
+  mapMaterial: {fileID: 2100000, guid: 3c70e9d85aa9cc3478a472f32c89b9fd, type: 2}
+--- !u!114 &1926648407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1926648402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3adf61413531d41489ea1bec8cd678d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!43 &1928118640
 Mesh:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -646,71 +711,6 @@ Mesh:
   m_BakedConvexCollisionMesh: 
   m_BakedTriangleCollisionMesh: 
   m_MeshOptimized: 0
---- !u!1 &1926648402
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1926648404}
-  - component: {fileID: 1926648406}
-  - component: {fileID: 1926648407}
-  m_Layer: 0
-  m_Name: Map Generator
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1926648404
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1926648402}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1926648406
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1926648402}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9746ccfbf63d8f74998fed0731bd7867, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  colliderLODIndex: 0
-  detailLevels:
-  - lod: 0
-    visibleDistThreshold: 400
-  - lod: 1
-    visibleDistThreshold: 600
-  - lod: 3
-    visibleDistThreshold: 800
-  meshSettings: {fileID: 11400000, guid: 05655c8a63f4f244884aa02f179f397f, type: 2}
-  heightMapSettings: {fileID: 11400000, guid: 43777388e6d9a85479dbc91887d2252c, type: 2}
-  textureSettings: {fileID: 11400000, guid: be57d2d96ac32164eae70681efaa5621, type: 2}
-  viewer: {fileID: 2065105563}
-  mapMaterial: {fileID: 2100000, guid: 3c70e9d85aa9cc3478a472f32c89b9fd, type: 2}
---- !u!114 &1926648407
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1926648402}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3adf61413531d41489ea1bec8cd678d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &2065105563 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4521391129715992, guid: de60a3e26bc129744af5a032f06c19c5,
@@ -794,7 +794,7 @@ Transform:
   m_GameObject: {fileID: 2067108726}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 39.2, y: 0.1, z: 39.2}
+  m_LocalScale: {x: 117.6, y: 0.1, z: 117.6}
   m_Children: []
   m_Father: {fileID: 930323083}
   m_RootOrder: 0

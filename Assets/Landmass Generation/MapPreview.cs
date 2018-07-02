@@ -35,20 +35,36 @@ public class MapPreview : MonoBehaviour
         textureData.ApplyToMaterial(terrainMaterial);
         textureData.UpdateMeshHeights(terrainMaterial, heightMapSettings.minHeight, heightMapSettings.maxHeight);
 
-        HeightMap heightMap = HeightMapGenerator.GenerateHeightMap(meshSettings.numVertsPerLine, heightMapSettings, Vector2.zero);
+        int previewSize = meshSettings.numVertsPerLine;
+        int gridSize = 1;
+
+        if (meshSettings.generateFixedSizeTerrain)
+        {
+            gridSize = meshSettings.fixedTerrainSize * 2 + 1;
+            int numVertsPerLine = meshSettings.numVertsPerLine;
+            previewSize = numVertsPerLine * gridSize;
+        }
 
         if (drawMode == DrawMode.NoiseMap)
-            DrawTexture(TextureGenerator.TextureFromHeightMap(heightMap));
+        {
+            HeightMap heightMap = HeightMapGenerator.GenerateHeightMap(previewSize, heightMapSettings, Vector2.zero);
+            DrawTexture(TextureGenerator.TextureFromHeightMap(heightMap), gridSize);
+        }
         else if (drawMode == DrawMode.DrawMesh)
+        {
+            HeightMap heightMap = HeightMapGenerator.GenerateHeightMap(meshSettings.numVertsPerLine, heightMapSettings, Vector2.zero);
             DrawMesh(MeshGenerator.GenerateTerrainMesh(heightMap.values, meshSettings, editorPreviewLOD));
+        }
         else if (drawMode == DrawMode.FalloffMap)
-            DrawTexture(TextureGenerator.TextureFromHeightMap(new HeightMap(FalloffGenerator.GenerateFalloffMap(meshSettings.numVertsPerLine), 0, 1)));
+        {
+            DrawTexture(TextureGenerator.TextureFromHeightMap(new HeightMap(FalloffGenerator.GenerateFalloffMap(previewSize), 0, 1)), gridSize);
+        }
     }
 
-    public void DrawTexture(Texture2D texture)
+    public void DrawTexture(Texture2D texture, int gridSize)
     {
         textureRenderer.sharedMaterial.mainTexture = texture;
-        textureRenderer.transform.localScale = new Vector3(meshSettings.meshWorldSize, 1, meshSettings.meshWorldSize) / 10f;
+        textureRenderer.transform.localScale = new Vector3(meshSettings.meshWorldSize * gridSize, 1, meshSettings.meshWorldSize * gridSize) / 10f;
 
         textureRenderer.gameObject.SetActive(true);
         meshFilter.gameObject.SetActive(false);
