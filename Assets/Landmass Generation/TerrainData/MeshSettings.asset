@@ -15,6 +15,6 @@ MonoBehaviour:
   meshScale: 4
   useFlatShading: 0
   chunkSizeIndex: 2
-  flatShadedChunkSizeIndex: 0
+  flatShadedChunkSizeIndex: 1
   generateFixedSizeTerrain: 1
   fixedTerrainSize: 1

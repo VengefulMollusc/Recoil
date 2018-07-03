@@ -95,6 +95,9 @@ public class MapPreview : MonoBehaviour
         float[,] falloffMap = FalloffGenerator.GenerateFalloffMap(previewSize);
         int previewChunkIndex = 0;
 
+        if (previewChunks == null)
+            previewChunks = new List<GameObject>();
+
         for (int x = -fixedTerrainSize; x <= fixedTerrainSize; x++)
         {
             for (int y = -fixedTerrainSize; y <= fixedTerrainSize; y++)
