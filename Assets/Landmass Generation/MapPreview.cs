@@ -66,7 +66,7 @@ public class MapPreview : MonoBehaviour
     public void DrawTexture(Texture2D texture, int gridSize)
     {
         textureRenderer.sharedMaterial.mainTexture = texture;
-        textureRenderer.transform.localScale = new Vector3(meshSettings.meshWorldSize * gridSize, 1, meshSettings.meshWorldSize * gridSize) / 10f;
+        textureRenderer.transform.localScale = new Vector3(-meshSettings.meshWorldSize * gridSize, 1, meshSettings.meshWorldSize * gridSize) / 10f;
 
         textureRenderer.gameObject.SetActive(true);
         meshFilter.gameObject.SetActive(false);
