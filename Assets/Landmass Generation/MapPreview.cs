@@ -81,10 +81,10 @@ public class MapPreview : MonoBehaviour
 
     void ClearPreviewChunks()
     {
-        Debug.Log("Clearing chunks");
         foreach (GameObject chunk in previewChunks)
         {
-            DestroyImmediate(chunk);
+            if (chunk != null)
+                DestroyImmediate(chunk);
         }
         previewChunks.Clear();
     }
@@ -93,7 +93,7 @@ public class MapPreview : MonoBehaviour
     {
         int fixedTerrainSize = meshSettings.fixedTerrainSize;
 
-        float[,] falloffMap = (heightMapSettings.useFalloff) ? FalloffGenerator.GenerateFalloffMap(previewSize) : new float[0,0];
+        float[,] falloffMap = (heightMapSettings.useFalloff) ? FalloffGenerator.GenerateFalloffMap(previewSize) : new float[0, 0];
 
         int previewChunkIndex = 0;
 
@@ -104,6 +104,10 @@ public class MapPreview : MonoBehaviour
             {
                 DestroyImmediate(chunk);
             }
+        }
+        else if (previewChunks.Count > 0 && previewChunks[0] == null)
+        {
+            ClearPreviewChunks();
         }
 
         for (int x = -fixedTerrainSize; x <= fixedTerrainSize; x++)
@@ -163,7 +167,7 @@ public class MapPreview : MonoBehaviour
             for (int i = previewChunks.Count - previewChunkIndex; i > 0; i--)
             {
                 GameObject chunk = previewChunks[previewChunks.Count - 1];
-                previewChunks.RemoveAt(previewChunks.Count-1);
+                previewChunks.RemoveAt(previewChunks.Count - 1);
                 DestroyImmediate(chunk);
             }
         }
