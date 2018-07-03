@@ -63,52 +63,7 @@ public class MapPreview : MonoBehaviour
         {
             if (previewWholeFixedSizeMesh && meshSettings.generateFixedSizeTerrain)
             {
-                int fixedTerrainSize = meshSettings.fixedTerrainSize;
-                float[,] falloffMap = FalloffGenerator.GenerateFalloffMap(previewSize);
-                for (int x = -fixedTerrainSize; x <= fixedTerrainSize; x++)
-                {
-                    for (int y = -fixedTerrainSize; y <= fixedTerrainSize; y++)
-                    {
-                        Vector2 position = new Vector2(x * meshSettings.meshWorldSize, y * meshSettings.meshWorldSize);
-                        Vector2 sampleCenter = position / meshSettings.meshScale;
-                        HeightMap heightMap;
-
-                        if (heightMapSettings.useFalloff)
-                        {
-                            int falloffStartX = meshSettings.numVertsPerLine * (x + fixedTerrainSize);
-                            int falloffStartY = previewSize -
-                                                (meshSettings.numVertsPerLine * (y + fixedTerrainSize + 1));
-
-                            heightMap = HeightMapGenerator.GenerateHeightMapWithFalloff(meshSettings.numVertsPerLine, heightMapSettings,
-                                    sampleCenter, falloffMap, falloffStartX, falloffStartY);
-                        }
-                        else
-                        {
-                            heightMap = HeightMapGenerator.GenerateHeightMap(meshSettings.numVertsPerLine, heightMapSettings,
-                                    sampleCenter);
-                        }
-                        
-
-                        GameObject previewMeshObject = new GameObject("Terrain Preview Chunk")
-                        {
-                            tag = "PreviewChunk"
-                        };
-                        previewMeshObject.AddComponent<HideOnPlay>();
-                        MeshRenderer previewMeshRenderer = previewMeshObject.AddComponent<MeshRenderer>();
-                        previewMeshRenderer.sharedMaterial = terrainMaterial;
-                        MeshFilter previewMeshFilter = previewMeshObject.AddComponent<MeshFilter>();
-
-                        previewMeshObject.transform.position = new Vector3(position.x, 0, position.y);
-                        previewMeshObject.transform.SetParent(previewParent);
-
-                        MeshData meshData =
-                            MeshGenerator.GenerateTerrainMesh(heightMap.values, meshSettings, editorPreviewLOD);
-                        previewMeshFilter.sharedMesh = meshData.CreateMesh();
-                    }
-                }
-
-                textureRenderer.gameObject.SetActive(false);
-                meshFilter.gameObject.SetActive(false);
+                PreviewFixedSizeMesh(previewSize);
             }
             else
             {
@@ -120,6 +75,56 @@ public class MapPreview : MonoBehaviour
         {
             DrawTexture(TextureGenerator.TextureFromHeightMap(new HeightMap(FalloffGenerator.GenerateFalloffMap(previewSize), 0, 1)), gridSize);
         }
+    }
+
+    private void PreviewFixedSizeMesh(int previewSize)
+    {
+        int fixedTerrainSize = meshSettings.fixedTerrainSize;
+        float[,] falloffMap = FalloffGenerator.GenerateFalloffMap(previewSize);
+        for (int x = -fixedTerrainSize; x <= fixedTerrainSize; x++)
+        {
+            for (int y = -fixedTerrainSize; y <= fixedTerrainSize; y++)
+            {
+                Vector2 position = new Vector2(x * meshSettings.meshWorldSize, y * meshSettings.meshWorldSize);
+                Vector2 sampleCenter = position / meshSettings.meshScale;
+                HeightMap heightMap;
+
+                if (heightMapSettings.useFalloff)
+                {
+                    int falloffStartX = meshSettings.numVertsPerLine * (x + fixedTerrainSize);
+                    int falloffStartY = previewSize -
+                                        (meshSettings.numVertsPerLine * (y + fixedTerrainSize + 1));
+
+                    heightMap = HeightMapGenerator.GenerateHeightMapWithFalloff(meshSettings.numVertsPerLine, heightMapSettings,
+                        sampleCenter, falloffMap, falloffStartX, falloffStartY);
+                }
+                else
+                {
+                    heightMap = HeightMapGenerator.GenerateHeightMap(meshSettings.numVertsPerLine, heightMapSettings,
+                        sampleCenter);
+                }
+
+
+                GameObject previewMeshObject = new GameObject("Terrain Preview Chunk")
+                {
+                    tag = "PreviewChunk"
+                };
+                previewMeshObject.AddComponent<HideOnPlay>();
+                MeshRenderer previewMeshRenderer = previewMeshObject.AddComponent<MeshRenderer>();
+                previewMeshRenderer.sharedMaterial = terrainMaterial;
+                MeshFilter previewMeshFilter = previewMeshObject.AddComponent<MeshFilter>();
+
+                previewMeshObject.transform.position = new Vector3(position.x, 0, position.y);
+                previewMeshObject.transform.SetParent(previewParent);
+
+                MeshData meshData =
+                    MeshGenerator.GenerateTerrainMesh(heightMap.values, meshSettings, editorPreviewLOD);
+                previewMeshFilter.sharedMesh = meshData.CreateMesh();
+            }
+        }
+
+        textureRenderer.gameObject.SetActive(false);
+        meshFilter.gameObject.SetActive(false);
     }
 
     public void DrawTexture(Texture2D texture, int gridSize)
