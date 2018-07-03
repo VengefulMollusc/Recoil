@@ -32,14 +32,11 @@ public class MapPreview : MonoBehaviour
 
     public bool autoUpdate;
 
+    private List<GameObject> previewChunks;
+
 
     public void DrawMapInEditor()
     {
-        foreach (GameObject chunk in GameObject.FindGameObjectsWithTag("PreviewChunk"))
-        {
-            DestroyImmediate(chunk);
-        }
-
         textureData.ApplyToMaterial(terrainMaterial);
         textureData.UpdateMeshHeights(terrainMaterial, heightMapSettings.minHeight, heightMapSettings.maxHeight);
 
@@ -50,6 +47,11 @@ public class MapPreview : MonoBehaviour
         {
             gridSize = meshSettings.fixedTerrainSize * 2 + 1;
             previewSize = meshSettings.numVertsPerLine * gridSize;
+        }
+
+        if (drawMode != DrawMode.DrawMesh || !(previewWholeFixedSizeMesh && meshSettings.generateFixedSizeTerrain))
+        {
+            ClearPreviewChunks();
         }
 
         if (drawMode == DrawMode.NoiseMap)
@@ -77,10 +79,22 @@ public class MapPreview : MonoBehaviour
         }
     }
 
+    void ClearPreviewChunks()
+    {
+        Debug.Log("Clearing chunks");
+        foreach (GameObject chunk in previewChunks)
+        {
+            DestroyImmediate(chunk);
+        }
+        previewChunks.Clear();
+    }
+
     private void PreviewFixedSizeMesh(int previewSize)
     {
         int fixedTerrainSize = meshSettings.fixedTerrainSize;
         float[,] falloffMap = FalloffGenerator.GenerateFalloffMap(previewSize);
+        int previewChunkIndex = 0;
+
         for (int x = -fixedTerrainSize; x <= fixedTerrainSize; x++)
         {
             for (int y = -fixedTerrainSize; y <= fixedTerrainSize; y++)
@@ -104,15 +118,26 @@ public class MapPreview : MonoBehaviour
                         sampleCenter);
                 }
 
-
-                GameObject previewMeshObject = new GameObject("Terrain Preview Chunk")
+                GameObject previewMeshObject;
+                MeshFilter previewMeshFilter;
+                if (previewChunkIndex < previewChunks.Count)
                 {
-                    tag = "PreviewChunk"
-                };
-                previewMeshObject.AddComponent<HideOnPlay>();
-                MeshRenderer previewMeshRenderer = previewMeshObject.AddComponent<MeshRenderer>();
-                previewMeshRenderer.sharedMaterial = terrainMaterial;
-                MeshFilter previewMeshFilter = previewMeshObject.AddComponent<MeshFilter>();
+                    previewMeshObject = previewChunks[previewChunkIndex];
+                    previewMeshFilter = previewMeshObject.GetComponent<MeshFilter>();
+                }
+                else
+                {
+                    previewMeshObject = new GameObject("Terrain Preview Chunk")
+                    {
+                        tag = "PreviewChunk"
+                    };
+                    previewChunks.Add(previewMeshObject);
+                    previewMeshObject.AddComponent<HideOnPlay>();
+                    MeshRenderer previewMeshRenderer = previewMeshObject.AddComponent<MeshRenderer>();
+                    previewMeshRenderer.sharedMaterial = terrainMaterial;
+                    previewMeshFilter = previewMeshObject.AddComponent<MeshFilter>();
+                }
+                previewChunkIndex++;
 
                 previewMeshObject.transform.position = new Vector3(position.x, 0, position.y);
                 previewMeshObject.transform.SetParent(previewParent);
@@ -120,6 +145,16 @@ public class MapPreview : MonoBehaviour
                 MeshData meshData =
                     MeshGenerator.GenerateTerrainMesh(heightMap.values, meshSettings, editorPreviewLOD);
                 previewMeshFilter.sharedMesh = meshData.CreateMesh();
+            }
+        }
+
+        if (previewChunkIndex < previewChunks.Count)
+        {
+            for (int i = previewChunks.Count - previewChunkIndex; i > 0; i--)
+            {
+                GameObject chunk = previewChunks[previewChunks.Count - 1];
+                previewChunks.RemoveAt(previewChunks.Count-1);
+                DestroyImmediate(chunk);
             }
         }
 
