@@ -96,7 +96,13 @@ public class MapPreview : MonoBehaviour
         int previewChunkIndex = 0;
 
         if (previewChunks == null)
+        {
             previewChunks = new List<GameObject>();
+            foreach (GameObject chunk in GameObject.FindGameObjectsWithTag("PreviewChunk"))
+            {
+                DestroyImmediate(chunk);
+            }
+        }
 
         for (int x = -fixedTerrainSize; x <= fixedTerrainSize; x++)
         {
