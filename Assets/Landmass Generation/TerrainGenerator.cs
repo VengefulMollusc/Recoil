@@ -42,12 +42,16 @@ public class TerrainGenerator : MonoBehaviour
         chunksVisibleInViewDst = Mathf.RoundToInt(maxViewDist / meshWorldSize);
 
         generateFixedSizeTerrain = meshSettings.generateFixedSizeTerrain;
-        fixedTerrainSize = meshSettings.fixedTerrainSize;
-        numVertsPerLine = meshSettings.numVertsPerLine;
-        falloffMapSize = (numVertsPerLine - 2) * (fixedTerrainSize * 2 + 1) + 2;
 
-        if (heightMapSettings.useFalloff)
-            falloffMap = FalloffGenerator.GenerateFalloffMap(falloffMapSize);
+        if (generateFixedSizeTerrain)
+        {
+            fixedTerrainSize = meshSettings.fixedTerrainSize;
+            numVertsPerLine = meshSettings.numVertsPerLine;
+            falloffMapSize = (numVertsPerLine - 2) * (fixedTerrainSize * 2 + 1) + 2;
+
+            if (heightMapSettings.useFalloff)
+                falloffMap = FalloffGenerator.GenerateFalloffMap(falloffMapSize);
+        }
 
         UpdateVisibleChunks();
     }
@@ -119,17 +123,20 @@ public class TerrainGenerator : MonoBehaviour
             {
                 TerrainChunk newChunk = new TerrainChunk(viewedChunkCoord, heightMapSettings, meshSettings, detailLevels,
                     colliderLODIndex, transform, viewer, mapMaterial);
+                
+                terrainChunkDictionary.Add(viewedChunkCoord, newChunk);
+                newChunk.onVisibilityChanged += OnTerrainChunkVisibilityChanged;
 
                 if (generateFixedSizeTerrain && heightMapSettings.useFalloff)
                 {
                     int falloffStartX = (numVertsPerLine - 2) * (x + fixedTerrainSize);
                     int falloffStartY = falloffMapSize - 2 - (numVertsPerLine - 2) * (y + fixedTerrainSize + 1);
-                    newChunk.UseFalloffMap(falloffMap, falloffStartX, falloffStartY);
+                    newChunk.Load(falloffMap, falloffStartX, falloffStartY);
                 }
-
-                terrainChunkDictionary.Add(viewedChunkCoord, newChunk);
-                newChunk.onVisibilityChanged += OnTerrainChunkVisibilityChanged;
-                newChunk.Load();
+                else
+                {
+                    newChunk.Load();
+                }
             }
         }
     }

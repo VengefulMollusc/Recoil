@@ -30,11 +30,6 @@ public class TerrainChunk
     private MeshSettings meshSettings;
     private Transform viewer;
 
-    private bool useFalloffMap;
-    private float[,] falloffMap;
-    private int falloffStartX;
-    private int falloffStartY;
-
     public TerrainChunk(Vector2 coord, HeightMapSettings heightMapSettings, MeshSettings meshSettings, LODInfo[] detailLevels, int colliderLODIndex, Transform parent, Transform viewer, Material material)
     {
         this.coord = coord;
@@ -75,20 +70,14 @@ public class TerrainChunk
 
     }
 
-    public void UseFalloffMap(float[,] falloffMap, int falloffStartX, int falloffStartY)
-    {
-        useFalloffMap = true;
-        this.falloffMap = falloffMap;
-        this.falloffStartX = falloffStartX;
-        this.falloffStartY = falloffStartY;
-    }
-
     public void Load()
     {
-        if (useFalloffMap)
-            ThreadedDataRequester.RequestData(() => HeightMapGenerator.GenerateHeightMapWithFalloff(meshSettings.numVertsPerLine, heightMapSettings, sampleCentre, falloffMap, falloffStartX, falloffStartY), OnHeightMapReceived);
-        else
-            ThreadedDataRequester.RequestData(() => HeightMapGenerator.GenerateHeightMap(meshSettings.numVertsPerLine, heightMapSettings, sampleCentre), OnHeightMapReceived);
+        ThreadedDataRequester.RequestData(() => HeightMapGenerator.GenerateHeightMap(meshSettings.numVertsPerLine, heightMapSettings, sampleCentre), OnHeightMapReceived);
+    }
+
+    public void Load(float[,] falloffMap, int falloffStartX, int falloffStartY)
+    {
+        ThreadedDataRequester.RequestData(() => HeightMapGenerator.GenerateHeightMapWithFalloff(meshSettings.numVertsPerLine, heightMapSettings, sampleCentre, falloffMap, falloffStartX, falloffStartY), OnHeightMapReceived);
     }
 
     void OnHeightMapReceived(object heightMapObject)
