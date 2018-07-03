@@ -47,7 +47,9 @@ public class MapPreview : MonoBehaviour
 
         if (drawMode == DrawMode.NoiseMap)
         {
-            HeightMap heightMap = HeightMapGenerator.GenerateHeightMap(previewSize, heightMapSettings, Vector2.zero);
+            float[,] falloffMap = FalloffGenerator.GenerateFalloffMap(previewSize);
+            HeightMap heightMap = (heightMapSettings.useFalloff) ? HeightMapGenerator.GenerateHeightMapWithFalloff(previewSize, heightMapSettings, Vector2.zero, falloffMap, 0, 0) : 
+                HeightMapGenerator.GenerateHeightMap(previewSize, heightMapSettings, Vector2.zero);
             DrawTexture(TextureGenerator.TextureFromHeightMap(heightMap), gridSize);
         }
         else if (drawMode == DrawMode.DrawMesh)
