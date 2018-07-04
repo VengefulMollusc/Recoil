@@ -81,6 +81,11 @@ public class MapPreview : MonoBehaviour
 
     void ClearPreviewChunks()
     {
+        if (previewChunks == null)
+        {
+            previewChunks = new List<GameObject>();
+            return;
+        }
         foreach (GameObject chunk in previewChunks)
         {
             if (chunk != null)
