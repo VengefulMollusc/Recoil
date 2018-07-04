@@ -26,7 +26,7 @@ public class HeightMapSettings : UpdatableData
 
     public void RandomiseNoise()
     {
-        string glyphs = "abcdefghijklmnopqrstuvwxyz023456789";
+        string glyphs = "abcdefghijklmnopqrstuvwxyz0123456789";
         int seedLength = Random.Range(3, 6);
         string seedString = "";
         for (int i = 0; i < seedLength; i++)
