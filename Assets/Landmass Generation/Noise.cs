@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
@@ -101,6 +102,7 @@ public class NoiseSettings
     public float persistance = 0.5f;
     public float lacunarity = 2f;
 
+    public string seedString;
     public int seed;
     public Vector2 offset;
 
@@ -110,5 +112,10 @@ public class NoiseSettings
         octaves = Mathf.Max(octaves, 1);
         lacunarity = Mathf.Max(lacunarity, 1);
         persistance = Mathf.Clamp01(persistance);
+
+        if (!String.IsNullOrEmpty(seedString))
+        {
+            seed = seedString.GetHashCode();
+        }
     }
 }

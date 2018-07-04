@@ -26,8 +26,16 @@ public class HeightMapSettings : UpdatableData
 
     public void RandomiseNoise()
     {
-        noiseSettings.seed = Random.Range(-9999, 9999);
-        noiseSettings.offset = new Vector2(Random.Range(-9999f, 9999f), Random.Range(-9999f, 9999f));
+        string glyphs = "abcdefghijklmnopqrstuvwxyz023456789";
+        int seedLength = Random.Range(3, 6);
+        string seedString = "";
+        for (int i = 0; i < seedLength; i++)
+        {
+            seedString += glyphs[Random.Range(0, glyphs.Length)];
+        }
+        noiseSettings.seedString = seedString;
+
+        noiseSettings.ValidateValues();
     }
 
 #if UNITY_EDITOR
