@@ -5,7 +5,13 @@ using UnityEngine;
 
 public static class FalloffGenerator {
 
-    public static float[,] GenerateFalloffMap(int size)
+    public enum FalloffMode
+    {
+        Square,
+        Circular
+    };
+
+    public static float[,] GenerateFalloffMap(int size, FalloffMode mode)
     {
         float[,] map = new float[size,size];
 
@@ -16,7 +22,13 @@ public static class FalloffGenerator {
                 float x = i / (float) size * 2 - 1;
                 float y = j / (float) size * 2 - 1;
 
-                float value = Mathf.Max(Mathf.Abs(x), Mathf.Abs(y));
+                float value = 0f;
+
+                if (mode == FalloffMode.Square)
+                    value = Mathf.Max(Mathf.Abs(x), Mathf.Abs(y));
+                else if (mode == FalloffMode.Circular)
+                    value = Mathf.Min(Mathf.Sqrt(x * x + y * y), 1f);
+
                 map[i, j] = Evaluate(value);
             }
         }

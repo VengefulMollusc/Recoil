@@ -56,7 +56,7 @@ public class MapPreview : MonoBehaviour
 
         if (drawMode == DrawMode.NoiseMap)
         {
-            float[,] falloffMap = FalloffGenerator.GenerateFalloffMap(previewSize);
+            float[,] falloffMap = FalloffGenerator.GenerateFalloffMap(previewSize, heightMapSettings.falloffMode);
             HeightMap heightMap = (heightMapSettings.useFalloff) ? HeightMapGenerator.GenerateHeightMapWithFalloff(previewSize, heightMapSettings, Vector2.zero, falloffMap, 0, 0) :
                 HeightMapGenerator.GenerateHeightMap(previewSize, heightMapSettings, Vector2.zero);
             DrawTexture(TextureGenerator.TextureFromHeightMap(heightMap), gridSize);
@@ -75,7 +75,7 @@ public class MapPreview : MonoBehaviour
         }
         else if (drawMode == DrawMode.FalloffMap)
         {
-            DrawTexture(TextureGenerator.TextureFromHeightMap(new HeightMap(FalloffGenerator.GenerateFalloffMap(previewSize), 0, 1)), gridSize);
+            DrawTexture(TextureGenerator.TextureFromHeightMap(new HeightMap(FalloffGenerator.GenerateFalloffMap(previewSize, heightMapSettings.falloffMode), 0, 1)), gridSize);
         }
     }
 
@@ -98,7 +98,7 @@ public class MapPreview : MonoBehaviour
     {
         int fixedTerrainSize = meshSettings.fixedTerrainSize;
 
-        float[,] falloffMap = (heightMapSettings.useFalloff) ? FalloffGenerator.GenerateFalloffMap(previewSize) : new float[0, 0];
+        float[,] falloffMap = (heightMapSettings.useFalloff) ? FalloffGenerator.GenerateFalloffMap(previewSize, heightMapSettings.falloffMode) : new float[0, 0];
 
         int previewChunkIndex = 0;
 

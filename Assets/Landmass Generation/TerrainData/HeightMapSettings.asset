@@ -21,6 +21,7 @@ MonoBehaviour:
     seed: 12
     offset: {x: 0, y: -200}
   useFalloff: 1
+  falloffMode: 0
   heightMultiplier: 200
   heightCurve:
     serializedVersion: 2

@@ -50,7 +50,7 @@ public class TerrainGenerator : MonoBehaviour
             falloffMapSize = (numVertsPerLine - 2) * (fixedTerrainSize * 2 + 1) + 2;
 
             if (heightMapSettings.useFalloff)
-                falloffMap = FalloffGenerator.GenerateFalloffMap(falloffMapSize);
+                falloffMap = FalloffGenerator.GenerateFalloffMap(falloffMapSize, heightMapSettings.falloffMode);
         }
 
         UpdateVisibleChunks();
