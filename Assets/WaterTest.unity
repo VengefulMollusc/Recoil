@@ -123,7 +123,6 @@ GameObject:
   - component: {fileID: 536743097}
   - component: {fileID: 536743096}
   - component: {fileID: 536743095}
-  - component: {fileID: 536743094}
   m_Layer: 0
   m_Name: WaterPlaneGenerator
   m_TagString: Untagged
@@ -131,20 +130,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &536743094
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 536743093}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c00d241e58dc8df44a196fdea3839f29, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  power: 1.5
-  scale: 1
-  timeScale: 0.5
 --- !u!114 &536743095
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -158,6 +143,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   size: 128
   gridSize: 128
+  power: 1.5
+  scale: 1
+  timeScale: 0.5
 --- !u!23 &536743096
 MeshRenderer:
   m_ObjectHideFlags: 0

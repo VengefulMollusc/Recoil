@@ -4,8 +4,17 @@ using UnityEngine;
 
 public class WaterPlaneGenerator : MonoBehaviour
 {
+    [Header("Plane Variables")]
     public float size = 1f;
     public int gridSize = 16;
+
+    [Header("Noise Variables")]
+    public float power = 3f;
+    public float scale = 1f;
+    public float timeScale = 1f;
+
+    private float xOffset;
+    private float yOffset;
 
     private MeshFilter meshFilter;
 
@@ -14,6 +23,16 @@ public class WaterPlaneGenerator : MonoBehaviour
     {
         meshFilter = GetComponent<MeshFilter>();
         meshFilter.mesh = GenerateMesh();
+        
+        MakeNoise();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        MakeNoise();
+        xOffset += Time.deltaTime * timeScale;
+        yOffset += Time.deltaTime * timeScale;
     }
 
     private Mesh GenerateMesh()
@@ -56,5 +75,25 @@ public class WaterPlaneGenerator : MonoBehaviour
         mesh.SetTriangles(triangles, 0);
 
         return mesh;
+    }
+
+    void MakeNoise()
+    {
+        Vector3[] vertices = meshFilter.mesh.vertices;
+
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            vertices[i].y = CalculateHeight(vertices[i].x, vertices[i].z) * power;
+        }
+
+        meshFilter.mesh.vertices = vertices;
+    }
+
+    float CalculateHeight(float x, float y)
+    {
+        float xCoord = x * scale + xOffset;
+        float yCoord = y * scale + yOffset;
+
+        return Mathf.PerlinNoise(xCoord, yCoord);
     }
 }
