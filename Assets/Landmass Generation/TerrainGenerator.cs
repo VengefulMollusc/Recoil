@@ -47,7 +47,7 @@ public class TerrainGenerator : MonoBehaviour
         {
             fixedTerrainSize = meshSettings.fixedTerrainSize;
             numVertsPerLine = meshSettings.numVertsPerLine;
-            falloffMapSize = (numVertsPerLine - 2) * (fixedTerrainSize * 2 + 1) + 2;
+            falloffMapSize = (numVertsPerLine - 3) * (fixedTerrainSize * 2 + 1) + 3;
 
             if (heightMapSettings.useFalloff)
                 falloffMap = FalloffGenerator.GenerateFalloffMap(falloffMapSize, heightMapSettings.falloffMode);
@@ -129,8 +129,9 @@ public class TerrainGenerator : MonoBehaviour
 
                 if (generateFixedSizeTerrain && heightMapSettings.useFalloff)
                 {
-                    int falloffStartX = (numVertsPerLine - 2) * (x + fixedTerrainSize);
-                    int falloffStartY = falloffMapSize - 2 - (numVertsPerLine - 2) * (y + fixedTerrainSize + 1);
+                    int falloffStartX = (numVertsPerLine - 3) * (x + fixedTerrainSize);
+                    int falloffStartY = falloffMapSize - 3 - (numVertsPerLine - 3) * (y + fixedTerrainSize + 1);
+
                     newChunk.Load(falloffMap, falloffStartX, falloffStartY);
                 }
                 else

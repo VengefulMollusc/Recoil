@@ -46,7 +46,7 @@ public class MapPreview : MonoBehaviour
         if (meshSettings.generateFixedSizeTerrain)
         {
             gridSize = meshSettings.fixedTerrainSize * 2 + 1;
-            previewSize = (meshSettings.numVertsPerLine - 2) * gridSize + 2;
+            previewSize = (meshSettings.numVertsPerLine - 3) * gridSize + 3;
         }
 
         if (drawMode != DrawMode.DrawMesh || !(previewWholeFixedSizeMesh && meshSettings.generateFixedSizeTerrain))
@@ -125,8 +125,8 @@ public class MapPreview : MonoBehaviour
 
                 if (heightMapSettings.useFalloff)
                 {
-                    int falloffStartX = (meshSettings.numVertsPerLine - 2) * (x + fixedTerrainSize);
-                    int falloffStartY = previewSize - 2 - (meshSettings.numVertsPerLine - 2) * (y + fixedTerrainSize + 1);
+                    int falloffStartX = (meshSettings.numVertsPerLine - 3) * (x + fixedTerrainSize);
+                    int falloffStartY = previewSize - 3 - (meshSettings.numVertsPerLine - 3) * (y + fixedTerrainSize + 1);
 
                     heightMap = HeightMapGenerator.GenerateHeightMapWithFalloff(meshSettings.numVertsPerLine, heightMapSettings,
                         sampleCenter, falloffMap, falloffStartX, falloffStartY);
