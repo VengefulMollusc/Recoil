@@ -85,6 +85,7 @@ public class TerrainChunk
         heightMap = (HeightMap)heightMapObject;
         heightMapReceived = true;
 
+        CreateWaterPlane();
         UpdateTerrainChunk();
     }
 
@@ -93,6 +94,30 @@ public class TerrainChunk
         get
         {
             return new Vector2(viewer.position.x, viewer.position.z);
+        }
+    }
+
+    private void CreateWaterPlane()
+    {
+        if (heightMapSettings.useWaterPlane)
+        {
+            GameObject waterPlaneObject;
+            if (meshObject.transform.childCount > 0)
+            {
+                waterPlaneObject = meshObject.transform.GetChild(0).gameObject;
+            }
+            else
+            {
+                waterPlaneObject = GameObject.CreatePrimitive(PrimitiveType.Plane);
+                waterPlaneObject.transform.SetParent(meshObject.transform);
+                waterPlaneObject.GetComponent<MeshRenderer>().sharedMaterial = heightMapSettings.waterMaterial;
+            }
+            // set height and scale for water plane
+            float waterHeight = heightMapSettings.heightCurve.Evaluate(heightMapSettings.waterHeight) *
+                                heightMapSettings.heightMultiplier;
+            waterPlaneObject.transform.position = new Vector3(meshObject.transform.position.x, waterHeight, meshObject.transform.position.z);
+            float scale = meshSettings.meshWorldSize / 10f;
+            waterPlaneObject.transform.localScale = new Vector3(scale, 1, scale);
         }
     }
 

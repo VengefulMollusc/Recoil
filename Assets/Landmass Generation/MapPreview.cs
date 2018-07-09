@@ -165,26 +165,7 @@ public class MapPreview : MonoBehaviour
                     MeshGenerator.GenerateTerrainMesh(heightMap.values, meshSettings, editorPreviewLOD);
                 previewMeshFilter.sharedMesh = meshData.CreateMesh();
 
-                if (heightMapSettings.useWaterPlane)
-                {
-                    if (previewMeshObject.transform.childCount > 0)
-                    {
-                        for (int i = previewMeshObject.transform.childCount - 1; i >= 0; i--)
-                        {
-                            DestroyImmediate(previewMeshObject.transform.GetChild(i).gameObject);
-                        }
-                    }
-                    // doesn't have water plane child
-                    GameObject waterPlaneObject = GameObject.CreatePrimitive(PrimitiveType.Plane);
-                    float waterHeight = heightMapSettings.heightCurve.Evaluate(heightMapSettings.waterHeight) * heightMapSettings.heightMultiplier;
-                    waterPlaneObject.transform.position = new Vector3(position.x, waterHeight, position.y);
-                    float scale = meshSettings.meshWorldSize / 10f;
-                    waterPlaneObject.transform.localScale = new Vector3(scale, 1, scale);
-
-                    waterPlaneObject.GetComponent<MeshRenderer>().sharedMaterial = heightMapSettings.waterMaterial;
-
-                    waterPlaneObject.transform.SetParent(previewMeshObject.transform);
-                }
+                CreateWaterPlane(previewMeshObject, position);
             }
         }
 
@@ -200,6 +181,30 @@ public class MapPreview : MonoBehaviour
 
         textureRenderer.gameObject.SetActive(false);
         meshFilter.gameObject.SetActive(false);
+    }
+
+    private void CreateWaterPlane(GameObject previewMeshObject, Vector2 position)
+    {
+        if (heightMapSettings.useWaterPlane)
+        {
+            GameObject waterPlaneObject;
+            if (previewMeshObject.transform.childCount > 0)
+            {
+                waterPlaneObject = previewMeshObject.transform.GetChild(0).gameObject;
+            }
+            else
+            {
+                waterPlaneObject = GameObject.CreatePrimitive(PrimitiveType.Plane);
+                waterPlaneObject.transform.SetParent(previewMeshObject.transform);
+                waterPlaneObject.GetComponent<MeshRenderer>().sharedMaterial = heightMapSettings.waterMaterial;
+            }
+            // set height and scale for water plane
+            float waterHeight = heightMapSettings.heightCurve.Evaluate(heightMapSettings.waterHeight) *
+                                heightMapSettings.heightMultiplier;
+            waterPlaneObject.transform.position = new Vector3(position.x, waterHeight, position.y);
+            float scale = meshSettings.meshWorldSize / 10f;
+            waterPlaneObject.transform.localScale = new Vector3(scale, 1, scale);
+        }
     }
 
     public void DrawTexture(Texture2D texture, int gridSize)

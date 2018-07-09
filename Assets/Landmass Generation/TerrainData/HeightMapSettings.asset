@@ -49,5 +49,5 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 0
   useWaterPlane: 1
-  waterHeight: 0.18
+  waterHeight: 0.215
   waterMaterial: {fileID: 2100000, guid: e21432cc620ab9e48a6017f9cbc85907, type: 2}
