@@ -24,13 +24,13 @@ public class WaterPlaneGenerator : MonoBehaviour
         meshFilter = GetComponent<MeshFilter>();
         meshFilter.mesh = GenerateMesh();
         
-        MakeNoise();
+        ApplyWaterNoise();
     }
 
     // Update is called once per frame
     void Update()
     {
-        MakeNoise();
+        ApplyWaterNoise();
         xOffset += Time.deltaTime * timeScale;
         yOffset += Time.deltaTime * timeScale;
     }
@@ -77,7 +77,7 @@ public class WaterPlaneGenerator : MonoBehaviour
         return mesh;
     }
 
-    void MakeNoise()
+    void ApplyWaterNoise()
     {
         Vector3[] vertices = meshFilter.mesh.vertices;
 
