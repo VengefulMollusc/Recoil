@@ -164,6 +164,27 @@ public class MapPreview : MonoBehaviour
                 MeshData meshData =
                     MeshGenerator.GenerateTerrainMesh(heightMap.values, meshSettings, editorPreviewLOD);
                 previewMeshFilter.sharedMesh = meshData.CreateMesh();
+
+                if (heightMapSettings.useWaterPlane)
+                {
+                    if (previewMeshObject.transform.childCount > 0)
+                    {
+                        for (int i = previewMeshObject.transform.childCount - 1; i >= 0; i--)
+                        {
+                            DestroyImmediate(previewMeshObject.transform.GetChild(i).gameObject);
+                        }
+                    }
+                    // doesn't have water plane child
+                    GameObject waterPlaneObject = GameObject.CreatePrimitive(PrimitiveType.Plane);
+                    float waterHeight = heightMapSettings.heightCurve.Evaluate(heightMapSettings.waterHeight) * heightMapSettings.heightMultiplier;
+                    waterPlaneObject.transform.position = new Vector3(position.x, waterHeight, position.y);
+                    float scale = meshSettings.meshWorldSize / 10f;
+                    waterPlaneObject.transform.localScale = new Vector3(scale, 1, scale);
+
+                    waterPlaneObject.GetComponent<MeshRenderer>().sharedMaterial = heightMapSettings.waterMaterial;
+
+                    waterPlaneObject.transform.SetParent(previewMeshObject.transform);
+                }
             }
         }
 

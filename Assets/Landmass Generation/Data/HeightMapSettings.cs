@@ -14,6 +14,10 @@ public class HeightMapSettings : UpdatableData
     public float heightMultiplier;
     public AnimationCurve heightCurve;
 
+    public bool useWaterPlane;
+    public float waterHeight;
+    public Material waterMaterial;
+
     public float minHeight
     {
         get { return heightMultiplier * heightCurve.Evaluate(0); }
