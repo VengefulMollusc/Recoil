@@ -260,8 +260,9 @@ public class HoverMotor : MonoBehaviour
             {
                 if (hitInfo.distance > rayCastHeightModifier) // this check to make sure raycasts ending above player collider dont trigger hover
                 {
-                    float force = (1 - (hitInfo.distance - rayCastHeightModifier) / (rayLength - rayCastHeightModifier)) *
-                                  (boosting ? hoverForce * boostHoverForceMultiplier : hoverForce);
+                    //float force = (1 - (hitInfo.distance - rayCastHeightModifier) / (rayLength - rayCastHeightModifier)) *
+                    //              (boosting ? hoverForce * boostHoverForceMultiplier : hoverForce);
+                    float force = (1 - (hitInfo.distance - rayCastHeightModifier) / (rayLength - rayCastHeightModifier)) * hoverForce;
                     if (force > maxHoverForce)
                         maxHoverForce = force;
                 }

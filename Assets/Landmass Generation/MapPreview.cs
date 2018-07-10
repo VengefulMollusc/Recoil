@@ -44,6 +44,8 @@ public class MapPreview : MonoBehaviour
 
     public void DrawMapInEditor()
     {
+        UpdateTerrainDataVariables();
+
         textureData.ApplyToMaterial(terrainMaterial);
         textureData.UpdateMeshHeights(terrainMaterial, heightMapSettings.minHeight, heightMapSettings.maxHeight);
 
@@ -114,7 +116,7 @@ public class MapPreview : MonoBehaviour
             previewChunks = new List<GameObject>();
             foreach (GameObject chunk in GameObject.FindGameObjectsWithTag("PreviewChunk"))
             {
-                DestroyImmediate(chunk);
+                previewChunks.Add(chunk);
             }
         }
         else if (previewChunks.Count > 0 && previewChunks[0] == null)
