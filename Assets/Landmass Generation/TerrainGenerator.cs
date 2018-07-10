@@ -10,9 +10,10 @@ public class TerrainGenerator : MonoBehaviour
     public int colliderLODIndex;
     public LODInfo[] detailLevels;
 
-    public MeshSettings meshSettings;
-    public HeightMapSettings heightMapSettings;
-    public TextureData textureSettings;
+    public TerrainDataPackage terrainDataPackage;
+    private HeightMapSettings heightMapSettings;
+    private MeshSettings meshSettings;
+    private TextureData textureSettings;
 
     public Transform viewer;
     public Material mapMaterial;
@@ -34,6 +35,8 @@ public class TerrainGenerator : MonoBehaviour
 
     void Start()
     {
+        UpdateTerrainDataVariables();
+
         textureSettings.ApplyToMaterial(mapMaterial);
         textureSettings.UpdateMeshHeights(mapMaterial, heightMapSettings.minHeight, heightMapSettings.maxHeight);
 
@@ -73,6 +76,13 @@ public class TerrainGenerator : MonoBehaviour
             viewerPositionOld = viewerPosition;
             UpdateVisibleChunks();
         }
+    }
+
+    void UpdateTerrainDataVariables()
+    {
+        heightMapSettings = terrainDataPackage.heightMapSettings;
+        meshSettings = terrainDataPackage.meshSettings;
+        textureSettings = terrainDataPackage.textureData;
     }
 
     void UpdateVisibleChunks()

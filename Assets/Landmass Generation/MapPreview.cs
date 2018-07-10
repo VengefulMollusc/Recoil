@@ -17,9 +17,10 @@ public class MapPreview : MonoBehaviour
 
     public DrawMode drawMode;
 
-    public MeshSettings meshSettings;
-    public HeightMapSettings heightMapSettings;
-    public TextureData textureData;
+    public TerrainDataPackage terrainDataPackage;
+    private HeightMapSettings heightMapSettings;
+    private MeshSettings meshSettings;
+    private TextureData textureData;
 
     public Material terrainMaterial;
 
@@ -34,6 +35,12 @@ public class MapPreview : MonoBehaviour
 
     private List<GameObject> previewChunks;
 
+    private void UpdateTerrainDataVariables()
+    {
+        heightMapSettings = terrainDataPackage.heightMapSettings;
+        meshSettings = terrainDataPackage.meshSettings;
+        textureData = terrainDataPackage.textureData;
+    }
 
     public void DrawMapInEditor()
     {
@@ -226,6 +233,8 @@ public class MapPreview : MonoBehaviour
 
     void OnValuesUpdated()
     {
+        UpdateTerrainDataVariables();
+
         if (!Application.isPlaying)
         {
             DrawMapInEditor();
