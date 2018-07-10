@@ -101,17 +101,10 @@ public class TerrainChunk
     {
         if (heightMapSettings.useWaterPlane)
         {
-            GameObject waterPlaneObject;
-            if (meshObject.transform.childCount > 0)
-            {
-                waterPlaneObject = meshObject.transform.GetChild(0).gameObject;
-            }
-            else
-            {
-                waterPlaneObject = GameObject.CreatePrimitive(PrimitiveType.Plane);
-                waterPlaneObject.transform.SetParent(meshObject.transform);
-                waterPlaneObject.GetComponent<MeshRenderer>().sharedMaterial = heightMapSettings.waterMaterial;
-            }
+            GameObject waterPlaneObject = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            waterPlaneObject.transform.SetParent(meshObject.transform);
+            waterPlaneObject.GetComponent<MeshRenderer>().sharedMaterial = heightMapSettings.waterMaterial;
+
             // set height and scale for water plane
             float waterHeight = heightMapSettings.heightCurve.Evaluate(heightMapSettings.waterHeight) *
                                 heightMapSettings.heightMultiplier;
