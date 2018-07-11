@@ -7,6 +7,7 @@ public class RailgunWeapon : Weapon
 {
     private const float range = 200f;
     private const float fireRate = 0.25f;
+    private const float damage = 10f;
 
     private bool firing;
     private bool firingSequenceActive;
@@ -52,6 +53,10 @@ public class RailgunWeapon : Weapon
         if (Physics.Raycast(origin, direction, out hitInfo, range))
         {
             hitPosition = hitInfo.point;
+
+            HealthController healthController = hitInfo.transform.gameObject.GetComponent<HealthController>();
+            if (healthController != null)
+                healthController.Damage(damage);
         }
     }
 
