@@ -58,7 +58,6 @@ public class HoverMotor : MonoBehaviour
 
     private bool boosting;
     private float boostState;
-    private float boostHoverForceMultiplier;
 
     private bool useBumperForce;
     private float bumperColliderRadius;
@@ -80,8 +79,6 @@ public class HoverMotor : MonoBehaviour
 
         // sqr maxspeed for cheaper comparisons later
         maxSpeed *= maxSpeed;
-
-        boostHoverForceMultiplier = 1f;
 
         UpdateVariables();
 
@@ -187,7 +184,6 @@ public class HoverMotor : MonoBehaviour
         // TODO: look at this again with sloping terrain. May want to remove entirely or make relative to ground slope as well
         // Calculate extra hover force based on facing direction
         float dot = Vector3.Dot(Vector3.down, forward);
-        boostHoverForceMultiplier = Utilities.MapValues(dot, -0.5f, 0.5f, 1f, boostForceMultiplier, true);
 
         // track boost state and begin recharge if limit is hit
         boostState += Time.fixedDeltaTime;
@@ -202,7 +198,6 @@ public class HoverMotor : MonoBehaviour
     private IEnumerator RechargeBoost()
     {
         boosting = false;
-        boostHoverForceMultiplier = 1f;
 
         // wait for the recharge delay
         yield return new WaitForSeconds(boostRechargeDelay);
@@ -260,8 +255,6 @@ public class HoverMotor : MonoBehaviour
             {
                 if (hitInfo.distance > rayCastHeightModifier) // this check to make sure raycasts ending above player collider dont trigger hover
                 {
-                    //float force = (1 - (hitInfo.distance - rayCastHeightModifier) / (rayLength - rayCastHeightModifier)) *
-                    //              (boosting ? hoverForce * boostHoverForceMultiplier : hoverForce);
                     float force = (1 - (hitInfo.distance - rayCastHeightModifier) / (rayLength - rayCastHeightModifier)) * hoverForce;
                     if (force > maxHoverForce)
                         maxHoverForce = force;
