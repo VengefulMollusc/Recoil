@@ -5,6 +5,7 @@ using UnityEngine;
 public class InputController : MonoBehaviour
 {
     private HoverMotor motor;
+    private WeaponController weaponController;
 
     [Header("Axes")]
     [SerializeField]
@@ -24,11 +25,17 @@ public class InputController : MonoBehaviour
     [SerializeField]
     private KeyCode decreaseHeightKey = KeyCode.F;
 
+    [SerializeField]
+    private KeyCode mainWeaponKey = KeyCode.Space;
+    [SerializeField]
+    private KeyCode secondaryWeaponKey = KeyCode.E;
+
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         motor = GetComponent<HoverMotor>();
+        weaponController = GetComponent<WeaponController>();
     }
 
     // Update is called once per frame
@@ -53,6 +60,19 @@ public class InputController : MonoBehaviour
                 motor.Boost(true);
             if (Input.GetKeyUp(boostKey))
                 motor.Boost(false);
+        }
+
+        if (weaponController != null)
+        {
+            if (Input.GetKeyDown(mainWeaponKey))
+                weaponController.UseMainWeapon(true);
+            if (Input.GetKeyUp(mainWeaponKey))
+                weaponController.UseMainWeapon(false);
+
+            if (Input.GetKeyDown(secondaryWeaponKey))
+                weaponController.UseSecondaryWeapon(true);
+            if (Input.GetKeyUp(secondaryWeaponKey))
+                weaponController.UseSecondaryWeapon(false);
         }
     }
 }

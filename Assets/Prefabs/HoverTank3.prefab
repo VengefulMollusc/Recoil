@@ -23,9 +23,11 @@ GameObject:
   - component: {fileID: 23154638462595098}
   - component: {fileID: 64503934852905322}
   - component: {fileID: 54524942735922544}
+  - component: {fileID: 135055120569449770}
   - component: {fileID: 114046097406454780}
   - component: {fileID: 114823834796332608}
-  - component: {fileID: 135055120569449770}
+  - component: {fileID: 114129856107104522}
+  - component: {fileID: 114667158090751562}
   m_Layer: 8
   m_Name: HoverTank3
   m_TagString: Untagged
@@ -208,6 +210,32 @@ MonoBehaviour:
   boostKey: 304
   increaseHeightKey: 114
   decreaseHeightKey: 102
+  mainWeaponKey: 32
+  secondaryWeaponKey: 101
+--- !u!114 &114129856107104522
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1054013353523638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40e99d3b57c7c0b4ab442958891ddc11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainWeapon: {fileID: 114667158090751562}
+  secondaryWeapon: {fileID: 0}
+--- !u!114 &114667158090751562
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1054013353523638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a9bf2389313bb64886b606111a8ffc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114823834796332608
 MonoBehaviour:
   m_ObjectHideFlags: 1
