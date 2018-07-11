@@ -78,6 +78,7 @@ public static class HeightMapGenerator
 
         if (xInBounds && yInBounds)
         {
+            // both are in bounds. return value as normal
             return falloffMap[x, y];
         }
 
@@ -91,27 +92,7 @@ public static class HeightMapGenerator
             return 0f;
         }
 
-        // invert falloff effects here
-
-        //if (xInBounds)
-        //{
-        //    x = halfFalloffSize;
-        //    y = GetAbsoluteIndex(y, falloffMapSize);
-        //}
-        //else if (yInBounds)
-        //{
-        //    x = GetAbsoluteIndex(x, falloffMapSize);
-        //    y = halfFalloffSize;
-        //}
-        //else
-        //{
-        //    // both out of bounds
-        //    x = GetAbsoluteIndex(x, falloffMapSize);
-        //    y = GetAbsoluteIndex(y, falloffMapSize);
-        //}
-
-        
-
+        // invert falloff effects here for outer border
         if (!xInBounds && !yInBounds)
         {
             // neither index is in bounds
@@ -125,6 +106,7 @@ public static class HeightMapGenerator
         }
         else
         {
+            // one index is within bounds
             x = yInBounds ? GetAbsoluteIndex(x, falloffMapSize) : halfFalloffSize;
             y = xInBounds ? GetAbsoluteIndex(y, falloffMapSize) : halfFalloffSize;
         }
@@ -132,6 +114,9 @@ public static class HeightMapGenerator
         return falloffMap[x, y];
     }
 
+    /*
+     * Calculates the absolute index of a falloffMap coordinate (the relative index INSIDE the bounds of the map)
+     */
     private static int GetAbsoluteIndex(int index, int falloffMapSize)
     {
         if (index < 0)
