@@ -194,14 +194,19 @@ public class MapPreview : MonoBehaviour
 
     private void CreateWaterPlane(GameObject previewMeshObject, Vector2 position)
     {
+        GameObject waterPlaneObject = null;
+        if (previewMeshObject.transform.childCount > 0)
+        {
+            waterPlaneObject = previewMeshObject.transform.GetChild(0).gameObject;
+            if (!heightMapSettings.useWaterPlane)
+            {
+                DestroyImmediate(waterPlaneObject);
+            }
+        }
+
         if (heightMapSettings.useWaterPlane)
         {
-            GameObject waterPlaneObject;
-            if (previewMeshObject.transform.childCount > 0)
-            {
-                waterPlaneObject = previewMeshObject.transform.GetChild(0).gameObject;
-            }
-            else
+            if (waterPlaneObject == null)
             {
                 waterPlaneObject = GameObject.CreatePrimitive(PrimitiveType.Plane);
                 waterPlaneObject.transform.SetParent(previewMeshObject.transform);

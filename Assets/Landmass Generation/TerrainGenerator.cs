@@ -95,18 +95,18 @@ public class TerrainGenerator : MonoBehaviour
             visibleTerrainChunks[i].UpdateTerrainChunk();
         }
 
-        if (generateFixedSizeTerrain)
-        {
-            for (int y = -fixedTerrainSize; y <= fixedTerrainSize; y++)
-            {
-                for (int x = -fixedTerrainSize; x <= fixedTerrainSize; x++)
-                {
-                    UpdateChunk(x, y, alreadyUpdatedChunkCoords);
-                }
-            }
-        }
-        else
-        {
+        //if (generateFixedSizeTerrain)
+        //{
+        //    for (int y = -fixedTerrainSize; y <= fixedTerrainSize; y++)
+        //    {
+        //        for (int x = -fixedTerrainSize; x <= fixedTerrainSize; x++)
+        //        {
+        //            UpdateChunk(x, y, alreadyUpdatedChunkCoords);
+        //        }
+        //    }
+        //}
+        //else
+        //{
             int currentChunkCoordX = Mathf.RoundToInt(viewerPosition.x / meshWorldSize);
             int currentChunkCoordY = Mathf.RoundToInt(viewerPosition.y / meshWorldSize);
 
@@ -117,7 +117,7 @@ public class TerrainGenerator : MonoBehaviour
                     UpdateChunk(currentChunkCoordX + xOffset, currentChunkCoordY + yOffset, alreadyUpdatedChunkCoords);
                 }
             }
-        }
+        //}
     }
 
     void UpdateChunk(int x, int y, HashSet<Vector2> alreadyUpdatedChunkCoords)
@@ -131,13 +131,18 @@ public class TerrainGenerator : MonoBehaviour
             }
             else
             {
-                TerrainChunk newChunk = new TerrainChunk(viewedChunkCoord, heightMapSettings, meshSettings, detailLevels,
+                bool useGlobalFalloff = generateFixedSizeTerrain && heightMapSettings.useFalloff;
+                bool isFlatChunk = useGlobalFalloff && (x < -fixedTerrainSize || x > fixedTerrainSize ||
+                                                        y < -fixedTerrainSize || y > fixedTerrainSize);
+
+                LODInfo[] lods = !isFlatChunk ? detailLevels : new [] {detailLevels[detailLevels.Length - 1]};
+                TerrainChunk newChunk = new TerrainChunk(viewedChunkCoord, heightMapSettings, meshSettings, lods,
                     colliderLODIndex, transform, viewer, mapMaterial);
                 
                 terrainChunkDictionary.Add(viewedChunkCoord, newChunk);
                 newChunk.onVisibilityChanged += OnTerrainChunkVisibilityChanged;
 
-                if (generateFixedSizeTerrain && heightMapSettings.useFalloff)
+                if (useGlobalFalloff && !isFlatChunk)
                 {
                     int falloffStartX = (numVertsPerLine - 3) * (x + fixedTerrainSize);
                     int falloffStartY = falloffMapSize - 3 - (numVertsPerLine - 3) * (y + fixedTerrainSize + 1);
@@ -146,7 +151,7 @@ public class TerrainGenerator : MonoBehaviour
                 }
                 else
                 {
-                    newChunk.Load();
+                    newChunk.Load(isFlatChunk);
                 }
             }
         }

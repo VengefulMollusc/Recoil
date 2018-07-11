@@ -70,9 +70,26 @@ public class TerrainChunk
 
     }
 
-    public void Load()
+    public void Load(bool isFlatChunk)
     {
-        ThreadedDataRequester.RequestData(() => HeightMapGenerator.GenerateHeightMap(meshSettings.numVertsPerLine, heightMapSettings, sampleCentre), OnHeightMapReceived);
+        if (isFlatChunk)
+        {
+            // Create flat heightMap
+            float[,] values = new float[meshSettings.numVertsPerLine, meshSettings.numVertsPerLine];
+            for (int x = 0; x < meshSettings.numVertsPerLine; x++)
+            {
+                for (int y = 0; y < meshSettings.numVertsPerLine; y++)
+                {
+                    values[x, y] = 0f;
+                }
+            }
+            HeightMap heightMap = new HeightMap(values, 0f, 0f);
+            OnHeightMapReceived(heightMap);
+        }
+        else
+        {
+            ThreadedDataRequester.RequestData(() => HeightMapGenerator.GenerateHeightMap(meshSettings.numVertsPerLine, heightMapSettings, sampleCentre), OnHeightMapReceived);
+        }
     }
 
     public void Load(float[,] falloffMap, int falloffStartX, int falloffStartY)
