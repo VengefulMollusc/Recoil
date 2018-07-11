@@ -18,3 +18,4 @@ MonoBehaviour:
   flatShadedChunkSizeIndex: 1
   generateFixedSizeTerrain: 1
   fixedTerrainSize: 2
+  flattenOutsideTerrain: 0

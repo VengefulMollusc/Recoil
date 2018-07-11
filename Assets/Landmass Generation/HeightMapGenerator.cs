@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class HeightMapGenerator {
+public static class HeightMapGenerator
+{
 
     public static HeightMap GenerateHeightMap(int width, HeightMapSettings settings, Vector2 sampleCenter)
     {
@@ -46,7 +47,10 @@ public static class HeightMapGenerator {
         {
             for (int j = 0; j < width; j++)
             {
-                values[i, j] -= falloffMap[falloffStartX + i, falloffStartY + j];
+                // apply falloff map
+                float falloffValue = CalculateFalloffValue(falloffStartX + i, falloffStartY + j, falloffMap);
+                values[i, j] -= falloffValue;
+
                 if (values[i, j] < 0f)
                     values[i, j] = 0f;
 
@@ -64,6 +68,78 @@ public static class HeightMapGenerator {
         }
 
         return new HeightMap(values, minValue, maxValue);
+    }
+
+    private static float CalculateFalloffValue(int x, int y, float[,] falloffMap)
+    {
+        int falloffMapSize = falloffMap.GetLength(0);
+        bool xInBounds = x > 0 && x < falloffMapSize;
+        bool yInBounds = y > 0 && y < falloffMapSize;
+
+        if (xInBounds && yInBounds)
+        {
+            return falloffMap[x, y];
+        }
+
+        // coords are outside falloffMap
+        int halfFalloffSize = falloffMapSize / 2;
+        int lowerZeroBound = -halfFalloffSize;
+        int higherZeroBound = falloffMapSize + halfFalloffSize;
+        if (x < lowerZeroBound || x >= higherZeroBound || y < lowerZeroBound || y >= higherZeroBound)
+        {
+            // coords outside inverted map effect area
+            return 0f;
+        }
+
+        // invert falloff effects here
+
+        //if (xInBounds)
+        //{
+        //    x = halfFalloffSize;
+        //    y = GetAbsoluteIndex(y, falloffMapSize);
+        //}
+        //else if (yInBounds)
+        //{
+        //    x = GetAbsoluteIndex(x, falloffMapSize);
+        //    y = halfFalloffSize;
+        //}
+        //else
+        //{
+        //    // both out of bounds
+        //    x = GetAbsoluteIndex(x, falloffMapSize);
+        //    y = GetAbsoluteIndex(y, falloffMapSize);
+        //}
+
+        
+
+        if (!xInBounds && !yInBounds)
+        {
+            // neither index is in bounds
+            x = GetAbsoluteIndex(x, falloffMapSize);
+            y = GetAbsoluteIndex(y, falloffMapSize);
+
+            if (x > y)
+                y = halfFalloffSize;
+            else
+                x = halfFalloffSize;
+        }
+        else
+        {
+            x = yInBounds ? GetAbsoluteIndex(x, falloffMapSize) : halfFalloffSize;
+            y = xInBounds ? GetAbsoluteIndex(y, falloffMapSize) : halfFalloffSize;
+        }
+
+        return falloffMap[x, y];
+    }
+
+    private static int GetAbsoluteIndex(int index, int falloffMapSize)
+    {
+        if (index < 0)
+            index = -index;
+        else if (index >= falloffMapSize)
+            index -= falloffMapSize;
+
+        return index;
     }
 }
 

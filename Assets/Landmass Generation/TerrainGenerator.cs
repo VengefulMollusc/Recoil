@@ -132,9 +132,10 @@ public class TerrainGenerator : MonoBehaviour
             else
             {
                 bool useGlobalFalloff = generateFixedSizeTerrain && heightMapSettings.useFalloff;
-                bool isFlatChunk = useGlobalFalloff && (x < -fixedTerrainSize || x > fixedTerrainSize ||
+                bool isFlatChunk = meshSettings.flattenOutsideTerrain && useGlobalFalloff && (x < -fixedTerrainSize || x > fixedTerrainSize ||
                                                         y < -fixedTerrainSize || y > fixedTerrainSize);
 
+                // flatten LODs to lowest when using flat planes
                 LODInfo[] lods = !isFlatChunk ? detailLevels : new [] {detailLevels[detailLevels.Length - 1]};
                 TerrainChunk newChunk = new TerrainChunk(viewedChunkCoord, heightMapSettings, meshSettings, lods,
                     colliderLODIndex, transform, viewer, mapMaterial);
