@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class TerrainChunk
 {
@@ -30,7 +31,11 @@ public class TerrainChunk
     private MeshSettings meshSettings;
     private Transform viewer;
 
-    public TerrainChunk(Vector2 coord, HeightMapSettings heightMapSettings, MeshSettings meshSettings, LODInfo[] detailLevels, int colliderLODIndex, Transform parent, Transform viewer, Material material)
+    private TerrainPopulationSettings populationSettings;
+    private List<GameObject> populationObjects;
+
+
+    public TerrainChunk(Vector2 coord, HeightMapSettings heightMapSettings, MeshSettings meshSettings, LODInfo[] detailLevels, int colliderLODIndex, Transform parent, Transform viewer, Material material, TerrainPopulationSettings populationSettings)
     {
         this.coord = coord;
         this.detailLevels = detailLevels;
@@ -38,6 +43,7 @@ public class TerrainChunk
         this.heightMapSettings = heightMapSettings;
         this.meshSettings = meshSettings;
         this.viewer = viewer;
+        this.populationSettings = populationSettings;
 
         sampleCentre = coord * meshSettings.meshWorldSize / meshSettings.meshScale;
         Vector2 position = coord * meshSettings.meshWorldSize;
@@ -104,6 +110,12 @@ public class TerrainChunk
 
         CreateWaterPlane();
         UpdateTerrainChunk();
+        Populate();
+    }
+
+    public void Populate()
+    {
+        populationObjects = populationSettings.Populate(meshObject.transform, heightMap, meshSettings);
     }
 
     Vector2 viewerPosition

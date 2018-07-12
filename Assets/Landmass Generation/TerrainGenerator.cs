@@ -14,6 +14,7 @@ public class TerrainGenerator : MonoBehaviour
     private HeightMapSettings heightMapSettings;
     private MeshSettings meshSettings;
     private TextureData textureSettings;
+    private TerrainPopulationSettings populationSettings;
 
     public Transform viewer;
     public Material mapMaterial;
@@ -83,6 +84,7 @@ public class TerrainGenerator : MonoBehaviour
         heightMapSettings = terrainDataPackage.heightMapSettings;
         meshSettings = terrainDataPackage.meshSettings;
         textureSettings = terrainDataPackage.textureData;
+        populationSettings = terrainDataPackage.populationSettings;
     }
 
     void UpdateVisibleChunks()
@@ -95,29 +97,16 @@ public class TerrainGenerator : MonoBehaviour
             visibleTerrainChunks[i].UpdateTerrainChunk();
         }
 
-        //if (generateFixedSizeTerrain)
-        //{
-        //    for (int y = -fixedTerrainSize; y <= fixedTerrainSize; y++)
-        //    {
-        //        for (int x = -fixedTerrainSize; x <= fixedTerrainSize; x++)
-        //        {
-        //            UpdateChunk(x, y, alreadyUpdatedChunkCoords);
-        //        }
-        //    }
-        //}
-        //else
-        //{
-            int currentChunkCoordX = Mathf.RoundToInt(viewerPosition.x / meshWorldSize);
-            int currentChunkCoordY = Mathf.RoundToInt(viewerPosition.y / meshWorldSize);
+        int currentChunkCoordX = Mathf.RoundToInt(viewerPosition.x / meshWorldSize);
+        int currentChunkCoordY = Mathf.RoundToInt(viewerPosition.y / meshWorldSize);
 
-            for (int yOffset = -chunksVisibleInViewDst; yOffset <= chunksVisibleInViewDst; yOffset++)
+        for (int yOffset = -chunksVisibleInViewDst; yOffset <= chunksVisibleInViewDst; yOffset++)
+        {
+            for (int xOffset = -chunksVisibleInViewDst; xOffset <= chunksVisibleInViewDst; xOffset++)
             {
-                for (int xOffset = -chunksVisibleInViewDst; xOffset <= chunksVisibleInViewDst; xOffset++)
-                {
-                    UpdateChunk(currentChunkCoordX + xOffset, currentChunkCoordY + yOffset, alreadyUpdatedChunkCoords);
-                }
+                UpdateChunk(currentChunkCoordX + xOffset, currentChunkCoordY + yOffset, alreadyUpdatedChunkCoords);
             }
-        //}
+        }
     }
 
     void UpdateChunk(int x, int y, HashSet<Vector2> alreadyUpdatedChunkCoords)
@@ -136,10 +125,10 @@ public class TerrainGenerator : MonoBehaviour
                                                         y < -fixedTerrainSize || y > fixedTerrainSize);
 
                 // flatten LODs to lowest when using flat planes
-                LODInfo[] lods = !isFlatChunk ? detailLevels : new [] {detailLevels[detailLevels.Length - 1]};
+                LODInfo[] lods = !isFlatChunk ? detailLevels : new[] { detailLevels[detailLevels.Length - 1] };
                 TerrainChunk newChunk = new TerrainChunk(viewedChunkCoord, heightMapSettings, meshSettings, lods,
-                    colliderLODIndex, transform, viewer, mapMaterial);
-                
+                    colliderLODIndex, transform, viewer, mapMaterial, populationSettings);
+
                 terrainChunkDictionary.Add(viewedChunkCoord, newChunk);
                 newChunk.onVisibilityChanged += OnTerrainChunkVisibilityChanged;
 

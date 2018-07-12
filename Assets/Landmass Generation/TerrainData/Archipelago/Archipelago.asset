@@ -14,3 +14,4 @@ MonoBehaviour:
   heightMapSettings: {fileID: 11400000, guid: 43777388e6d9a85479dbc91887d2252c, type: 2}
   meshSettings: {fileID: 11400000, guid: 05655c8a63f4f244884aa02f179f397f, type: 2}
   textureData: {fileID: 11400000, guid: be57d2d96ac32164eae70681efaa5621, type: 2}
+  populationSettings: {fileID: 11400000, guid: 07e796f9e98e6e947a83100ec1c2ad36, type: 2}

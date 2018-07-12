@@ -8,5 +8,5 @@ public class TerrainDataPackage : ScriptableObject
     public HeightMapSettings heightMapSettings;
     public MeshSettings meshSettings;
     public TextureData textureData;
-
+    public TerrainPopulationSettings populationSettings;
 }
