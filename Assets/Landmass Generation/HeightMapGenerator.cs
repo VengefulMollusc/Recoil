@@ -30,9 +30,8 @@ public static class HeightMapGenerator
                 }
             }
         }
-
-        int interiorSeed = Noise.GetInteriorSeed(settings.noiseSettings, sampleCenter);
-        return new HeightMap(values, minValue, maxValue, interiorSeed);
+        
+        return new HeightMap(values, minValue, maxValue);
     }
 
     public static HeightMap GenerateHeightMapWithFalloff(int width, HeightMapSettings settings, Vector2 sampleCenter, float[,] falloffMap, int falloffStartX, int falloffStartY)
@@ -67,9 +66,8 @@ public static class HeightMapGenerator
                 }
             }
         }
-
-        int interiorSeed = Noise.GetInteriorSeed(settings.noiseSettings, sampleCenter);
-        return new HeightMap(values, minValue, maxValue, interiorSeed);
+        
+        return new HeightMap(values, minValue, maxValue);
     }
 
     private static float CalculateFalloffValue(int x, int y, float[,] falloffMap)
@@ -135,21 +133,11 @@ public struct HeightMap
     public readonly float[,] values;
     public readonly float minValue;
     public readonly float maxValue;
-    public readonly int interiorSeed;
-
-    public HeightMap(float[,] values, float minValue, float maxValue, int interiorSeed)
-    {
-        this.values = values;
-        this.minValue = minValue;
-        this.maxValue = maxValue;
-        this.interiorSeed = interiorSeed;
-    }
 
     public HeightMap(float[,] values, float minValue, float maxValue)
     {
         this.values = values;
         this.minValue = minValue;
         this.maxValue = maxValue;
-        interiorSeed = 0;
     }
 }

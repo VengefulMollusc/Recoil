@@ -88,11 +88,6 @@ public static class Noise
 
         return noiseMap;
     }
-
-    public static int GetInteriorSeed(NoiseSettings settings, Vector2 sampleCenter)
-    {
-        return settings.seed + (int)sampleCenter.x + (int)sampleCenter.y;
-    }
 }
 
 [System.Serializable]
