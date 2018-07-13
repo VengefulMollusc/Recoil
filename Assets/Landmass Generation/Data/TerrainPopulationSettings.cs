@@ -5,33 +5,38 @@ using UnityEngine;
 [CreateAssetMenu]
 public class TerrainPopulationSettings : UpdatableData
 {
-    public List<PopulatableObject> populatableObjects;
-
     [Range(1, 5)]
     public int populationIndexStep;
 
-    public List<GameObject> Populate(Transform terrainChunkTransform, HeightMap heightMap, MeshSettings meshSettings)
+    public List<PopulatableObject> populatableObjects;
+
+    public List<GameObject> Populate(Transform terrainChunkTransform, HeightMap heightMap, MeshSettings meshSettings, HeightMapSettings heightMapSettings)
     {
         List<GameObject> population = new List<GameObject>();
 
-        for (int x = 0; x < meshSettings.numVertsPerLine; x += populationIndexStep)
+        AnimationCurve heightCurve_threadSafe = new AnimationCurve(heightMapSettings.heightCurve.keys);
+
+        for (int x = 1; x < meshSettings.numVertsPerLine-1; x += populationIndexStep)
         {
-            for (int y = 0; y < meshSettings.numVertsPerLine; y += populationIndexStep)
+            for (int y = 1; y < meshSettings.numVertsPerLine-1; y += populationIndexStep)
             {
                 float pointHeight = heightMap.values[x, y];
-                float relativeHeight = pointHeight / (heightMap.maxValue - heightMap.minValue);
 
                 List<int> optionsAtThisheight = new List<int>();
                 for (int i = 0; i < populatableObjects.Count; i++)
                 {
-                    if (relativeHeight > populatableObjects[i].minHeight && relativeHeight < populatableObjects[i].maxHeight)
+                    float min = populatableObjects[i]
+                        .GetMinHeight(heightCurve_threadSafe, heightMapSettings.heightMultiplier);
+                    float max = populatableObjects[i]
+                        .GetMaxHeight(heightCurve_threadSafe, heightMapSettings.heightMultiplier);
+                    if (pointHeight >= min && pointHeight <= max)
                     {
                         optionsAtThisheight.Add(i);
                     }
                 }
 
                 if (optionsAtThisheight.Count <= 0)
-                    break;
+                    continue;
 
                 //float noiseVal = Mathf.PerlinNoise(x + pointHeight, y + pointHeight);
 
@@ -56,8 +61,11 @@ public class TerrainPopulationSettings : UpdatableData
 
     private Vector3 GetPosition(int x, int y, float pointHeight, float terrainHeightOffset, MeshSettings meshSettings)
     {
-        //return new Vector2(x * (meshSettings.meshWorldSize / 10f), y * (meshSettings.meshWorldSize / 10f));
-        return new Vector3(x - (meshSettings.numVertsPerLine / 2), pointHeight + terrainHeightOffset, (meshSettings.numVertsPerLine / 2) - y);
+        float xPos = (x - (meshSettings.numVertsPerLine / 2)) * meshSettings.meshScale;
+        float zPos = ((meshSettings.numVertsPerLine / 2) - y) * meshSettings.meshScale;
+        float height = pointHeight + terrainHeightOffset;
+
+        return new Vector3(xPos, height, zPos);
     }
 
     [System.Serializable]
@@ -65,9 +73,19 @@ public class TerrainPopulationSettings : UpdatableData
     {
         public GameObject objectPrefab;
         public float terrainHeightOffset;
-        public float objectRadius;
+        public float placementRadius;
 
-        [Range(0, 1)] public float minHeight;
-        [Range(0, 1)] public float maxHeight;
+        [Range(0, 1)] [SerializeField] private float minHeight;
+        [Range(0, 1)] [SerializeField] private float maxHeight;
+
+        public float GetMinHeight(AnimationCurve heightCurve, float heightMultiplier)
+        {
+            return heightCurve.Evaluate(minHeight) * heightMultiplier;
+        }
+
+        public float GetMaxHeight(AnimationCurve heightCurve, float heightMultiplier)
+        {
+            return heightCurve.Evaluate(maxHeight) * heightMultiplier;
+        }
     }
 }

@@ -115,7 +115,7 @@ public class TerrainChunk
 
     public void Populate()
     {
-        populationObjects = populationSettings.Populate(meshObject.transform, heightMap, meshSettings);
+        populationObjects = populationSettings.Populate(meshObject.transform, heightMap, meshSettings, heightMapSettings);
     }
 
     Vector2 viewerPosition
