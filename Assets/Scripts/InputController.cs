@@ -18,17 +18,23 @@ public class InputController : MonoBehaviour
     private string yCamAxis = "LookY";
 
     [Header("Buttons")]
+    //[SerializeField]
+    //private KeyCode boostKey = KeyCode.LeftShift;
     [SerializeField]
-    private KeyCode boostKey = KeyCode.LeftShift;
+    private string boostButton = "Jump";
     [SerializeField]
     private KeyCode increaseHeightKey = KeyCode.R;
     [SerializeField]
     private KeyCode decreaseHeightKey = KeyCode.F;
 
+    //[SerializeField]
+    //private KeyCode mainWeaponKey = KeyCode.Space;
+    //[SerializeField]
+    //private KeyCode secondaryWeaponKey = KeyCode.E;
     [SerializeField]
-    private KeyCode mainWeaponKey = KeyCode.Space;
+    private string mainWeaponButton = "Fire1";
     [SerializeField]
-    private KeyCode secondaryWeaponKey = KeyCode.E;
+    private string secondaryWeaponButton = "Fire2";
 
     void Start()
     {
@@ -56,22 +62,22 @@ public class InputController : MonoBehaviour
                 motor.ChangeHeight(-1f);
 
             // Boost
-            if (Input.GetKeyDown(boostKey))
+            if (Input.GetButtonDown(boostButton))
                 motor.Boost(true);
-            if (Input.GetKeyUp(boostKey))
+            if (Input.GetButtonUp(boostButton))
                 motor.Boost(false);
         }
 
         if (weaponController != null)
         {
-            if (Input.GetKeyDown(mainWeaponKey))
+            if (Input.GetButtonDown(mainWeaponButton))
                 weaponController.UseMainWeapon(true);
-            if (Input.GetKeyUp(mainWeaponKey))
+            if (Input.GetButtonUp(mainWeaponButton))
                 weaponController.UseMainWeapon(false);
 
-            if (Input.GetKeyDown(secondaryWeaponKey))
+            if (Input.GetButtonDown(secondaryWeaponButton))
                 weaponController.UseSecondaryWeapon(true);
-            if (Input.GetKeyUp(secondaryWeaponKey))
+            if (Input.GetButtonUp(secondaryWeaponButton))
                 weaponController.UseSecondaryWeapon(false);
         }
     }
