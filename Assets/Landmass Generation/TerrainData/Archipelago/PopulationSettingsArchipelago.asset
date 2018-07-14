@@ -16,7 +16,8 @@ MonoBehaviour:
   populatableObjects:
   - objectPrefab: {fileID: 1291491682455870, guid: 9b9414499ed089b4a85cb8fa33f3bfc8,
       type: 2}
-    terrainHeightOffset: 0
+    terrainHeightOffset: 20
     placementRadius: 0
+    noiseThreshold: 0.2
     minHeight: 0.2
-    maxHeight: 0.5
+    maxHeight: 0.8
