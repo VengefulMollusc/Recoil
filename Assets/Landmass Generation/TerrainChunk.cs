@@ -8,6 +8,7 @@ public class TerrainChunk
     public Vector2 coord;
 
     private GameObject meshObject;
+    private Transform meshTransform;
     private Vector2 sampleCentre;
     private Bounds bounds;
 
@@ -50,6 +51,7 @@ public class TerrainChunk
         bounds = new Bounds(position, Vector2.one * meshSettings.meshWorldSize);
 
         meshObject = new GameObject("Terrain Chunk");
+        meshTransform = meshObject.transform;
         meshRenderer = meshObject.AddComponent<MeshRenderer>();
         meshFilter = meshObject.AddComponent<MeshFilter>();
         meshCollider = meshObject.AddComponent<MeshCollider>();
@@ -107,16 +109,24 @@ public class TerrainChunk
     {
         heightMap = (HeightMap)heightMapObject;
         heightMapReceived = true;
-
+        
         CreateWaterPlane();
         UpdateTerrainChunk();
+
+        // Populate chunk once heightmap received
+        //ThreadedDataRequester.RequestData(() => TerrainPopulator.Populate(populationSettings, meshTransform, heightMap, meshSettings, heightMapSettings, sampleCentre), OnPopulationReceived);
         Populate();
     }
 
-    public void Populate()
+    void Populate()
     {
-        populationObjects = populationSettings.Populate(meshObject.transform, heightMap, meshSettings, heightMapSettings, sampleCentre);
+        populationObjects = TerrainPopulator.Populate(populationSettings, meshTransform, heightMap, meshSettings, heightMapSettings, sampleCentre);
     }
+
+    //void OnPopulationReceived(object populationListObject)
+    //{
+    //    populationObjects = (List<GameObject>)populationListObject;
+    //}
 
     Vector2 viewerPosition
     {
