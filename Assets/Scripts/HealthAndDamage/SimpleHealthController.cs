@@ -14,6 +14,7 @@ public class SimpleHealthController : HealthController
 
         if (healthAmount < 0f)
         {
+            healthAmount = 0f;
             Debug.Log("Deaded");
         }
     }

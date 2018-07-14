@@ -54,9 +54,11 @@ public class RailgunWeapon : Weapon
         {
             hitPosition = hitInfo.point;
 
-            HealthController healthController = hitInfo.transform.gameObject.GetComponent<HealthController>();
+            HealthController healthController = hitInfo.collider.gameObject.GetComponent<HealthController>();
             if (healthController != null)
+            {
                 healthController.Damage(damage);
+            }
         }
     }
 
