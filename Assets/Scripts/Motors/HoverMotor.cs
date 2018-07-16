@@ -143,10 +143,7 @@ public class HoverMotor : MonoBehaviour
         rb.AddForce(gravityVector * Time.fixedDeltaTime, ForceMode.Impulse);
 
         // Movement
-        if (boosting)
-            ApplyBoost();
-        else
-            ApplyMovementForce();
+        ApplyMovementForce();
 
         // Turning
         ApplyTurningForce();
@@ -167,31 +164,37 @@ public class HoverMotor : MonoBehaviour
         if (moveInputVector == Vector2.zero)
             return;
 
-        Vector3 inputForce = (forwardFlat * moveInputVector.y)
-            + (rightFlat * moveInputVector.x);
-        rb.AddForce(inputForce * moveForce * Time.fixedDeltaTime, ForceMode.Impulse);
+        if (boosting)
+        {
+            // Add boost force
+            if (moveInputVector == Vector2.zero)
+            {
+                rb.AddForce(forward * moveForce * boostForceMultiplier * Time.fixedDeltaTime, ForceMode.Impulse);
+            }
+            else
+            {
+                Vector3 force = forward * moveInputVector.y + right * moveInputVector.x;
+                rb.AddForce(force.normalized * moveForce * boostForceMultiplier * Time.fixedDeltaTime, ForceMode.Impulse);
+            }
+
+            // track boost state and begin recharge if limit is hit
+            boostState += Time.fixedDeltaTime;
+            if (boostState >= boostTime)
+            {
+                boostState = boostTime;
+                StartCoroutine(RechargeBoost());
+            }
+        }
+        else
+        {
+            Vector3 inputForce = (forwardFlat * moveInputVector.y)
+                + (rightFlat * moveInputVector.x);
+            rb.AddForce(inputForce * moveForce * Time.fixedDeltaTime, ForceMode.Impulse);
+        }
 
         // lean slightly to match left/right movement
         Vector3 leanTorque = forwardFlat * -moveInputVector.x * leanStrength;
         rb.AddTorque(leanTorque * Time.fixedDeltaTime, ForceMode.Impulse);
-    }
-
-    void ApplyBoost()
-    {
-        // Add boost force
-        rb.AddForce(forward * moveForce * boostForceMultiplier * Time.fixedDeltaTime, ForceMode.Impulse);
-
-        // TODO: look at this again with sloping terrain. May want to remove entirely or make relative to ground slope as well
-        // Calculate extra hover force based on facing direction
-        float dot = Vector3.Dot(Vector3.down, forward);
-
-        // track boost state and begin recharge if limit is hit
-        boostState += Time.fixedDeltaTime;
-        if (boostState >= boostTime)
-        {
-            boostState = boostTime;
-            StartCoroutine(RechargeBoost());
-        }
     }
 
     // Recharges boost value after a delay
