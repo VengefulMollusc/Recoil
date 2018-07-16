@@ -13,7 +13,6 @@ public class HoverMotorInspector : Editor
         Vector3 origin = motor.transform.position + (Vector3.up * motor.rayCastHeightModifier);
         Handles.color = Color.red;
         //float size = motor.sphereCastRadius * 2f;
-        Rigidbody rb = motor.GetComponent<Rigidbody>();
 
         //Handles.SphereHandleCap(0, origin + (Vector3.up * motor.sphereCastRadius), Quaternion.identity, size, EventType.Repaint);
         //Handles.SphereHandleCap(0, origin + (Vector3.up * motor.sphereCastRadius) + (Vector3.down * hoverHeight), Quaternion.identity, size, EventType.Repaint);
@@ -21,7 +20,7 @@ public class HoverMotorInspector : Editor
         List<Vector3> directions = motor.raycastDirections;
         foreach (Vector3 ray in directions)
         {
-            float rayLength = motor.CalculateHoverRayLength(ray, rb);
+            float rayLength = motor.CalculateHoverRayLength(ray);
             Handles.DrawLine(origin, origin + (ray.normalized * rayLength));
         }
     }

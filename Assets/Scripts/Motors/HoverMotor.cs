@@ -244,7 +244,7 @@ public class HoverMotor : MonoBehaviour
         foreach (Vector3 ray in raycastDirections)
         {
             RaycastHit hitInfo;
-            float rayLength = CalculateHoverRayLength(ray, rb);
+            float rayLength = CalculateHoverRayLength(ray);
             if (Physics.Raycast(origin, ray, out hitInfo, rayLength, raycastMask))
             {
                 if (hitInfo.distance > rayCastHeightModifier) // this check to make sure raycasts ending above player collider dont trigger hover
@@ -267,7 +267,7 @@ public class HoverMotor : MonoBehaviour
     }
 
     // TODO: rb parameter exists so can be called from inspector script
-    public float CalculateHoverRayLength(Vector3 ray, Rigidbody rb)
+    public float CalculateHoverRayLength(Vector3 ray)
     {
         Vector3 rayNormalised = ray.normalized;
         // extend raycast length depending on angle from vertical
@@ -278,6 +278,11 @@ public class HoverMotor : MonoBehaviour
         // extend raycast length depending on angle to movement direction
         float movementSpread = 0f;
         //Vector3 movementVector = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
+        // this line so inspector script doesnt trip over rb
+        if (rb == null)
+            return hoverHeight + verticalSpread;
+
         Vector3 movementVector = rb.velocity;
         if (movementVector != Vector3.zero && Vector3.Angle(movementVector, ray) < 60f)
         {
