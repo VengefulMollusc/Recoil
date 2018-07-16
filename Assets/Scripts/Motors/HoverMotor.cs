@@ -244,16 +244,22 @@ public class HoverMotor : MonoBehaviour
         Vector3 origin = position + (Vector3.up * rayCastHeightModifier);
         foreach (Vector3 ray in raycastDirections)
         {
+            // extend raycast length depending on angle from vertical
+            // TODO: if hoverHeight is ever made constant, this can be baked into the rays at Start()
             RaycastHit hitInfo;
             float verticalDot = (Vector3.Dot(Vector3.up, ray.normalized) + 1) * 0.5f;
             float verticalSpread = verticalDot * hoverHeight * rayCastHorizontalLengthModifier;
 
+            // extend raycast length depending on angle to movement direction
+            float movementSpread = 0f;
             Vector3 movementVector = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-            float movementDot = Vector3.Dot(movementVector.normalized, ray.normalized);
-            movementDot = (movementDot - 0.5f) * 2f;
-            if (movementDot < 0f)
-                movementDot = 0f;
-            float movementSpread = movementDot * hoverHeight * rayCastHorizontalLengthModifier;
+            if (movementVector != Vector3.zero)
+            {
+                float movementDot = Vector3.Dot(movementVector.normalized, ray.normalized);
+                movementDot = (movementDot - 0.75f) * 4f;
+                if (movementDot > 0f)
+                    movementSpread = movementDot * hoverHeight * rayCastHorizontalLengthModifier;
+            }
 
             float rayLength = hoverHeight + verticalSpread + movementSpread;
             if (Physics.Raycast(origin, ray, out hitInfo, rayLength, raycastMask))
