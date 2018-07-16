@@ -207,11 +207,11 @@ MonoBehaviour:
   yMovAxis: Vertical
   xCamAxis: LookX
   yCamAxis: LookY
-  boostKey: 304
+  boostButton: Jump
   increaseHeightKey: 114
   decreaseHeightKey: 102
-  mainWeaponKey: 32
-  secondaryWeaponKey: 101
+  mainWeaponButton: Fire1
+  secondaryWeaponButton: Fire2
 --- !u!114 &114129856107104522
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -248,8 +248,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   verticalDrag: 0.01
-  gravityForce: 10
-  maxSpeed: 20
+  gravityForce: 92
   moveForce: 20
   leanStrength: 1
   turnSpeed: 4
@@ -305,5 +304,5 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 8
+  m_Radius: 12
   m_Center: {x: 0, y: 0, z: 0}

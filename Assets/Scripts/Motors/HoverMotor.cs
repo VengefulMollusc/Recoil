@@ -14,8 +14,6 @@ public class HoverMotor : MonoBehaviour
     [SerializeField] private float gravityForce = 10f;
 
     [Header("Movement")]
-    [SerializeField]
-    private float maxSpeed = 20f;
     [SerializeField] private float moveForce = 10f;
     [SerializeField] private float leanStrength = 0.5f;
 
@@ -77,11 +75,12 @@ public class HoverMotor : MonoBehaviour
 
         bumperColliderRadius = GetComponent<SphereCollider>().radius;
 
-        // sqr maxspeed for cheaper comparisons later
-        maxSpeed *= maxSpeed;
-
         UpdateVariables();
+        ProcessHoverRays();
+    }
 
+    void ProcessHoverRays()
+    {
         foreach (Vector3 ray in raycastDirections)
         {
             ray.Normalize();
@@ -140,7 +139,7 @@ public class HoverMotor : MonoBehaviour
         UpdateVariables();
 
         // Apply Gravity
-        rb.AddForce(gravityVector * Time.fixedDeltaTime, ForceMode.Impulse);
+        rb.AddForce(gravityVector * Time.fixedDeltaTime, ForceMode.VelocityChange);
 
         // Movement
         ApplyMovementForce();
