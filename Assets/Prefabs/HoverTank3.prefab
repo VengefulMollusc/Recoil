@@ -258,9 +258,9 @@ MonoBehaviour:
   boostTime: 1.5
   boostRechargeTime: 3
   boostRechargeDelay: 1.5
-  hoverHeight: 15
+  hoverHeight: 20
   minHoverHeight: 10
-  maxHoverHeight: 20
+  maxHoverHeight: 30
   heightChangeForce: 3
   heightChangeRate: 10
   hoverForce: 40

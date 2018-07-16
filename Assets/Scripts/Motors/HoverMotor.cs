@@ -243,24 +243,8 @@ public class HoverMotor : MonoBehaviour
         Vector3 origin = position + (Vector3.up * rayCastHeightModifier);
         foreach (Vector3 ray in raycastDirections)
         {
-            // extend raycast length depending on angle from vertical
-            // TODO: if hoverHeight is ever made constant, this can be baked into the rays at Start()
             RaycastHit hitInfo;
-            float verticalDot = (Vector3.Dot(Vector3.up, ray.normalized) + 1) * 0.5f;
-            float verticalSpread = verticalDot * hoverHeight * rayCastHorizontalLengthModifier;
-
-            // extend raycast length depending on angle to movement direction
-            float movementSpread = 0f;
-            Vector3 movementVector = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-            if (movementVector != Vector3.zero)
-            {
-                float movementDot = Vector3.Dot(movementVector.normalized, ray.normalized);
-                movementDot = (movementDot - 0.75f) * 4f;
-                if (movementDot > 0f)
-                    movementSpread = movementDot * hoverHeight * rayCastHorizontalLengthModifier;
-            }
-
-            float rayLength = hoverHeight + verticalSpread + movementSpread;
+            float rayLength = CalculateHoverRayLength(ray, rb);
             if (Physics.Raycast(origin, ray, out hitInfo, rayLength, raycastMask))
             {
                 if (hitInfo.distance > rayCastHeightModifier) // this check to make sure raycasts ending above player collider dont trigger hover
@@ -280,6 +264,30 @@ public class HoverMotor : MonoBehaviour
         Vector3 velocity = rb.velocity;
         velocity.y *= 1f - verticalDrag;
         rb.velocity = velocity;
+    }
+
+    // TODO: rb parameter exists so can be called from inspector script
+    public float CalculateHoverRayLength(Vector3 ray, Rigidbody rb)
+    {
+        Vector3 rayNormalised = ray.normalized;
+        // extend raycast length depending on angle from vertical
+        // TODO: if hoverHeight is ever made constant, this can be baked into the rays at Start()
+        float verticalDot = (Vector3.Dot(Vector3.up, rayNormalised) + 1) * 0.5f;
+        float verticalSpread = verticalDot * hoverHeight * rayCastHorizontalLengthModifier;
+
+        // extend raycast length depending on angle to movement direction
+        float movementSpread = 0f;
+        //Vector3 movementVector = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        Vector3 movementVector = rb.velocity;
+        if (movementVector != Vector3.zero && Vector3.Angle(movementVector, ray) < 60f)
+        {
+            float movementDot = Vector3.Dot(movementVector * 0.01f, rayNormalised);
+            //movementDot = (movementDot - 0.75f) * 4f;
+            if (movementDot > 0f)
+                movementSpread = movementDot * hoverHeight * rayCastHorizontalLengthModifier;
+        }
+
+        return hoverHeight + verticalSpread + movementSpread;
     }
 
     void ApplyBumperForce()
