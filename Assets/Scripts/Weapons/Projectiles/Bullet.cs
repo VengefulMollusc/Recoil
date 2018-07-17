@@ -15,10 +15,13 @@ public class Bullet : MonoBehaviour
 
     private bool despawning;
 
+    private GameObject sourceObject;
+
     private float timer;
 
-    public void Launch(Vector3 position, Vector3 direction)
+    public void Launch(Vector3 position, Vector3 direction, GameObject source)
     {
+        sourceObject = source;
         transform.position = position;
         movementVector = direction.normalized * distancePerSecond;
         timer = 0f;
@@ -42,10 +45,13 @@ public class Bullet : MonoBehaviour
         RaycastHit hitInfo;
         if (Physics.Raycast(transform.position, movementVector, out hitInfo, movementVector.magnitude * Time.deltaTime))
         {
-            float distance = hitInfo.distance;
-            transform.position += movementVector.normalized * distance * Time.deltaTime;
-            Collide(hitInfo.collider);
-            return;
+            if (hitInfo.collider.gameObject != sourceObject)
+            {
+                float distance = hitInfo.distance;
+                transform.position += movementVector.normalized * distance * Time.deltaTime;
+                Collide(hitInfo.collider);
+                return;
+            }
         }
 
         transform.position += movementVector * Time.deltaTime;

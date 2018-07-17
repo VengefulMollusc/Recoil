@@ -53,6 +53,6 @@ public class MachineGun : Weapon
         Vector3 direction = transform.forward;
 
         Bullet bullet = GameObjectPoolController.Dequeue(poolableBulletKey).GetComponent<Bullet>();
-        bullet.Launch(origin, direction);
+        bullet.Launch(origin, direction, gameObject);
     }
 }
