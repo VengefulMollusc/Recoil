@@ -28,11 +28,7 @@ public class HoverMotor : MonoBehaviour
     [SerializeField] private float boostRechargeDelay = 1.5f;
 
     [Header("Hover")]
-    [SerializeField] private float hoverHeight = 15f;
-    [SerializeField] private float minHoverHeight = 10f;
-    [SerializeField] private float maxHoverHeight = 20f;
-    [SerializeField] private float heightChangeForce = 3f;
-    [SerializeField] private float heightChangeRate = 10f;
+    [SerializeField] private float hoverHeight = 20f;
     [SerializeField] private float hoverForce = 30f;
     [SerializeField] private LayerMask raycastMask;
     public List<Vector3> raycastDirections;
@@ -55,6 +51,8 @@ public class HoverMotor : MonoBehaviour
 
     private bool useBumperForce;
     private float bumperColliderRadius;
+
+    private float[] raycastBaseLengths;
 
     // Cached variables
     private Vector3 position;
@@ -82,9 +80,15 @@ public class HoverMotor : MonoBehaviour
      */
     void ProcessHoverRays()
     {
-        foreach (Vector3 ray in raycastDirections)
+        raycastBaseLengths = new float[raycastDirections.Count];
+
+        for (int i = 0; i < raycastDirections.Count; i++)
         {
-            ray.Normalize();
+            raycastDirections[i].Normalize();
+            // extend raycast length depending on angle from vertical
+            float verticalDot = (Vector3.Dot(Vector3.up, raycastDirections[i]) + 1) * 0.5f;
+            float verticalSpread = verticalDot * hoverHeight * rayCastHorizontalLengthModifier;
+            raycastBaseLengths[i] = hoverHeight + verticalSpread;
         }
     }
 
@@ -130,21 +134,6 @@ public class HoverMotor : MonoBehaviour
         turnInputVector = new Vector2(x, y);
         if (turnInputVector.sqrMagnitude > 1f)
             turnInputVector.Normalize();
-    }
-
-    /*
-     * Handle hover height adjustment input
-     *
-     * TODO: refactor to just use constant hover height
-     */
-    public void ChangeHeight(float change)
-    {
-        // Change hover height between limits
-        hoverHeight = Mathf.Clamp(hoverHeight + (change * heightChangeRate * Time.deltaTime),
-            minHoverHeight, maxHoverHeight);
-
-        // boost hover force in direction of change
-        rb.AddForce(Vector3.up * change * heightChangeForce * Time.deltaTime, ForceMode.Impulse);
     }
 
     /*
@@ -279,11 +268,11 @@ public class HoverMotor : MonoBehaviour
         // raycast and apply hover force
         float maxHoverForce = 0f;
         Vector3 origin = position + (Vector3.up * rayCastHeightModifier);
-        foreach (Vector3 ray in raycastDirections)
+        for (int i = 0; i < raycastDirections.Count; i++)
         {
             RaycastHit hitInfo;
-            float rayLength = CalculateHoverRayLength(ray);
-            if (Physics.Raycast(origin, ray, out hitInfo, rayLength, raycastMask))
+            float rayLength = CalculateHoverRayLengthFromIndex(i);
+            if (Physics.Raycast(origin, raycastDirections[i], out hitInfo, rayLength, raycastMask))
             {
                 if (hitInfo.distance > rayCastHeightModifier) // this check to make sure raycasts ending above player collider dont trigger hover
                 {
@@ -307,30 +296,31 @@ public class HoverMotor : MonoBehaviour
     /*
      * Calculates the length of a given hover raycast based on angles to vertical axis and velocity direction
      */
-    public float CalculateHoverRayLength(Vector3 ray)
+    public float CalculateHoverRayLengthFromIndex(int rayIndex)
     {
-        Vector3 rayNormalised = ray.normalized;
+        if (rayIndex < 0 || rayIndex >= raycastDirections.Count)
+            return 0f;
 
-        // extend raycast length depending on angle from vertical
-        // TODO: NOTE: if hoverHeight is ever made constant, this can be baked into the rays at Start()
-        float verticalDot = (Vector3.Dot(Vector3.up, rayNormalised) + 1) * 0.5f;
-        float verticalSpread = verticalDot * hoverHeight * rayCastHorizontalLengthModifier;
+        if (raycastBaseLengths == null)
+            ProcessHoverRays();
 
         // this line so inspector script doesnt trip over missing rb before start
         if (rb == null)
-            return hoverHeight + verticalSpread;
+            return raycastBaseLengths[rayIndex];
+
+        Vector3 ray = raycastDirections[rayIndex];
 
         // extend raycast length depending on angle to movement direction
         float movementSpread = 0f;
         Vector3 movementVector = rb.velocity;
         if (movementVector != Vector3.zero && Vector3.Angle(movementVector, ray) < 60f)
         {
-            float movementDot = Vector3.Dot(movementVector * 0.01f, rayNormalised);
+            float movementDot = Vector3.Dot(movementVector * 0.01f, ray);
             if (movementDot > 0f)
                 movementSpread = movementDot * hoverHeight * rayCastHorizontalLengthModifier;
         }
 
-        return hoverHeight + verticalSpread + movementSpread;
+        return raycastBaseLengths[rayIndex] + movementSpread;
     }
 
     /*

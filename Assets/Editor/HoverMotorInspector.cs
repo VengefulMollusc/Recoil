@@ -18,10 +18,10 @@ public class HoverMotorInspector : Editor
         //Handles.SphereHandleCap(0, origin + (Vector3.up * motor.sphereCastRadius) + (Vector3.down * hoverHeight), Quaternion.identity, size, EventType.Repaint);
 
         List<Vector3> directions = motor.raycastDirections;
-        foreach (Vector3 ray in directions)
+        for (int i = 0; i < directions.Count; i++)
         {
-            float rayLength = motor.CalculateHoverRayLength(ray);
-            Handles.DrawLine(origin, origin + (ray.normalized * rayLength));
+            float rayLength = motor.CalculateHoverRayLengthFromIndex(i);
+            Handles.DrawLine(origin, origin + (directions[i].normalized * rayLength));
         }
     }
 

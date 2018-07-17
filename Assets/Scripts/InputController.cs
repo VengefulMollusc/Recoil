@@ -22,15 +22,7 @@ public class InputController : MonoBehaviour
     //private KeyCode boostKey = KeyCode.LeftShift;
     [SerializeField]
     private string boostButton = "Jump";
-    [SerializeField]
-    private KeyCode increaseHeightKey = KeyCode.R;
-    [SerializeField]
-    private KeyCode decreaseHeightKey = KeyCode.F;
-
-    //[SerializeField]
-    //private KeyCode mainWeaponKey = KeyCode.Space;
-    //[SerializeField]
-    //private KeyCode secondaryWeaponKey = KeyCode.E;
+    
     [SerializeField]
     private string mainWeaponButton = "Fire1";
     [SerializeField]
@@ -54,13 +46,6 @@ public class InputController : MonoBehaviour
             motor.Move(Input.GetAxisRaw(xMovAxis), Input.GetAxisRaw(yMovAxis));
             motor.MoveCamera(Input.GetAxisRaw(xCamAxis), Input.GetAxisRaw(yCamAxis));
 
-            // Height change buttons
-            if (Input.GetKey(increaseHeightKey))
-                motor.ChangeHeight(1f);
-
-            if (Input.GetKey(decreaseHeightKey))
-                motor.ChangeHeight(-1f);
-
             // Boost
             if (Input.GetButtonDown(boostButton))
                 motor.Boost(true);
@@ -68,6 +53,7 @@ public class InputController : MonoBehaviour
                 motor.Boost(false);
         }
 
+        // get weapon input state
         if (weaponController != null)
         {
             if (Input.GetButtonDown(mainWeaponButton))
