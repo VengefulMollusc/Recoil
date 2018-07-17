@@ -6,11 +6,16 @@ public class MachineGun : Weapon
 {
     public GameObject bulletPrefab;
     public float fireRate = 0.2f;
+    public float spread = 0.02f;
+    public List<Vector3> firingPoints;
+
+    [Header("Editor")] public bool editFiringPoints;
 
     private bool firing;
     private bool firingSequenceActive;
 
     private string poolableBulletKey;
+    private int firingPointIndex;
 
     void Start()
     {
@@ -49,10 +54,28 @@ public class MachineGun : Weapon
      */
     private void Fire()
     {
-        Vector3 origin = transform.position + (transform.up * 0.5f);
-        Vector3 direction = transform.forward;
+        Vector3 origin = GetFiringPoint();
+        Vector3 direction = GetDirection();
 
         Bullet bullet = GameObjectPoolController.Dequeue(poolableBulletKey).GetComponent<Bullet>();
         bullet.Launch(origin, direction, gameObject);
+    }
+
+    private Vector3 GetFiringPoint()
+    {
+        Vector3 point = transform.position + firingPoints[firingPointIndex];
+        firingPointIndex++;
+        if (firingPointIndex >= firingPoints.Count)
+            firingPointIndex = 0;
+        return point;
+    }
+
+    private Vector3 GetDirection()
+    {
+        Vector3 direction = transform.forward;
+        direction.x += Random.Range(-spread, spread);
+        direction.y += Random.Range(-spread, spread);
+        direction.z += Random.Range(-spread, spread);
+        return direction;
     }
 }
