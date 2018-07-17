@@ -49,7 +49,7 @@ public class MachineGun : Weapon
      */
     private void Fire()
     {
-        Vector3 origin = transform.position;
+        Vector3 origin = transform.position + (transform.up * 0.5f);
         Vector3 direction = transform.forward;
 
         Bullet bullet = GameObjectPoolController.Dequeue(poolableBulletKey).GetComponent<Bullet>();
