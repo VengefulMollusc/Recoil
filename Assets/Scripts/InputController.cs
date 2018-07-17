@@ -18,6 +18,8 @@ public class InputController : MonoBehaviour
     private string yCamAxis = "LookY";
 
     [SerializeField]
+    private bool useWeaponAxes;
+    [SerializeField]
     private string mainWeaponAxis = "WeaponMain";
     [SerializeField]
     private string secondaryWeaponAxis = "WeaponSecondary";
@@ -25,12 +27,11 @@ public class InputController : MonoBehaviour
     [Header("Buttons")]
     [SerializeField]
     private string boostButton = "Jump";
-    
+
     [SerializeField]
     private string mainWeaponButton = "Fire1";
     [SerializeField]
     private string secondaryWeaponButton = "Fire2";
-
 
     void Start()
     {
@@ -60,15 +61,30 @@ public class InputController : MonoBehaviour
         // get weapon input state
         if (weaponController != null)
         {
-            if (Input.GetButtonDown(mainWeaponButton))
-                weaponController.UseMainWeapon(true);
-            if (Input.GetButtonUp(mainWeaponButton))
-                weaponController.UseMainWeapon(false);
+            if (useWeaponAxes)
+            {
+                if (Input.GetAxisRaw(mainWeaponAxis) > 0f)
+                    weaponController.UseMainWeapon(true);
+                if (Input.GetAxisRaw(mainWeaponAxis) <= 0f)
+                    weaponController.UseMainWeapon(false);
 
-            if (Input.GetButtonDown(secondaryWeaponButton))
-                weaponController.UseSecondaryWeapon(true);
-            if (Input.GetButtonUp(secondaryWeaponButton))
-                weaponController.UseSecondaryWeapon(false);
+                if (Input.GetAxisRaw(secondaryWeaponAxis) > 0f)
+                    weaponController.UseSecondaryWeapon(true);
+                if (Input.GetAxisRaw(secondaryWeaponAxis) <= 0f)
+                    weaponController.UseSecondaryWeapon(false);
+            }
+            else
+            {
+                if (Input.GetButtonDown(mainWeaponButton))
+                    weaponController.UseMainWeapon(true);
+                if (Input.GetButtonUp(mainWeaponButton))
+                    weaponController.UseMainWeapon(false);
+
+                if (Input.GetButtonDown(secondaryWeaponButton))
+                    weaponController.UseSecondaryWeapon(true);
+                if (Input.GetButtonUp(secondaryWeaponButton))
+                    weaponController.UseSecondaryWeapon(false);
+            }
         }
     }
 }

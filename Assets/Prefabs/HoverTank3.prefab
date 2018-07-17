@@ -60,13 +60,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1432145336701756}
-  m_LocalRotation: {x: 0.1065601, y: -0, z: -0, w: 0.99430627}
-  m_LocalPosition: {x: 0.5, y: 3.5, z: -10}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.5, z: -10}
   m_LocalScale: {x: 1, y: 1.1796188, z: 0.96407646}
   m_Children: []
   m_Father: {fileID: 4521391129715992}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 12.234, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4521391129715992
 Transform:
   m_ObjectHideFlags: 1
@@ -208,6 +208,7 @@ MonoBehaviour:
   yMovAxis: Vertical
   xCamAxis: LookX
   yCamAxis: LookY
+  useWeaponAxes: 1
   mainWeaponAxis: WeaponMain
   secondaryWeaponAxis: WeaponSecondary
   boostButton: Jump
@@ -315,5 +316,5 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 12
+  m_Radius: 6
   m_Center: {x: 0, y: 0, z: 0}
