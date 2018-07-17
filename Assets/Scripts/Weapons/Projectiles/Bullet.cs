@@ -5,12 +5,15 @@ using UnityEngine;
 [RequireComponent(typeof(Poolable))]
 public class Bullet : MonoBehaviour
 {
-    public float lifeSpan = 1f;
+    public float lifeSpan = 2f;
     public float damage = 10f;
     public float distancePerSecond = 100f;
 
     private Poolable poolable;
     private Vector3 movementVector;
+    private TrailRenderer trailRenderer;
+
+    private bool despawning;
 
     private float timer;
 
@@ -20,17 +23,24 @@ public class Bullet : MonoBehaviour
         movementVector = direction.normalized * distancePerSecond;
         timer = 0f;
         gameObject.SetActive(true);
+        despawning = false;
+
+        if (trailRenderer == null)
+        {
+            trailRenderer = GetComponent<TrailRenderer>();
+        }
+        trailRenderer.Clear();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!gameObject.activeSelf)
+        if (!gameObject.activeSelf || despawning)
             return;
 
         // raycast ahead for collisions
         RaycastHit hitInfo;
-        if (Physics.Raycast(transform.position, movementVector, out hitInfo, movementVector.magnitude))
+        if (Physics.Raycast(transform.position, movementVector, out hitInfo, movementVector.magnitude * Time.deltaTime))
         {
             float distance = hitInfo.distance;
             transform.position += movementVector.normalized * distance * Time.deltaTime;
@@ -43,7 +53,7 @@ public class Bullet : MonoBehaviour
 
         if (timer >= lifeSpan)
         {
-            Despawn();
+            StartCoroutine(Despawn());
         }
     }
 
@@ -54,11 +64,13 @@ public class Bullet : MonoBehaviour
         {
             healthController.Damage(damage);
         }
-        Despawn();
+        StartCoroutine(Despawn());
     }
 
-    void Despawn()
+    IEnumerator Despawn()
     {
+        despawning = true;
+        yield return new WaitForSeconds(trailRenderer.time);
         GameObjectPoolController.Enqueue(GetComponent<Poolable>());
     }
 }

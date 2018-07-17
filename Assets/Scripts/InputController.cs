@@ -60,14 +60,14 @@ public class InputController : MonoBehaviour
         // get weapon input state
         if (weaponController != null)
         {
-            if (Input.GetButtonDown(mainWeaponButton) || Input.GetAxisRaw(mainWeaponAxis) > 0f)
+            if (Input.GetButtonDown(mainWeaponButton))
                 weaponController.UseMainWeapon(true);
-            if (Input.GetButtonUp(mainWeaponButton) || Input.GetAxisRaw(mainWeaponAxis) <= 0f)
+            if (Input.GetButtonUp(mainWeaponButton))
                 weaponController.UseMainWeapon(false);
 
-            if (Input.GetButtonDown(secondaryWeaponButton) || Input.GetAxisRaw(secondaryWeaponAxis) > 0f)
+            if (Input.GetButtonDown(secondaryWeaponButton))
                 weaponController.UseSecondaryWeapon(true);
-            if (Input.GetButtonUp(secondaryWeaponButton) || Input.GetAxisRaw(secondaryWeaponAxis) <= 0f)
+            if (Input.GetButtonUp(secondaryWeaponButton))
                 weaponController.UseSecondaryWeapon(false);
         }
     }

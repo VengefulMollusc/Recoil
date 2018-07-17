@@ -49,7 +49,6 @@ public class MachineGun : Weapon
      */
     private void Fire()
     {
-        Debug.Log("Fire MG");
         Vector3 origin = transform.position;
         Vector3 direction = transform.forward;
 
