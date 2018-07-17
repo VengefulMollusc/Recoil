@@ -28,6 +28,7 @@ GameObject:
   - component: {fileID: 114823834796332608}
   - component: {fileID: 114129856107104522}
   - component: {fileID: 114667158090751562}
+  - component: {fileID: 114881691442120892}
   m_Layer: 8
   m_Name: HoverTank3
   m_TagString: Untagged
@@ -207,9 +208,9 @@ MonoBehaviour:
   yMovAxis: Vertical
   xCamAxis: LookX
   yCamAxis: LookY
+  mainWeaponAxis: WeaponMain
+  secondaryWeaponAxis: WeaponSecondary
   boostButton: Jump
-  increaseHeightKey: 114
-  decreaseHeightKey: 102
   mainWeaponButton: Fire1
   secondaryWeaponButton: Fire2
 --- !u!114 &114129856107104522
@@ -224,7 +225,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainWeapon: {fileID: 114667158090751562}
-  secondaryWeapon: {fileID: 0}
+  secondaryWeapon: {fileID: 114881691442120892}
 --- !u!114 &114667158090751562
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -259,10 +260,6 @@ MonoBehaviour:
   boostRechargeTime: 3
   boostRechargeDelay: 1.5
   hoverHeight: 20
-  minHoverHeight: 10
-  maxHoverHeight: 30
-  heightChangeForce: 3
-  heightChangeRate: 10
   hoverForce: 40
   raycastMask:
     serializedVersion: 2
@@ -287,6 +284,20 @@ MonoBehaviour:
   gyroCorrectionStrength: 6
   rotationLimit: 0.6
   rotationCorrectionStrength: 4
+--- !u!114 &114881691442120892
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1054013353523638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f04ddbfc8523d446a2c1ef5e09d96e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletPrefab: {fileID: 1641463690968118, guid: d1eaf308e92f0fb4ba3f76e8f3cbba4a,
+    type: 2}
+  fireRate: 0.2
 --- !u!124 &124798340235550674
 Behaviour:
   m_ObjectHideFlags: 1
