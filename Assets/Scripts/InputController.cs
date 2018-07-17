@@ -17,9 +17,12 @@ public class InputController : MonoBehaviour
     [SerializeField]
     private string yCamAxis = "LookY";
 
+    [SerializeField]
+    private string mainWeaponAxis = "WeaponMain";
+    [SerializeField]
+    private string secondaryWeaponAxis = "WeaponSecondary";
+
     [Header("Buttons")]
-    //[SerializeField]
-    //private KeyCode boostKey = KeyCode.LeftShift;
     [SerializeField]
     private string boostButton = "Jump";
     
@@ -27,6 +30,7 @@ public class InputController : MonoBehaviour
     private string mainWeaponButton = "Fire1";
     [SerializeField]
     private string secondaryWeaponButton = "Fire2";
+
 
     void Start()
     {
@@ -56,14 +60,14 @@ public class InputController : MonoBehaviour
         // get weapon input state
         if (weaponController != null)
         {
-            if (Input.GetButtonDown(mainWeaponButton))
+            if (Input.GetButtonDown(mainWeaponButton) || Input.GetAxisRaw(mainWeaponAxis) > 0f)
                 weaponController.UseMainWeapon(true);
-            if (Input.GetButtonUp(mainWeaponButton))
+            if (Input.GetButtonUp(mainWeaponButton) || Input.GetAxisRaw(mainWeaponAxis) <= 0f)
                 weaponController.UseMainWeapon(false);
 
-            if (Input.GetButtonDown(secondaryWeaponButton))
+            if (Input.GetButtonDown(secondaryWeaponButton) || Input.GetAxisRaw(secondaryWeaponAxis) > 0f)
                 weaponController.UseSecondaryWeapon(true);
-            if (Input.GetButtonUp(secondaryWeaponButton))
+            if (Input.GetButtonUp(secondaryWeaponButton) || Input.GetAxisRaw(secondaryWeaponAxis) <= 0f)
                 weaponController.UseSecondaryWeapon(false);
         }
     }
