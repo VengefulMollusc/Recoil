@@ -9,8 +9,7 @@ using UnityEngine;
 public class HoverMotor : MonoBehaviour
 {
     [Header("General")]
-    [SerializeField]
-    private float verticalDrag = 0.01f;
+    [SerializeField] private float verticalDrag = 0.01f;
     [SerializeField] private float gravityForce = 10f;
 
     [Header("Movement")]
@@ -18,20 +17,18 @@ public class HoverMotor : MonoBehaviour
     [SerializeField] private float leanStrength = 0.5f;
 
     [Header("Turning")]
-    [SerializeField]
-    private float turnSpeed = 4f;
+    [SerializeField] private float turnSpeed = 4f;
     [SerializeField] private float baseAngularDrag = 4f;
     [SerializeField] private float turningAngularDrag = 2f;
 
     [Header("Boost")]
-    [SerializeField]
-    private float boostForceMultiplier = 2f;
+    [SerializeField] private float boostForceMultiplier = 2f;
     [SerializeField] private float boostTime = 1.5f;
     [SerializeField] private float boostRechargeTime = 3f;
     [SerializeField] private float boostRechargeDelay = 1.5f;
 
     [Header("Hover")]
-    public float hoverHeight = 15f;
+    [SerializeField] private float hoverHeight = 15f;
     [SerializeField] private float minHoverHeight = 10f;
     [SerializeField] private float maxHoverHeight = 20f;
     [SerializeField] private float heightChangeForce = 3f;
@@ -43,8 +40,7 @@ public class HoverMotor : MonoBehaviour
     public float rayCastHorizontalLengthModifier = 2.5f;
 
     [Header("Gyro")]
-    [SerializeField]
-    private float gyroRotationLimit = 0.7f;
+    [SerializeField] private float gyroRotationLimit = 0.7f;
     [SerializeField] private float gyroCorrectionStrength = 6f;
     [SerializeField] private float rotationLimit = 0.6f;
     [SerializeField] private float rotationCorrectionStrength = 4f;
@@ -79,6 +75,11 @@ public class HoverMotor : MonoBehaviour
         ProcessHoverRays();
     }
 
+    /*
+     * Normalise hover raycasts.
+     *
+     * TODO: when using fixed hover height, verticalSpread can be baked in here
+     */
     void ProcessHoverRays()
     {
         foreach (Vector3 ray in raycastDirections)
@@ -87,6 +88,10 @@ public class HoverMotor : MonoBehaviour
         }
     }
 
+    /*
+     * Caches cardinal and flat direction variables for use by logic functions
+     * run at the start of each update
+     */
     void UpdateVariables()
     {
         // update cached transform variables
@@ -101,6 +106,9 @@ public class HoverMotor : MonoBehaviour
         rightFlat = rot * Vector3.right;
     }
 
+    /*
+     * Handle movement input
+     */
     public void Move(float x, float y)
     {
         moveInputVector = new Vector2(x, y);
@@ -108,6 +116,14 @@ public class HoverMotor : MonoBehaviour
             moveInputVector.Normalize();
     }
 
+    /*
+     * Handle turning input
+     *
+     * TODO: Rebuild turning/aiming to add second level of precise aiming.
+     * TODO: Use joystick for basic turning, then floating reticle for precise aiming.
+     * TODO: reticle controlled by eg: switch gyro.
+     * TODO: act roughly like killzone 3 psmove aiming
+     */
     public void MoveCamera(float x, float y)
     {
         // TODO: tweak this for smooth controller/mouse input
@@ -116,6 +132,11 @@ public class HoverMotor : MonoBehaviour
             turnInputVector.Normalize();
     }
 
+    /*
+     * Handle hover height adjustment input
+     *
+     * TODO: refactor to just use constant hover height
+     */
     public void ChangeHeight(float change)
     {
         // Change hover height between limits
@@ -126,6 +147,9 @@ public class HoverMotor : MonoBehaviour
         rb.AddForce(Vector3.up * change * heightChangeForce * Time.deltaTime, ForceMode.Impulse);
     }
 
+    /*
+     * Handle boost input
+     */
     public void Boost(bool isBoosting)
     {
         if (boosting && !isBoosting)
@@ -136,6 +160,7 @@ public class HoverMotor : MonoBehaviour
 
     void FixedUpdate()
     {
+        // Update cardinal/flat direction variables etc
         UpdateVariables();
 
         // Apply Gravity
@@ -157,24 +182,21 @@ public class HoverMotor : MonoBehaviour
         useBumperForce = false;
     }
 
+    /*
+     * Apply movement force based on input
+     */
     void ApplyMovementForce()
     {
-        // Apply force to move tank
         if (moveInputVector == Vector2.zero)
             return;
 
+        // Apply force to move tank
         if (boosting)
         {
-            // Add boost force
-            if (moveInputVector == Vector2.zero)
-            {
-                rb.AddForce(forward * moveForce * boostForceMultiplier * Time.fixedDeltaTime, ForceMode.Impulse);
-            }
-            else
-            {
-                Vector3 force = forward * moveInputVector.y + right * moveInputVector.x;
-                rb.AddForce(force.normalized * moveForce * boostForceMultiplier * Time.fixedDeltaTime, ForceMode.Impulse);
-            }
+            // Apply boosting movement force
+            // Uses actual forward/right vectors rather than flat vectors to allow more directional control 
+            Vector3 boostForce = (forward * moveInputVector.y) + (right * moveInputVector.x);
+            rb.AddForce(boostForce.normalized * moveForce * boostForceMultiplier * Time.fixedDeltaTime, ForceMode.Impulse);
 
             // track boost state and begin recharge if limit is hit
             boostState += Time.fixedDeltaTime;
@@ -186,17 +208,23 @@ public class HoverMotor : MonoBehaviour
         }
         else
         {
-            Vector3 inputForce = (forwardFlat * moveInputVector.y)
+            // Not boosting: apply default movement force
+            Vector3 movementForce = (forwardFlat * moveInputVector.y)
                 + (rightFlat * moveInputVector.x);
-            rb.AddForce(inputForce * moveForce * Time.fixedDeltaTime, ForceMode.Impulse);
+            rb.AddForce(movementForce * moveForce * Time.fixedDeltaTime, ForceMode.Impulse);
         }
 
         // lean slightly to match left/right movement
+        // TODO: detach visuals slightly from camera, allow leaning forward/back as well
         Vector3 leanTorque = forwardFlat * -moveInputVector.x * leanStrength;
         rb.AddTorque(leanTorque * Time.fixedDeltaTime, ForceMode.Impulse);
     }
 
-    // Recharges boost value after a delay
+    /*
+     * Coroutine to recharge boost
+     *
+     * Stops when fully recharged or boost input is activated again
+     */
     private IEnumerator RechargeBoost()
     {
         boosting = false;
@@ -218,24 +246,34 @@ public class HoverMotor : MonoBehaviour
             boostState = 0f;
     }
 
+    /*
+     * Apply turning torque based on input
+     */
     void ApplyTurningForce()
     {
-        // Apply torque to rotate facing direction
         if (turnInputVector == Vector2.zero)
             return;
 
+        // Apply torque to rotate facing direction
         Vector3 torque = (up * turnInputVector.x * turnSpeed) + (right * -turnInputVector.y * turnSpeed);
 
         rb.AddTorque(torque * Time.fixedDeltaTime, ForceMode.Impulse);
 
     }
 
+    /*
+     * Switch angular drag value based on whether receiving turn input
+     * (no input = higher drag for more accurate stopping)
+     */
     void DampenTurning()
     {
         // Apply angular drag value based on input state
         rb.angularDrag = (turnInputVector == Vector2.zero) ? baseAngularDrag : turningAngularDrag;
     }
 
+    /*
+     * Perform raycasts underneath and apply hover force based on the closest hit
+     */
     void ApplyHoverForce()
     {
         // raycast and apply hover force
@@ -266,28 +304,28 @@ public class HoverMotor : MonoBehaviour
         rb.velocity = velocity;
     }
 
-    // TODO: rb parameter exists so can be called from inspector script
+    /*
+     * Calculates the length of a given hover raycast based on angles to vertical axis and velocity direction
+     */
     public float CalculateHoverRayLength(Vector3 ray)
     {
         Vector3 rayNormalised = ray.normalized;
+
         // extend raycast length depending on angle from vertical
-        // TODO: if hoverHeight is ever made constant, this can be baked into the rays at Start()
+        // TODO: NOTE: if hoverHeight is ever made constant, this can be baked into the rays at Start()
         float verticalDot = (Vector3.Dot(Vector3.up, rayNormalised) + 1) * 0.5f;
         float verticalSpread = verticalDot * hoverHeight * rayCastHorizontalLengthModifier;
 
-        // extend raycast length depending on angle to movement direction
-        float movementSpread = 0f;
-        //Vector3 movementVector = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-
-        // this line so inspector script doesnt trip over rb
+        // this line so inspector script doesnt trip over missing rb before start
         if (rb == null)
             return hoverHeight + verticalSpread;
 
+        // extend raycast length depending on angle to movement direction
+        float movementSpread = 0f;
         Vector3 movementVector = rb.velocity;
         if (movementVector != Vector3.zero && Vector3.Angle(movementVector, ray) < 60f)
         {
             float movementDot = Vector3.Dot(movementVector * 0.01f, rayNormalised);
-            //movementDot = (movementDot - 0.75f) * 4f;
             if (movementDot > 0f)
                 movementSpread = movementDot * hoverHeight * rayCastHorizontalLengthModifier;
         }
@@ -295,6 +333,9 @@ public class HoverMotor : MonoBehaviour
         return hoverHeight + verticalSpread + movementSpread;
     }
 
+    /*
+     * Shunts tank away from close surfaces in cardinal directions
+     */
     void ApplyBumperForce()
     {
         if (!useBumperForce)
@@ -325,6 +366,9 @@ public class HoverMotor : MonoBehaviour
             rb.AddForce(bumperForce * Time.fixedDeltaTime, ForceMode.Impulse);
     }
 
+    /*
+     * Apply torque to level tank
+     */
     void GyroCorrection()
     {
         // check against vertical rotation limit
@@ -359,6 +403,9 @@ public class HoverMotor : MonoBehaviour
         }
     }
 
+    /*
+     * Trigger collider used to trigger bumper raycasts
+     */
     void OnTriggerStay(Collider col)
     {
         if (!col.isTrigger)
