@@ -208,7 +208,7 @@ MonoBehaviour:
   yMovAxis: Vertical
   xCamAxis: LookX
   yCamAxis: LookY
-  useWeaponAxes: 1
+  useWeaponAxes: 0
   mainWeaponAxis: WeaponMain
   secondaryWeaponAxis: WeaponSecondary
   boostButton: Jump
