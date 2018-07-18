@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SimpleHealthController : HealthController
 {
-    public float healthAmount = 100f;
+    public float healthAmount;
 
     public override void Damage(float damageAmount)
     {
@@ -20,5 +20,10 @@ public class SimpleHealthController : HealthController
             healthAmount = 0f;
             Debug.Log("Deaded");
         }
+    }
+
+    public override bool isDead()
+    {
+        return healthAmount <= 0f;
     }
 }
