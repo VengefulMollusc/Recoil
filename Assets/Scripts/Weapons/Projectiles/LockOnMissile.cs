@@ -15,9 +15,10 @@ public class LockOnMissile : MonoBehaviour
     public float initialGravity;
     public float homingStrength;
 
-    private Rigidbody rb;
     private Transform target;
+    private Rigidbody rb;
     private HealthController health;
+    private TrailRenderer trail;
 
     private bool launching;
     private float timer;
@@ -40,14 +41,19 @@ public class LockOnMissile : MonoBehaviour
         if (health == null)
             health = GetComponent<SimpleHealthController>();
 
+        if (trail == null)
+            trail = GetComponent<TrailRenderer>();
+
         rb.isKinematic = false;
         rb.detectCollisions = true;
         rb.velocity = (launchDirection * launchVelocity) + parentVelocity;
+
+        trail.Clear();
     }
 
     void FixedUpdate()
     {
-        if (!gameObject.activeSelf)
+        if (!gameObject.activeSelf || rb.isKinematic)
             return;
 
         timer += Time.fixedDeltaTime;
@@ -154,6 +160,13 @@ public class LockOnMissile : MonoBehaviour
         rb.isKinematic = true;
         rb.detectCollisions = false;
         // explode damage and particle effects
+
+        StartCoroutine(Despawn());
+    }
+
+    private IEnumerator Despawn()
+    {
+        yield return new WaitForSeconds(trail.time);
         GameObjectPoolController.Enqueue(GetComponent<Poolable>());
     }
 }
