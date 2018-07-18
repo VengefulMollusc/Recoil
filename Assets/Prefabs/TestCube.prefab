@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 65371573308366546}
   - component: {fileID: 23840958584112666}
   - component: {fileID: 114882056672158034}
+  - component: {fileID: 54674605173036226}
   m_Layer: 0
   m_Name: TestCube
   m_TagString: Untagged
@@ -115,6 +116,21 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1291491682455870}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!54 &54674605173036226
+Rigidbody:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1291491682455870}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0.5
+  m_AngularDrag: 0.2
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!65 &65371573308366546
 BoxCollider:
   m_ObjectHideFlags: 1

@@ -167,10 +167,11 @@ public class LockOnMissile : MonoBehaviour
         rb.isKinematic = true;
         rb.detectCollisions = false;
 
-        // explode damage and particle effects
+        // TODO: explosion particle effects here
+
+        // Apply explosion damage and force
         Vector3 position = transform.position;
         Collider[] hitColliders = Physics.OverlapSphere(position, explosionRadius, explosionLayerMask, QueryTriggerInteraction.Ignore);
-
         foreach (Collider col in hitColliders)
         {
             // damage health
