@@ -21,6 +21,8 @@ public class LockOnMissileLauncher : Weapon
     private List<LockOnTarget> lockOnTargets;
     private List<float> lockOnLevels;
 
+    private Rigidbody parentRb;
+
     private string poolableMissileKey;
 
     private bool lockingOn;
@@ -32,6 +34,8 @@ public class LockOnMissileLauncher : Weapon
         poolableMissileKey = lockOnMissilePrefab.GetComponent<Poolable>().key;
         int poolableCount = missileLaunchCount;
         GameObjectPoolController.AddEntry(poolableMissileKey, lockOnMissilePrefab, poolableCount, poolableCount * 4);
+
+        parentRb = GetComponentInParent<Rigidbody>();
 
         if (launchPointTransforms.Count <= 0)
             Debug.LogError("No launchPointTransforms defined");
@@ -89,7 +93,7 @@ public class LockOnMissileLauncher : Weapon
             //TODO: Layer mask here just includes scenery and lockontargets
             if (targetAngle <= checkAngle && Physics.Raycast(position, toTarget, out hitInfo, rayLength, lockOnRayCastLayerMask))
             {
-                if (hitInfo.transform == target.transform)
+                if (hitInfo.collider.transform == target.transform)
                 {
                     visibleTargets.Add(target);
 
@@ -145,7 +149,7 @@ public class LockOnMissileLauncher : Weapon
 
             LockOnMissile missile = GameObjectPoolController.Dequeue(poolableMissileKey).GetComponent<LockOnMissile>();
             Transform launchTransform = GetLaunchTransform();
-            missile.Launch(launchTransform.position, launchTransform.forward, launchTransform.up, targets[i].transform);
+            missile.Launch(launchTransform.position, launchTransform.forward, launchTransform.up, targets[i].transform, parentRb.velocity);
             yield return new WaitForSeconds(launchRate);
         }
 

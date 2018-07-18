@@ -51,6 +51,7 @@ public class TerrainChunk
         bounds = new Bounds(position, Vector2.one * meshSettings.meshWorldSize);
 
         meshObject = new GameObject("Terrain Chunk");
+        meshObject.layer = 11;
         meshTransform = meshObject.transform;
         meshRenderer = meshObject.AddComponent<MeshRenderer>();
         meshFilter = meshObject.AddComponent<MeshFilter>();
@@ -141,6 +142,7 @@ public class TerrainChunk
         if (heightMapSettings.useWaterPlane)
         {
             GameObject waterPlaneObject = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            waterPlaneObject.layer = 11;
             waterPlaneObject.transform.SetParent(meshObject.transform);
             waterPlaneObject.GetComponent<MeshRenderer>().sharedMaterial = heightMapSettings.waterMaterial;
 

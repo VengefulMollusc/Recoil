@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Poolable))]
 [RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(HealthController))]
+[RequireComponent(typeof(SimpleHealthController))]
 public class LockOnMissile : MonoBehaviour
 {
     public float damage;
@@ -21,7 +21,7 @@ public class LockOnMissile : MonoBehaviour
     private bool launching;
     private float timer;
 
-    public void Launch(Vector3 position, Vector3 facingDirection, Vector3 launchDirection, Transform target)
+    public void Launch(Vector3 position, Vector3 facingDirection, Vector3 launchDirection, Transform target, Vector3 parentVelocity)
     {
         transform.position = position;
         transform.rotation = Quaternion.LookRotation(facingDirection, launchDirection);
@@ -35,9 +35,12 @@ public class LockOnMissile : MonoBehaviour
         if (rb == null)
             rb = GetComponent<Rigidbody>();
 
+        if (health == null)
+            health = GetComponent<SimpleHealthController>();
+
         rb.isKinematic = false;
         rb.detectCollisions = true;
-        rb.velocity = launchDirection * launchVelocity;
+        rb.velocity = (launchDirection * launchVelocity) + parentVelocity;
     }
 
     void FixedUpdate()
@@ -55,7 +58,8 @@ public class LockOnMissile : MonoBehaviour
 
         if (launching)
         {
-            rb.AddForce(Vector3.down * initialGravity * Time.fixedDeltaTime, ForceMode.Acceleration);
+            float launchForce = initialGravity * Time.fixedDeltaTime / Time.timeScale;
+            rb.AddForce(Vector3.down * launchForce, ForceMode.Acceleration);
 
             if (rb.velocity.y <= 0f)
                 Ignite();
@@ -65,7 +69,8 @@ public class LockOnMissile : MonoBehaviour
 
         // do tracking stuff here
         Vector3 forward = transform.forward;
-        rb.AddForce(forward * acceleration * Time.fixedDeltaTime, ForceMode.Acceleration);
+        float accelerationForce = acceleration * Time.fixedDeltaTime / Time.timeScale;
+        rb.AddForce(forward * accelerationForce, ForceMode.Acceleration);
 
         if (target != null)
         {
@@ -73,6 +78,8 @@ public class LockOnMissile : MonoBehaviour
             Vector3 newFacing = Vector3.RotateTowards(forward, toTarget, homingStrength * Time.fixedDeltaTime, 0f);
             Quaternion rot = Quaternion.FromToRotation(forward, newFacing);
             rb.rotation *= rot;
+
+            Debug.DrawLine(transform.position, target.position);
         }
     }
 

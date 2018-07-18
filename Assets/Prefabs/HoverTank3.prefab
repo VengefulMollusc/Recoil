@@ -27,9 +27,38 @@ GameObject:
   - component: {fileID: 114046097406454780}
   - component: {fileID: 114823834796332608}
   - component: {fileID: 114129856107104522}
-  - component: {fileID: 114667158090751562}
   m_Layer: 8
   m_Name: HoverTank3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1184663336555508
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4522083949207640}
+  m_Layer: 8
+  m_Name: LaunchPoint2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1272476515856432
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4473046618728804}
+  m_Layer: 8
+  m_Name: LaunchPoint1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46,6 +75,22 @@ GameObject:
   - component: {fileID: 114265689279775902}
   m_Layer: 8
   m_Name: MachineGun
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1421393956954020
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4848458561024994}
+  - component: {fileID: 114891179090081510}
+  m_Layer: 8
+  m_Name: LockOnMissileLauncher
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -69,6 +114,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!4 &4473046618728804
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1272476515856432}
+  m_LocalRotation: {x: 0, y: 0, z: -0.17364825, w: 0.9848078}
+  m_LocalPosition: {x: 1.5, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4848458561024994}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -20}
 --- !u!4 &4495668689419440
 Transform:
   m_ObjectHideFlags: 1
@@ -94,8 +152,37 @@ Transform:
   m_Children:
   - {fileID: 4495668689419440}
   - {fileID: 4872103930232760}
+  - {fileID: 4848458561024994}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4522083949207640
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1184663336555508}
+  m_LocalRotation: {x: 0, y: 0, z: 0.17364816, w: 0.9848078}
+  m_LocalPosition: {x: -1.5, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4848458561024994}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 20}
+--- !u!4 &4848458561024994
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1421393956954020}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4473046618728804}
+  - {fileID: 4522083949207640}
+  m_Father: {fileID: 4521391129715992}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4872103930232760
 Transform:
@@ -254,7 +341,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40e99d3b57c7c0b4ab442958891ddc11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainWeapon: {fileID: 114667158090751562}
+  mainWeapon: {fileID: 114891179090081510}
   secondaryWeapon: {fileID: 114265689279775902}
 --- !u!114 &114265689279775902
 MonoBehaviour:
@@ -275,17 +362,6 @@ MonoBehaviour:
   - {x: -2, y: 1, z: 1.5}
   - {x: 2, y: 1, z: 1.5}
   editFiringPoints: 0
---- !u!114 &114667158090751562
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1054013353523638}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a9bf2389313bb64886b606111a8ffc1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114823834796332608
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -312,7 +388,7 @@ MonoBehaviour:
   hoverForce: 40
   raycastMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 2049
   raycastDirections:
   - {x: 0, y: -1, z: 0}
   - {x: 1, y: -1, z: 0}
@@ -333,6 +409,33 @@ MonoBehaviour:
   gyroCorrectionStrength: 6
   rotationLimit: 0.6
   rotationCorrectionStrength: 4
+--- !u!114 &114891179090081510
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1421393956954020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b16a952b6608ac4c8b4cc9180f10a20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lockOnMissilePrefab: {fileID: 1347379887538322, guid: e267fd62f74332c4d8f581353904e8a9,
+    type: 2}
+  missileLaunchCount: 12
+  launchRate: 0.1
+  lockOnAngle: 45
+  lockOnRange: 500
+  lockOnTime: 1
+  launchPointTransforms:
+  - {fileID: 4473046618728804}
+  - {fileID: 4522083949207640}
+  lockOnLayerMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  lockOnRayCastLayerMask:
+    serializedVersion: 2
+    m_Bits: 3072
 --- !u!124 &124798340235550674
 Behaviour:
   m_ObjectHideFlags: 1
