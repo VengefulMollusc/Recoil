@@ -99,7 +99,7 @@ Rigidbody:
   m_Drag: 0.2
   m_AngularDrag: 0.05
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 1
@@ -221,6 +221,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
+  explosionRadius: 10
+  explosionDamage: 5
+  explosionForce: 10
+  explosionLayerMask:
+    serializedVersion: 2
+    m_Bits: 769
   acceleration: 500
   lifeSpan: 10
   ignitionTime: 2

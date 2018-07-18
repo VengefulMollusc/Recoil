@@ -7,7 +7,14 @@ using UnityEngine;
 [RequireComponent(typeof(SimpleHealthController))]
 public class LockOnMissile : MonoBehaviour
 {
+    [Header("Damage")]
     public float damage;
+    public float explosionRadius;
+    public float explosionDamage;
+    public float explosionForce;
+    public LayerMask explosionLayerMask;
+
+    [Header("Movement")]
     public float acceleration;
     public float lifeSpan;
     public float ignitionTime;
@@ -146,7 +153,7 @@ public class LockOnMissile : MonoBehaviour
             return;
 
         // damage stuff
-        HealthController healthController = col.gameObject.GetComponent<HealthController>();
+        HealthController healthController = col.collider.GetComponent<HealthController>();
         if (healthController != null)
         {
             healthController.Damage(damage);
@@ -159,7 +166,28 @@ public class LockOnMissile : MonoBehaviour
     {
         rb.isKinematic = true;
         rb.detectCollisions = false;
+
         // explode damage and particle effects
+        Vector3 position = transform.position;
+        Collider[] hitColliders = Physics.OverlapSphere(position, explosionRadius, explosionLayerMask, QueryTriggerInteraction.Ignore);
+
+        foreach (Collider col in hitColliders)
+        {
+            // damage health
+            HealthController health = col.GetComponent<HealthController>();
+            if (health != null)
+            {
+                health.Damage(explosionDamage);
+            }
+
+            // add explosion force
+            Rigidbody rigidbody = col.GetComponent<Rigidbody>();
+            if (rigidbody != null)
+            {
+                Vector3 force = (col.transform.position - position).normalized * explosionForce;
+                rigidbody.AddForce(force, ForceMode.Impulse);
+            }
+        }
 
         StartCoroutine(Despawn());
     }
