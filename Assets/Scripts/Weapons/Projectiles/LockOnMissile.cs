@@ -70,17 +70,34 @@ public class LockOnMissile : MonoBehaviour
         // do tracking stuff here
         Vector3 forward = transform.forward;
         float accelerationForce = acceleration * Time.fixedDeltaTime / Time.timeScale;
+        rb.velocity = Vector3.Project(rb.velocity, forward);
         rb.AddForce(forward * accelerationForce, ForceMode.Acceleration);
 
         if (target != null)
         {
-            Vector3 toTarget = target.position - transform.position;
+            //transform.LookAt(target.position);
+
+            Vector3 toTarget = (target.position - transform.position).normalized;
             Vector3 newFacing = Vector3.RotateTowards(forward, toTarget, homingStrength * Time.fixedDeltaTime, 0f);
-            Quaternion rot = Quaternion.FromToRotation(forward, newFacing);
-            rb.rotation *= rot;
+            rb.rotation = Quaternion.LookRotation(newFacing);
 
             Debug.DrawLine(transform.position, target.position);
         }
+
+        //// do tracking stuff here
+        //Vector3 forward = transform.forward;
+        //float accelerationForce = acceleration * Time.fixedDeltaTime / Time.timeScale;
+        //rb.AddForce(forward * accelerationForce, ForceMode.Acceleration);
+
+        //if (target != null)
+        //{
+        //    Vector3 toTarget = (target.position - transform.position).normalized;
+        //    Vector3 newFacing = Vector3.RotateTowards(forward, toTarget, homingStrength * Time.fixedDeltaTime, 0f);
+        //    Quaternion rot = Quaternion.FromToRotation(forward, newFacing);
+        //    rb.rotation *= rot;
+
+        //    Debug.DrawLine(transform.position, target.position);
+        //}
     }
 
     void Ignite()

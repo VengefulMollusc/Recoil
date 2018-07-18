@@ -225,7 +225,7 @@ MonoBehaviour:
   lifeSpan: 10
   launchVelocity: 30
   initialGravity: 2000
-  homingStrength: 360
+  homingStrength: 2
 --- !u!114 &114477731062510758
 MonoBehaviour:
   m_ObjectHideFlags: 1
