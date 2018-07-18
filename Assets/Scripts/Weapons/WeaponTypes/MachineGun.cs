@@ -66,7 +66,7 @@ public class MachineGun : Weapon
 
     private Vector3 GetFiringPoint()
     {
-        Vector3 point = transform.position + firingPoints[firingPointIndex];
+        Vector3 point = transform.TransformPoint(firingPoints[firingPointIndex]);
         firingPointIndex++;
         if (firingPointIndex >= firingPoints.Count)
             firingPointIndex = 0;

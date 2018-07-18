@@ -237,7 +237,7 @@ MonoBehaviour:
   yMovAxis: Vertical
   xCamAxis: LookX
   yCamAxis: LookY
-  useWeaponAxes: 0
+  useWeaponAxes: 1
   mainWeaponAxis: WeaponMain
   secondaryWeaponAxis: WeaponSecondary
   boostButton: Jump
@@ -269,11 +269,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 1641463690968118, guid: d1eaf308e92f0fb4ba3f76e8f3cbba4a,
     type: 2}
-  fireRate: 0.2
-  spreadAngle: 2
+  fireRate: 0.05
+  spread: 0.01
   firingPoints:
   - {x: -2, y: 1, z: 1.5}
   - {x: 2, y: 1, z: 1.5}
+  editFiringPoints: 0
 --- !u!114 &114667158090751562
 MonoBehaviour:
   m_ObjectHideFlags: 1
