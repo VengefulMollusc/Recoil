@@ -11,6 +11,8 @@ public class LockOnMissileLauncher : Weapon
     public float lockOnRange = 200f;
     public float lockOnTime = 1f;
 
+    public List<Transform> launchPointTransforms;
+
     public LayerMask lockOnLayerMask;
     public LayerMask lockOnRayCastLayerMask;
 
@@ -23,12 +25,16 @@ public class LockOnMissileLauncher : Weapon
 
     private bool lockingOn;
     private bool firing;
+    private int launchPointIndex;
 
     void Start()
     {
         poolableMissileKey = lockOnMissilePrefab.GetComponent<Poolable>().key;
         int poolableCount = missileLaunchCount;
         GameObjectPoolController.AddEntry(poolableMissileKey, lockOnMissilePrefab, poolableCount, poolableCount * 4);
+
+        if (launchPointTransforms.Count <= 0)
+            Debug.LogError("No launchPointTransforms defined");
     }
 
     public override void FireWeapon(bool pressed)
@@ -138,10 +144,20 @@ public class LockOnMissileLauncher : Weapon
                 continue;
 
             LockOnMissile missile = GameObjectPoolController.Dequeue(poolableMissileKey).GetComponent<LockOnMissile>();
-            missile.Launch(transform.position, transform.forward, transform.up, targets[i].transform);
+            Transform launchTransform = GetLaunchTransform();
+            missile.Launch(launchTransform.position, launchTransform.forward, launchTransform.up, targets[i].transform);
             yield return new WaitForSeconds(launchRate);
         }
 
         firing = false;
+    }
+
+    private Transform GetLaunchTransform()
+    {
+        Transform launchTransform = launchPointTransforms[launchPointIndex];
+        launchPointIndex++;
+        if (launchPointIndex >= launchPointTransforms.Count)
+            launchPointIndex = 0;
+        return launchTransform;
     }
 }
