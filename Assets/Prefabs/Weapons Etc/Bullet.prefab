@@ -155,5 +155,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lifeSpan: 2
   damage: 2
-  impactForce: 1
+  impactForce: 0.5
   distancePerSecond: 500
