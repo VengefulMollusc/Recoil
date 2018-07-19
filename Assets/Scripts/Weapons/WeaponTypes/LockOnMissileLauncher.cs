@@ -68,15 +68,15 @@ public class LockOnMissileLauncher : Weapon
 
     private void LockOn()
     {
-        Vector3 position = transform.position;
         Vector3 forward = transform.forward;
+        Vector3 origin = transform.position;
         float checkAngle = lockOnAngle * 0.5f;
         float radius = Mathf.Tan(checkAngle * Mathf.Deg2Rad) * lockOnRange;
         float rayLength = Mathf.Sqrt(lockOnRange * lockOnRange + radius * radius);
 
         List<LockOnTarget> visibleTargets = new List<LockOnTarget>();
 
-        Collider[] cols = Physics.OverlapCapsule(position + (forward * radius), position + (forward * lockOnRange), radius, lockOnLayerMask,
+        Collider[] cols = Physics.OverlapCapsule(origin + (forward * radius), origin + (forward * lockOnRange), radius, lockOnLayerMask,
             QueryTriggerInteraction.Ignore);
 
         foreach (Collider col in cols)
@@ -87,11 +87,11 @@ public class LockOnMissileLauncher : Weapon
 
             RaycastHit hitInfo;
             Vector3 targetPos = target.transform.position;
-            Vector3 toTarget = targetPos - position;
+            Vector3 toTarget = targetPos - origin;
             float targetAngle = Vector3.Angle(forward, toTarget);
 
             //TODO: Layer mask here just includes scenery and lockontargets
-            if (targetAngle <= checkAngle && Physics.Raycast(position, toTarget, out hitInfo, rayLength, lockOnRayCastLayerMask))
+            if (targetAngle <= checkAngle && Physics.Raycast(origin, toTarget, out hitInfo, rayLength, lockOnRayCastLayerMask))
             {
                 if (hitInfo.collider.transform == target.transform)
                 {

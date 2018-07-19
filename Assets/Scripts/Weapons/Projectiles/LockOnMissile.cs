@@ -141,6 +141,15 @@ public class LockOnMissile : MonoBehaviour
             healthController.Damage(damage);
         }
 
+        // TODO: figure out if impact force needed
+        //// apply impact force
+        //Rigidbody rb = col.collider.GetComponent<Rigidbody>();
+        //if (rb != null)
+        //{
+        //    Vector3 force = transform.forward * impactForce;
+        //    rb.AddForceAtPosition(force, transform.position, ForceMode.Impulse);
+        //}
+
         Explode();
     }
 
