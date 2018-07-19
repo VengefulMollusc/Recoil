@@ -150,13 +150,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1272476515856432}
-  m_LocalRotation: {x: 0, y: 0, z: -0.17364825, w: 0.9848078}
+  m_LocalRotation: {x: -0.17101015, y: -0.030153714, z: -0.17101015, w: 0.9698463}
   m_LocalPosition: {x: 1.5, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4848458561024994}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -20}
+  m_LocalEulerAnglesHint: {x: -20, y: 0, z: -20}
 --- !u!4 &4495668689419440
 Transform:
   m_ObjectHideFlags: 1
@@ -193,13 +193,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1184663336555508}
-  m_LocalRotation: {x: 0, y: 0, z: 0.17364816, w: 0.9848078}
+  m_LocalRotation: {x: -0.17101015, y: 0.030153701, z: 0.17101006, w: 0.96984637}
   m_LocalPosition: {x: -1.5, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4848458561024994}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 20}
+  m_LocalEulerAnglesHint: {x: -20, y: 0, z: 20}
 --- !u!4 &4848458561024994
 Transform:
   m_ObjectHideFlags: 1
@@ -355,7 +355,7 @@ MonoBehaviour:
   yMovAxis: Vertical
   xCamAxis: LookX
   yCamAxis: LookY
-  useWeaponAxes: 0
+  useWeaponAxes: 1
   mainWeaponAxis: WeaponMain
   secondaryWeaponAxis: WeaponSecondary
   boostButton: Jump
@@ -468,7 +468,7 @@ MonoBehaviour:
   launchRate: 0.1
   lockOnAngle: 45
   lockOnRange: 500
-  lockOnTime: 1
+  lockOnTime: 0.5
   launchPointTransforms:
   - {fileID: 4473046618728804}
   - {fileID: 4522083949207640}

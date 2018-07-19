@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class TerrainChunk
 {
-    private const float colliderGenerationDistanceThreshold = 10f;
+    //private const float colliderGenerationDistanceThreshold = 10f;
     public event System.Action<TerrainChunk, bool> onVisibilityChanged;
     public Vector2 coord;
 
@@ -220,14 +220,14 @@ public class TerrainChunk
                 }
             }
 
-            if (sqrDistFromViewerToEdge < colliderGenerationDistanceThreshold * colliderGenerationDistanceThreshold)
-            {
+            //if (sqrDistFromViewerToEdge < colliderGenerationDistanceThreshold * colliderGenerationDistanceThreshold)
+            //{
                 if (lodMeshes[colliderLODIndex].hasMesh)
                 {
                     meshCollider.sharedMesh = lodMeshes[colliderLODIndex].mesh;
                     hasSetCollider = true;
                 }
-            }
+            //}
         }
     }
 

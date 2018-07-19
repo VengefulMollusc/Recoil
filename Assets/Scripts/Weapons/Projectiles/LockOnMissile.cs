@@ -17,7 +17,7 @@ public class LockOnMissile : MonoBehaviour
     [Header("Movement")]
     public float acceleration;
     public float lifeSpan;
-    public float ignitionTime;
+    public float launchTime;
     public float launchVelocity;
     public float initialGravity;
     public float homingStrength;
@@ -26,10 +26,8 @@ public class LockOnMissile : MonoBehaviour
     private Rigidbody rb;
     private HealthController health;
     private TrailRenderer trail;
-
-    private bool launching;
+    
     private float timer;
-    private float ignitionTimer;
 
     public void Launch(Vector3 position, Vector3 facingDirection, Vector3 launchDirection, Transform target, Vector3 parentVelocity)
     {
@@ -37,7 +35,6 @@ public class LockOnMissile : MonoBehaviour
         transform.rotation = Quaternion.LookRotation(facingDirection, launchDirection);
 
         this.target = target;
-        launching = true;
         timer = 0f;
 
         gameObject.SetActive(true);
@@ -71,46 +68,42 @@ public class LockOnMissile : MonoBehaviour
             return;
         }
 
-        if (launching)
+        float launchRatio = 1f;
+
+        if (timer < launchTime)
         {
-            ApplyGravity(1f);
-
-            if (rb.velocity.y <= 0f)
-                Ignite();
-
-            return;
+            launchRatio = Mathf.Clamp01(timer / launchTime);
+            float falloff = 1 - launchRatio;
+            ApplyGravity(falloff);
         }
 
         // Apply rocket force
         Vector3 forward = transform.forward;
         Vector3 force = forward * acceleration * 10f;
 
-        if (ignitionTimer < ignitionTime)
-        {
-            float falloff = 1 - (ignitionTimer / ignitionTime);
-            ApplyGravity(falloff);
-            ignitionTimer += Time.fixedDeltaTime;
-        }
+        //if (timer > launchTime)
+        //{
+            // Apply direction correction force
+            Vector3 velocity = rb.velocity;
+            Vector3 projected = Vector3.Project(rb.velocity, forward);
 
-        // Apply direction correction force
-        Vector3 velocity = rb.velocity;
-        Vector3 projected = Vector3.Project(rb.velocity, forward);
-        if (Vector3.Dot(velocity, projected) > 0f)
-        {
-            Vector3 diff = projected - velocity;
-            force += diff * acceleration;
-        }
+            if (Vector3.Dot(velocity, projected) > 0f)
+            {
+                Vector3 diff = projected - velocity;
+                force += diff * acceleration * launchRatio;
+            }
 
-        if (target != null)
-        {
-            //transform.LookAt(target.position);
+            if (target != null)
+            {
+                //transform.LookAt(target.position);
 
-            Vector3 toTarget = (target.position - transform.position).normalized;
-            Vector3 newFacing = Vector3.RotateTowards(forward, toTarget, homingStrength * Time.fixedDeltaTime, 0f);
-            rb.rotation = Quaternion.LookRotation(newFacing);
+                Vector3 toTarget = (target.position - transform.position).normalized;
+                Vector3 newFacing = Vector3.RotateTowards(forward, toTarget, homingStrength * Time.fixedDeltaTime * launchRatio, 0f);
+                rb.rotation = Quaternion.LookRotation(newFacing);
 
-            Debug.DrawLine(transform.position, target.position);
-        }
+                //Debug.DrawLine(transform.position, target.position);
+            }
+        //}
 
         // Apply forces
         rb.AddForce(force * Time.fixedDeltaTime, ForceMode.Acceleration);
@@ -122,18 +115,8 @@ public class LockOnMissile : MonoBehaviour
         rb.AddForce(Vector3.down * gravityForce, ForceMode.Acceleration);
     }
 
-    void Ignite()
-    {
-        // activate rocket trail particle effect here
-        launching = false;
-        ignitionTimer = 0f;
-    }
-
     void OnCollisionEnter(Collision col)
     {
-        if (launching)
-            return;
-
         // damage stuff
         HealthController healthController = col.collider.GetComponent<HealthController>();
         if (healthController != null)

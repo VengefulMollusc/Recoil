@@ -108,11 +108,11 @@ public class LockOnMissileLauncher : Weapon
                     else
                     {
                         int index = lockOnTargets.IndexOf(target);
-                        if (lockOnLevels[index] < 1f)
+                        //if (lockOnLevels[index] < 1f)
                             lockOnLevels[index] += lockOnCheckInterval;
 
-                        if (lockOnLevels[index] > 1f)
-                            lockOnLevels[index] = 1f;
+                        //if (lockOnLevels[index] > 1f)
+                        //    lockOnLevels[index] = 1f;
                     }
                 }
             }
@@ -121,6 +121,9 @@ public class LockOnMissileLauncher : Weapon
         // Clear non-visible targets from tracking
         for (int i = lockOnTargets.Count - 1; i >= 0; i--)
         {
+
+            Debug.DrawLine(transform.position, lockOnTargets[i].transform.position);
+
             if (!visibleTargets.Contains(lockOnTargets[i]))
             {
                 lockOnTargets.RemoveAt(i);
@@ -149,7 +152,7 @@ public class LockOnMissileLauncher : Weapon
 
             LockOnMissile missile = GameObjectPoolController.Dequeue(poolableMissileKey).GetComponent<LockOnMissile>();
             Transform launchTransform = GetLaunchTransform();
-            missile.Launch(launchTransform.position, launchTransform.up, launchTransform.up, targets[i].transform, parentRb.velocity);
+            missile.Launch(launchTransform.position, launchTransform.forward, launchTransform.up, targets[i].transform, parentRb.velocity);
             yield return new WaitForSeconds(launchRate);
         }
 

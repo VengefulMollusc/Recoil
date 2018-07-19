@@ -229,7 +229,7 @@ MonoBehaviour:
     m_Bits: 769
   acceleration: 500
   lifeSpan: 10
-  ignitionTime: 2
+  launchTime: 1
   launchVelocity: 30
   initialGravity: 200
   homingStrength: 2
