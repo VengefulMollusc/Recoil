@@ -83,9 +83,6 @@ public class LockOnMissile : MonoBehaviour
 
         // Apply rocket force
         Vector3 forward = transform.forward;
-        //float accelerationForce = acceleration * Time.fixedDeltaTime * 10f;
-        //rb.AddForce(forward * accelerationForce, ForceMode.Acceleration);
-
         Vector3 force = forward * acceleration * 10f;
 
         if (ignitionTimer < ignitionTime)
@@ -117,21 +114,6 @@ public class LockOnMissile : MonoBehaviour
 
         // Apply forces
         rb.AddForce(force * Time.fixedDeltaTime, ForceMode.Acceleration);
-
-        //// do tracking stuff here
-        //Vector3 forward = transform.forward;
-        //float accelerationForce = acceleration * Time.fixedDeltaTime / Time.timeScale;
-        //rb.AddForce(forward * accelerationForce, ForceMode.Acceleration);
-
-        //if (target != null)
-        //{
-        //    Vector3 toTarget = (target.position - transform.position).normalized;
-        //    Vector3 newFacing = Vector3.RotateTowards(forward, toTarget, homingStrength * Time.fixedDeltaTime, 0f);
-        //    Quaternion rot = Quaternion.FromToRotation(forward, newFacing);
-        //    rb.rotation *= rot;
-
-        //    Debug.DrawLine(transform.position, target.position);
-        //}
     }
 
     private void ApplyGravity(float strength)
