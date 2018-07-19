@@ -1,29 +1,42 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class SimpleHealthController : HealthController
 {
-    public float healthAmount;
+    public float healthMax;
+
+    private float currentHealth;
+
+    private void Start()
+    {
+        currentHealth = healthMax;
+    }
 
     public override void Damage(float damageAmount)
     {
-        if (healthAmount <= 0)
+        if (currentHealth <= 0)
             return;
 
-        healthAmount -= damageAmount;
+        currentHealth -= damageAmount;
 
-        Debug.Log(healthAmount);
+        Debug.Log(currentHealth);
 
-        if (healthAmount <= 0f)
+        if (currentHealth <= 0f)
         {
-            healthAmount = 0f;
+            currentHealth = 0f;
             Debug.Log("Deaded");
         }
     }
 
     public override bool isDead()
     {
-        return healthAmount <= 0f;
+        return currentHealth <= 0f;
+    }
+
+    public override void ResetHealth()
+    {
+        currentHealth = healthMax;
     }
 }

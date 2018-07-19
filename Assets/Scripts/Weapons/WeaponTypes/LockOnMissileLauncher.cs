@@ -16,10 +16,9 @@ public class LockOnMissileLauncher : Weapon
     public LayerMask lockOnLayerMask;
     public LayerMask lockOnRayCastLayerMask;
 
-    private const float lockOnCheckInterval = 0.1f;
+    private List<LockOnTargetTracker> lockOnTargets;
 
-    private List<LockOnTarget> lockOnTargets;
-    private List<float> lockOnLevels;
+    private const float lockOnCheckInterval = 0.1f;
 
     private Rigidbody parentRb;
 
@@ -52,8 +51,7 @@ public class LockOnMissileLauncher : Weapon
 
     private IEnumerator LockOnCoroutine()
     {
-        lockOnTargets = new List<LockOnTarget>();
-        lockOnLevels = new List<float>();
+        lockOnTargets = new List<LockOnTargetTracker>();
 
         while (lockingOn)
         {
@@ -68,13 +66,17 @@ public class LockOnMissileLauncher : Weapon
 
     private void LockOn()
     {
+        Debug.Log("Locking on");
         Vector3 forward = transform.forward;
         Vector3 origin = transform.position;
         float checkAngle = lockOnAngle * 0.5f;
         float radius = Mathf.Tan(checkAngle * Mathf.Deg2Rad) * lockOnRange;
         float rayLength = Mathf.Sqrt(lockOnRange * lockOnRange + radius * radius);
 
-        List<LockOnTarget> visibleTargets = new List<LockOnTarget>();
+        foreach (LockOnTargetTracker tracker in lockOnTargets)
+        {
+            tracker.visible = false;
+        }
 
         Collider[] cols = Physics.OverlapCapsule(origin + (forward * radius), origin + (forward * lockOnRange), radius, lockOnLayerMask,
             QueryTriggerInteraction.Ignore);
@@ -93,42 +95,38 @@ public class LockOnMissileLauncher : Weapon
             //TODO: Layer mask here just includes scenery and lockontargets
             if (targetAngle <= checkAngle && Physics.Raycast(origin, toTarget, out hitInfo, rayLength, lockOnRayCastLayerMask))
             {
-                if (hitInfo.collider.transform == target.transform)
+                Transform targetTransform = target.transform;
+                if (hitInfo.collider.transform == targetTransform)
                 {
-                    visibleTargets.Add(target);
+                    Debug.DrawLine(targetTransform.position, origin);
 
-                    if (!lockOnTargets.Contains(target))
+                    bool foundTracker = false;
+                    foreach (LockOnTargetTracker tracker in lockOnTargets)
                     {
-                        if (lockOnTargets.Count < missileLaunchCount)
+                        if (tracker.targetTransform == targetTransform)
                         {
-                            lockOnTargets.Add(target);
-                            lockOnLevels.Add(0);
+                            tracker.visible = true;
+                            tracker.lockOnLevel += lockOnCheckInterval;
+                            foundTracker = true;
+                            break;
                         }
                     }
-                    else
-                    {
-                        int index = lockOnTargets.IndexOf(target);
-                        //if (lockOnLevels[index] < 1f)
-                            lockOnLevels[index] += lockOnCheckInterval;
 
-                        //if (lockOnLevels[index] > 1f)
-                        //    lockOnLevels[index] = 1f;
+                    if (!foundTracker && lockOnTargets.Count < missileLaunchCount)
+                    {
+                        LockOnTargetTracker newTracker = new LockOnTargetTracker(targetTransform);
+                        lockOnTargets.Add(newTracker);
                     }
                 }
             }
         }
 
         // Clear non-visible targets from tracking
-        for (int i = lockOnTargets.Count - 1; i >= 0; i--)
+        List<LockOnTargetTracker> trackers = new List<LockOnTargetTracker>(lockOnTargets);
+        foreach (LockOnTargetTracker tracker in trackers)
         {
-
-            Debug.DrawLine(transform.position, lockOnTargets[i].transform.position);
-
-            if (!visibleTargets.Contains(lockOnTargets[i]))
-            {
-                lockOnTargets.RemoveAt(i);
-                lockOnLevels.RemoveAt(i);
-            }
+            if (!tracker.visible)
+                lockOnTargets.Remove(tracker);
         }
     }
 
@@ -137,22 +135,21 @@ public class LockOnMissileLauncher : Weapon
         if (lockOnTargets.Count > 0)
         {
             firing = true;
-            List<LockOnTarget> targets = new List<LockOnTarget>(lockOnTargets);
-            List<float> levels = new List<float>(lockOnLevels);
-            StartCoroutine(LaunchCoroutine(targets, levels));
+            List<LockOnTargetTracker> targets = new List<LockOnTargetTracker>(lockOnTargets);
+            StartCoroutine(LaunchCoroutine(targets));
         }
     }
 
-    private IEnumerator LaunchCoroutine(List<LockOnTarget> targets, List<float> levels)
+    private IEnumerator LaunchCoroutine(List<LockOnTargetTracker> targets)
     {
-        for (int i = 0; i < targets.Count; i++)
+        foreach (LockOnTargetTracker tracker in targets)
         {
-            if (levels[i] < 1f)
+            if (tracker.lockOnLevel < lockOnTime)
                 continue;
 
             LockOnMissile missile = GameObjectPoolController.Dequeue(poolableMissileKey).GetComponent<LockOnMissile>();
             Transform launchTransform = GetLaunchTransform();
-            missile.Launch(launchTransform.position, launchTransform.forward, launchTransform.up, targets[i].transform, parentRb.velocity);
+            missile.Launch(launchTransform.position, launchTransform.forward, launchTransform.up, tracker.targetTransform, parentRb.velocity);
             yield return new WaitForSeconds(launchRate);
         }
 
@@ -166,5 +163,29 @@ public class LockOnMissileLauncher : Weapon
         if (launchPointIndex >= launchPointTransforms.Count)
             launchPointIndex = 0;
         return launchTransform;
+    }
+
+    private class LockOnTargetTracker
+    {
+        public readonly Transform targetTransform;
+        public float lockOnLevel;
+        public bool visible;
+
+        public LockOnTargetTracker(Transform target)
+        {
+            targetTransform = target;
+            visible = true;
+            lockOnLevel = 0f;
+        }
+
+        //public void SetVisible(bool visible)
+        //{
+        //    this.visible = visible;
+        //}
+
+        //public void IncreaseLevel(float amount)
+        //{
+        //    lockOnLevel = lockOnLevel + amount;
+        //}
     }
 }

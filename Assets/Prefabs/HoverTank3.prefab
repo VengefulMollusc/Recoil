@@ -446,7 +446,7 @@ MonoBehaviour:
   - {x: 0, y: -0.25, z: 1}
   - {x: 0, y: -0.25, z: -1}
   rayCastHeightModifier: 2
-  rayCastHorizontalLengthModifier: 2.5
+  rayCastHorizontalLengthModifier: 2
   gyroRotationLimit: 0.7
   gyroCorrectionStrength: 30
   rotationLimit: 0.6
@@ -495,7 +495,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 10
+  m_Radius: 12
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!135 &135545971876228788
 SphereCollider:

@@ -227,7 +227,7 @@ MonoBehaviour:
   explosionLayerMask:
     serializedVersion: 2
     m_Bits: 769
-  acceleration: 500
+  acceleration: 1000
   lifeSpan: 10
   launchTime: 1
   launchVelocity: 30
@@ -244,7 +244,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d912210a63f1b2f4dbdfcfee3f6d96b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 1
+  healthMax: 5
 --- !u!135 &135647415242485610
 SphereCollider:
   m_ObjectHideFlags: 1

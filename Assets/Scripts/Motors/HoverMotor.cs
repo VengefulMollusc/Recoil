@@ -313,7 +313,7 @@ public class HoverMotor : MonoBehaviour
         // extend raycast length depending on angle to movement direction
         float movementSpread = 0f;
         Vector3 movementVector = rb.velocity;
-        if (movementVector != Vector3.zero && Vector3.Angle(movementVector, ray) < 60f)
+        if (movementVector != Vector3.zero && Vector3.Angle(movementVector, ray) < 45f)
         {
             float movementDot = Vector3.Dot(movementVector * 0.01f, ray);
             if (movementDot > 0f)
@@ -339,7 +339,9 @@ public class HoverMotor : MonoBehaviour
             right,
             -right,
             up,
-            -up
+            -up, 
+            Vector3.down,
+            rb.velocity.normalized + Vector3.down
         };
         Vector3 bumperForce = Vector3.zero;
         // raycast in relative cardinal directions and average force

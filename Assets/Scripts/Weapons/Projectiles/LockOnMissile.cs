@@ -45,6 +45,8 @@ public class LockOnMissile : MonoBehaviour
         if (health == null)
             health = GetComponent<SimpleHealthController>();
 
+        health.ResetHealth();
+
         if (trail == null)
             trail = GetComponent<TrailRenderer>();
 
