@@ -7,6 +7,7 @@ public class Bullet : MonoBehaviour
 {
     public float lifeSpan = 2f;
     public float damage = 10f;
+    public float impactForce;
     public float distancePerSecond = 100f;
 
     private Poolable poolable;
@@ -49,7 +50,7 @@ public class Bullet : MonoBehaviour
             {
                 float distance = hitInfo.distance;
                 transform.position += movementVector.normalized * distance * Time.deltaTime;
-                Collide(hitInfo.collider);
+                Collide(hitInfo);
                 return;
             }
         }
@@ -63,13 +64,25 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    void Collide(Collider col)
+    void Collide(RaycastHit hitInfo)
     {
-        HealthController healthController = col.gameObject.GetComponent<HealthController>();
+        Collider col = hitInfo.collider;
+
+        // damage object
+        HealthController healthController = col.GetComponent<HealthController>();
         if (healthController != null)
         {
             healthController.Damage(damage);
         }
+
+        // apply impact force
+        Rigidbody rb = col.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            Vector3 force = movementVector.normalized * impactForce;
+            rb.AddForceAtPosition(force, hitInfo.point, ForceMode.Impulse);
+        }
+
         StartCoroutine(Despawn());
     }
 
