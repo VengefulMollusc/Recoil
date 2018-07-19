@@ -66,6 +66,8 @@ public class Bullet : MonoBehaviour
 
     void Collide(RaycastHit hitInfo)
     {
+        // trigger impact particle effect
+
         Collider col = hitInfo.collider;
 
         // damage object
