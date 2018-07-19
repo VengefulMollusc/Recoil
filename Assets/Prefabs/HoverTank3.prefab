@@ -177,7 +177,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1054013353523638}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 67, z: 0}
+  m_LocalPosition: {x: 0, y: 200, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4495668689419440}
@@ -464,7 +464,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lockOnMissilePrefab: {fileID: 1347379887538322, guid: e267fd62f74332c4d8f581353904e8a9,
     type: 2}
-  missileLaunchCount: 12
+  missileLaunchCount: 120
   launchRate: 0.1
   lockOnAngle: 45
   lockOnRange: 500

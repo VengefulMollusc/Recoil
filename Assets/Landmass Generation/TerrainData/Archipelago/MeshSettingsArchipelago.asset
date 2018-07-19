@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Name: MeshSettingsArchipelago
   m_EditorClassIdentifier: 
   autoUpdate: 1
-  meshScale: 4
+  meshScale: 12
   useFlatShading: 1
   chunkSizeIndex: 2
   flatShadedChunkSizeIndex: 1
   generateFixedSizeTerrain: 1
-  fixedTerrainSize: 2
+  fixedTerrainSize: 1
   flattenOutsideTerrain: 0

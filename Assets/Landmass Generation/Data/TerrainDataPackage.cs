@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu]
-public class TerrainDataPackage : ScriptableObject
+public class TerrainDataPackage : UpdatableData
 {
     public HeightMapSettings heightMapSettings;
     public MeshSettings meshSettings;
