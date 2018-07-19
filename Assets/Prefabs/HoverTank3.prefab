@@ -417,8 +417,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   verticalDrag: 0.01
   gravityForce: 92
-  moveForce: 100
-  leanStrength: 1.5
+  moveForce: 120
+  leanStrength: 2
   turnSpeed: 20
   baseAngularDrag: 4
   turningAngularDrag: 2
@@ -448,9 +448,9 @@ MonoBehaviour:
   rayCastHeightModifier: 2
   rayCastHorizontalLengthModifier: 2.5
   gyroRotationLimit: 0.7
-  gyroCorrectionStrength: 6
+  gyroCorrectionStrength: 30
   rotationLimit: 0.6
-  rotationCorrectionStrength: 4
+  rotationCorrectionStrength: 20
 --- !u!114 &114891179090081510
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -495,7 +495,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 6
+  m_Radius: 10
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!135 &135545971876228788
 SphereCollider:
