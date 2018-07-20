@@ -21,16 +21,14 @@ public class SimpleHealthController : HealthController
 
         currentHealth -= damageAmount;
 
-        Debug.Log(currentHealth);
-
-        if (currentHealth <= 0f)
+        if (IsDead())
         {
             currentHealth = 0f;
-            Debug.Log("Deaded");
+            Debug.Log(gameObject.name + " Deaded");
         }
     }
 
-    public override bool isDead()
+    public override bool IsDead()
     {
         return currentHealth <= 0f;
     }

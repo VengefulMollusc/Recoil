@@ -64,7 +64,7 @@ public class LockOnMissile : MonoBehaviour
 
         timer += Time.fixedDeltaTime;
 
-        if (health.isDead() || timer > lifeSpan)
+        if (health.IsDead() || timer > lifeSpan)
         {
             Explode();
             return;

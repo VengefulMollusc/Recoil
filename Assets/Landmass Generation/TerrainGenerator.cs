@@ -100,6 +100,11 @@ public class TerrainGenerator : MonoBehaviour
         int currentChunkCoordX = Mathf.RoundToInt(viewerPosition.x / meshWorldSize);
         int currentChunkCoordY = Mathf.RoundToInt(viewerPosition.y / meshWorldSize);
 
+        if (IsCoordOutOfBounds(currentChunkCoordX, currentChunkCoordY))
+        {
+            // TODO: activate oob effects etc for player
+        }
+
         for (int yOffset = -chunksVisibleInViewDst; yOffset <= chunksVisibleInViewDst; yOffset++)
         {
             for (int xOffset = -chunksVisibleInViewDst; xOffset <= chunksVisibleInViewDst; xOffset++)
@@ -121,8 +126,8 @@ public class TerrainGenerator : MonoBehaviour
             else
             {
                 bool useGlobalFalloff = generateFixedSizeTerrain && heightMapSettings.useFalloff;
-                bool isFlatChunk = meshSettings.flattenOutsideTerrain && useGlobalFalloff && (x < -fixedTerrainSize || x > fixedTerrainSize ||
-                                                        y < -fixedTerrainSize || y > fixedTerrainSize);
+                bool isOutOfBounds = IsCoordOutOfBounds(x, y);
+                bool isFlatChunk = meshSettings.flattenOutsideTerrain && useGlobalFalloff && isOutOfBounds;
 
                 // flatten LODs to lowest when using flat planes
                 LODInfo[] lods = !isFlatChunk ? detailLevels : new[] { detailLevels[detailLevels.Length - 1] };
@@ -141,10 +146,16 @@ public class TerrainGenerator : MonoBehaviour
                 }
                 else
                 {
-                    newChunk.Load(isFlatChunk);
+                    newChunk.Load(isOutOfBounds, isFlatChunk);
                 }
             }
         }
+    }
+
+    bool IsCoordOutOfBounds(int x, int y)
+    {
+        return generateFixedSizeTerrain && (x < -fixedTerrainSize || x > fixedTerrainSize ||
+                                            y < -fixedTerrainSize || y > fixedTerrainSize);
     }
 
     void OnTerrainChunkVisibilityChanged(TerrainChunk chunk, bool isVisible)

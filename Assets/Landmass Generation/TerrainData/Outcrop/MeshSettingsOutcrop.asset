@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69d0b57391132574a95420e3684b41ec, type: 3}
+  m_Name: MeshSettingsOutcrop
+  m_EditorClassIdentifier: 
+  autoUpdate: 1
+  meshScale: 12
+  useFlatShading: 1
+  chunkSizeIndex: 2
+  flatShadedChunkSizeIndex: 1
+  generateFixedSizeTerrain: 1
+  fixedTerrainSize: 2
+  flattenOutsideTerrain: 0

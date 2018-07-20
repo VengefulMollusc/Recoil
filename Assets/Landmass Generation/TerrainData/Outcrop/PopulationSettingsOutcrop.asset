@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddb9d77dc58828b4a8938be2dad9c4b3, type: 3}
+  m_Name: PopulationSettingsOutcrop
+  m_EditorClassIdentifier: 
+  autoUpdate: 0
+  populationIndexStep: 2
+  populatableObjects:
+  - objectPrefab: {fileID: 1291491682455870, guid: 9b9414499ed089b4a85cb8fa33f3bfc8,
+      type: 2}
+    terrainHeightOffset: 20
+    placementRadius: 0
+    noiseThreshold: 0.2
+    minHeight: 0.2
+    maxHeight: 0.8

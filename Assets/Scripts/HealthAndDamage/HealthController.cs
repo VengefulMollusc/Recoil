@@ -6,7 +6,7 @@ public abstract class HealthController : MonoBehaviour
 {
     public abstract void Damage(float damageAmount);
 
-    public abstract bool isDead();
+    public abstract bool IsDead();
 
     public abstract void ResetHealth();
 }

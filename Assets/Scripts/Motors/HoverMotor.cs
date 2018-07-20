@@ -298,15 +298,11 @@ public class HoverMotor : MonoBehaviour
      */
     public float CalculateHoverRayLengthFromIndex(int rayIndex)
     {
-        if (rayIndex < 0 || rayIndex >= raycastDirections.Count)
-            return 0f;
+        if (rayIndex < 0 || rayIndex >= raycastDirections.Count || rb == null)
+            return 1f;
 
         if (raycastBaseLengths == null)
             ProcessHoverRays();
-
-        // this line so inspector script doesnt trip over missing rb before start
-        if (rb == null)
-            return raycastBaseLengths[rayIndex];
 
         Vector3 ray = raycastDirections[rayIndex];
 

@@ -35,6 +35,8 @@ public class TerrainChunk
     private TerrainPopulationSettings populationSettings;
     private List<GameObject> populationObjects;
 
+    private bool isOutOfBoundsChunk;
+
 
     public TerrainChunk(Vector2 coord, HeightMapSettings heightMapSettings, MeshSettings meshSettings, LODInfo[] detailLevels, int colliderLODIndex, Transform parent, Transform viewer, Material material, TerrainPopulationSettings populationSettings)
     {
@@ -79,8 +81,9 @@ public class TerrainChunk
 
     }
 
-    public void Load(bool isFlatChunk)
+    public void Load(bool isOutOfBounds, bool isFlatChunk)
     {
+        isOutOfBoundsChunk = isOutOfBounds;
         if (isFlatChunk)
         {
             // Create flat heightMap
@@ -114,9 +117,12 @@ public class TerrainChunk
         CreateWaterPlane();
         UpdateTerrainChunk();
 
-        // Populate chunk once heightmap received
-        //ThreadedDataRequester.RequestData(() => TerrainPopulator.Populate(populationSettings, meshTransform, heightMap, meshSettings, heightMapSettings, sampleCentre), OnPopulationReceived);
-        Populate();
+        if (!isOutOfBoundsChunk)
+        {
+            // Populate chunk once heightmap received
+            //ThreadedDataRequester.RequestData(() => TerrainPopulator.Populate(populationSettings, meshTransform, heightMap, meshSettings, heightMapSettings, sampleCentre), OnPopulationReceived);
+            Populate();
+        }
     }
 
     void Populate()

@@ -66,7 +66,6 @@ public class LockOnMissileLauncher : Weapon
 
     private void LockOn()
     {
-        Debug.Log("Locking on");
         Vector3 forward = transform.forward;
         Vector3 origin = transform.position;
         float checkAngle = lockOnAngle * 0.5f;

@@ -255,6 +255,11 @@ public class MapPreview : MonoBehaviour
 
     void OnValidate()
     {
+        if (terrainDataPackage != null)
+        {
+            terrainDataPackage.OnValuesUpdated -= OnValuesUpdated;
+            terrainDataPackage.OnValuesUpdated += OnValuesUpdated;
+        }
         if (meshSettings != null)
         {
             meshSettings.OnValuesUpdated -= OnValuesUpdated;
