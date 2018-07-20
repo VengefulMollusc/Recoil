@@ -7,31 +7,7 @@ public class InputController : MonoBehaviour
     private HoverMotor motor;
     private WeaponController weaponController;
 
-    [Header("Axes")]
-    [SerializeField]
-    private string xMovAxis = "Horizontal";
-    [SerializeField]
-    private string yMovAxis = "Vertical";
-    [SerializeField]
-    private string xCamAxis = "LookX";
-    [SerializeField]
-    private string yCamAxis = "LookY";
-
-    [SerializeField]
-    private bool useWeaponAxes;
-    [SerializeField]
-    private string mainWeaponAxis = "WeaponMain";
-    [SerializeField]
-    private string secondaryWeaponAxis = "WeaponSecondary";
-
-    [Header("Buttons")]
-    [SerializeField]
-    private string boostButton = "Jump";
-
-    [SerializeField]
-    private string mainWeaponButton = "Fire1";
-    [SerializeField]
-    private string secondaryWeaponButton = "Fire2";
+    private PlayerInputSettings inputSettings;
 
     void Start()
     {
@@ -41,48 +17,56 @@ public class InputController : MonoBehaviour
         weaponController = GetComponent<WeaponController>();
     }
 
+    public void SetInputSettings(PlayerInputSettings inputSettings)
+    {
+        this.inputSettings = inputSettings;
+    }
+
     // Update is called once per frame
     void Update()
     {
+        if (inputSettings == null)
+            return;
+
         // Get vertical and horizontal input vectors
         if (motor != null)
         {
             // Apply movement and rotation
-            motor.Move(Input.GetAxisRaw(xMovAxis), Input.GetAxisRaw(yMovAxis));
-            motor.MoveCamera(Input.GetAxisRaw(xCamAxis), Input.GetAxisRaw(yCamAxis));
+            motor.Move(Input.GetAxisRaw(inputSettings.xMovAxis), Input.GetAxisRaw(inputSettings.yMovAxis));
+            motor.MoveCamera(Input.GetAxisRaw(inputSettings.xCamAxis), Input.GetAxisRaw(inputSettings.yCamAxis));
 
             // Boost
-            if (Input.GetButtonDown(boostButton))
+            if (Input.GetButtonDown(inputSettings.boostButton))
                 motor.Boost(true);
-            if (Input.GetButtonUp(boostButton))
+            if (Input.GetButtonUp(inputSettings.boostButton))
                 motor.Boost(false);
         }
 
         // get weapon input state
         if (weaponController != null)
         {
-            if (useWeaponAxes)
+            if (inputSettings.useWeaponAxes)
             {
-                if (Input.GetAxisRaw(mainWeaponAxis) > 0f)
+                if (Input.GetAxisRaw(inputSettings.mainWeaponAxis) > 0f)
                     weaponController.UseMainWeapon(true);
-                if (Input.GetAxisRaw(mainWeaponAxis) <= 0f)
+                if (Input.GetAxisRaw(inputSettings.mainWeaponAxis) <= 0f)
                     weaponController.UseMainWeapon(false);
 
-                if (Input.GetAxisRaw(secondaryWeaponAxis) > 0f)
+                if (Input.GetAxisRaw(inputSettings.secondaryWeaponAxis) > 0f)
                     weaponController.UseSecondaryWeapon(true);
-                if (Input.GetAxisRaw(secondaryWeaponAxis) <= 0f)
+                if (Input.GetAxisRaw(inputSettings.secondaryWeaponAxis) <= 0f)
                     weaponController.UseSecondaryWeapon(false);
             }
             else
             {
-                if (Input.GetButtonDown(mainWeaponButton))
+                if (Input.GetButtonDown(inputSettings.mainWeaponButton))
                     weaponController.UseMainWeapon(true);
-                if (Input.GetButtonUp(mainWeaponButton))
+                if (Input.GetButtonUp(inputSettings.mainWeaponButton))
                     weaponController.UseMainWeapon(false);
 
-                if (Input.GetButtonDown(secondaryWeaponButton))
+                if (Input.GetButtonDown(inputSettings.secondaryWeaponButton))
                     weaponController.UseSecondaryWeapon(true);
-                if (Input.GetButtonUp(secondaryWeaponButton))
+                if (Input.GetButtonUp(inputSettings.secondaryWeaponButton))
                     weaponController.UseSecondaryWeapon(false);
             }
         }
