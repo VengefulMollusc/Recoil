@@ -351,16 +351,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a47661abe93543146b02ff48bd269ad0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xMovAxis: Horizontal
-  yMovAxis: Vertical
-  xCamAxis: LookX
-  yCamAxis: LookY
-  useWeaponAxes: 0
-  mainWeaponAxis: WeaponMain
-  secondaryWeaponAxis: WeaponSecondary
-  boostButton: Jump
-  mainWeaponButton: Fire1
-  secondaryWeaponButton: Fire2
 --- !u!114 &114129856107104522
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -422,8 +412,8 @@ MonoBehaviour:
   turnSpeed: 20
   baseAngularDrag: 4
   turningAngularDrag: 2
-  boostForceMultiplier: 2
-  boostTime: 1.5
+  boostForceMultiplier: 3
+  boostTime: 2
   boostRechargeTime: 3
   boostRechargeDelay: 1.5
   hoverHeight: 25

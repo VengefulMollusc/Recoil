@@ -157,3 +157,6 @@ MonoBehaviour:
   damage: 1
   impactForce: 0.5
   distancePerSecond: 500
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 2817

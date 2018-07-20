@@ -10,6 +10,8 @@ public class Bullet : MonoBehaviour
     public float impactForce;
     public float distancePerSecond = 100f;
 
+    public LayerMask layerMask;
+
     private Poolable poolable;
     private Vector3 movementVector;
     private TrailRenderer trailRenderer;
@@ -44,7 +46,7 @@ public class Bullet : MonoBehaviour
 
         // raycast ahead for collisions
         RaycastHit hitInfo;
-        if (Physics.Raycast(transform.position, movementVector, out hitInfo, movementVector.magnitude * Time.deltaTime))
+        if (Physics.Raycast(transform.position, movementVector, out hitInfo, movementVector.magnitude * Time.deltaTime, layerMask, QueryTriggerInteraction.Ignore))
         {
             if (hitInfo.collider.gameObject != sourceObject)
             {

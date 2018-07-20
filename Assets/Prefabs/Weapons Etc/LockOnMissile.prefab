@@ -27,6 +27,7 @@ GameObject:
   - component: {fileID: 114306937952908130}
   - component: {fileID: 114417794067260882}
   - component: {fileID: 96101963501184844}
+  - component: {fileID: 114058745616726806}
   m_Layer: 9
   m_Name: LockOnMissile
   m_TagString: Untagged
@@ -102,7 +103,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 1
+  m_CollisionDetection: 2
 --- !u!96 &96101963501184844
 TrailRenderer:
   serializedVersion: 2
@@ -196,6 +197,22 @@ TrailRenderer:
     generateLightingData: 0
   m_MinVertexDistance: 0.1
   m_Autodestruct: 0
+--- !u!114 &114058745616726806
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1347379887538322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8f83b76f4b71d142a36bfbdb27c5d9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sendTriggerMessage: 0
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 2817
+  skinWidth: 0.1
 --- !u!114 &114306937952908130
 MonoBehaviour:
   m_ObjectHideFlags: 1
