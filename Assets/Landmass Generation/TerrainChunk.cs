@@ -30,7 +30,7 @@ public class TerrainChunk
 
     private HeightMapSettings heightMapSettings;
     private MeshSettings meshSettings;
-    private Transform viewer;
+    private List<Transform> viewers;
 
     private TerrainPopulationSettings populationSettings;
     private List<GameObject> populationObjects;
@@ -38,14 +38,14 @@ public class TerrainChunk
     private bool isOutOfBoundsChunk;
 
 
-    public TerrainChunk(Vector2 coord, HeightMapSettings heightMapSettings, MeshSettings meshSettings, LODInfo[] detailLevels, int colliderLODIndex, Transform parent, Transform viewer, Material material, TerrainPopulationSettings populationSettings)
+    public TerrainChunk(Vector2 coord, HeightMapSettings heightMapSettings, MeshSettings meshSettings, LODInfo[] detailLevels, int colliderLODIndex, Transform parent, List<Transform> viewers, Material material, TerrainPopulationSettings populationSettings)
     {
         this.coord = coord;
         this.detailLevels = detailLevels;
         this.colliderLODIndex = colliderLODIndex;
         this.heightMapSettings = heightMapSettings;
         this.meshSettings = meshSettings;
-        this.viewer = viewer;
+        this.viewers = viewers;
         this.populationSettings = populationSettings;
 
         sampleCentre = coord * meshSettings.meshWorldSize / meshSettings.meshScale;
@@ -135,11 +135,14 @@ public class TerrainChunk
     //    populationObjects = (List<GameObject>)populationListObject;
     //}
 
-    Vector2 viewerPosition
+    private float closestViewerDistance
     {
         get
         {
-            return new Vector2(viewer.position.x, viewer.position.z);
+            float closest = float.MaxValue;
+            foreach (Transform viewer in viewers)
+                closest = Mathf.Min(closest, bounds.SqrDistance(new Vector2(viewer.position.x, viewer.position.z)));
+            return closest;
         }
     }
 
@@ -165,7 +168,7 @@ public class TerrainChunk
     {
         if (heightMapReceived)
         {
-            float viewerDistFromNearestEdge = Mathf.Sqrt(bounds.SqrDistance(viewerPosition));
+            float viewerDistFromNearestEdge = Mathf.Sqrt(closestViewerDistance);
 
             bool wasVisible = IsVisible();
             bool visible = viewerDistFromNearestEdge <= maxViewDist;
@@ -216,7 +219,7 @@ public class TerrainChunk
     {
         if (!hasSetCollider)
         {
-            float sqrDistFromViewerToEdge = bounds.SqrDistance(viewerPosition);
+            float sqrDistFromViewerToEdge = closestViewerDistance;
 
             if (sqrDistFromViewerToEdge < detailLevels[colliderLODIndex].sqrVisibleDistanceThreshold)
             {

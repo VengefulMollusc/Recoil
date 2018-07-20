@@ -16,11 +16,11 @@ public class TerrainGenerator : MonoBehaviour
     private TextureData textureSettings;
     private TerrainPopulationSettings populationSettings;
 
-    public Transform viewer;
-    public Material mapMaterial;
+    public List<Transform> viewers;
+    private List<Vector2> viewerPositions;
+    private List<Vector2> oldViewerPositions;
 
-    private Vector2 viewerPosition;
-    private Vector2 viewerPositionOld;
+    public Material mapMaterial;
 
     float meshWorldSize;
     int chunksVisibleInViewDst;
@@ -62,9 +62,27 @@ public class TerrainGenerator : MonoBehaviour
 
     void Update()
     {
-        viewerPosition = new Vector2(viewer.position.x, viewer.position.z);
+        if (viewers == null)
+            return;
 
-        if (viewerPosition != viewerPositionOld)
+        bool updateCollisionMeshes = false;
+        bool updateVisibleChunks = false;
+        for (int i = 0; i < viewers.Count; i++)
+        {
+            viewerPositions[i] = new Vector2(viewers[i].position.x, viewers[i].position.z);
+            if (!updateCollisionMeshes && viewerPositions[i] != oldViewerPositions[i])
+            {
+                updateCollisionMeshes = true;
+            }
+
+            if ((oldViewerPositions[i] - viewerPositions[i]).sqrMagnitude > sqrViewerMoveThresholdForChunkUpdate)
+            {
+                oldViewerPositions[i] = viewerPositions[i];
+                updateVisibleChunks = true;
+            }
+        }
+
+        if (updateCollisionMeshes)
         {
             foreach (TerrainChunk chunk in visibleTerrainChunks)
             {
@@ -72,10 +90,21 @@ public class TerrainGenerator : MonoBehaviour
             }
         }
 
-        if ((viewerPositionOld - viewerPosition).sqrMagnitude > sqrViewerMoveThresholdForChunkUpdate)
+        if (updateVisibleChunks)
         {
-            viewerPositionOld = viewerPosition;
             UpdateVisibleChunks();
+        }
+    }
+
+    public void SetViewers(List<Transform> viewers)
+    {
+        this.viewers = viewers;
+        viewerPositions = new List<Vector2>();
+        oldViewerPositions = new List<Vector2>();
+        for (int i = 0; i < viewers.Count; i++)
+        {
+            viewerPositions.Add(new Vector2());
+            oldViewerPositions.Add(new Vector2());
         }
     }
 
@@ -97,20 +126,25 @@ public class TerrainGenerator : MonoBehaviour
             visibleTerrainChunks[i].UpdateTerrainChunk();
         }
 
-        int currentChunkCoordX = Mathf.RoundToInt(viewerPosition.x / meshWorldSize);
-        int currentChunkCoordY = Mathf.RoundToInt(viewerPosition.y / meshWorldSize);
+        HashSet<Vector2> coordsToUpdate = new HashSet<Vector2>();
 
-        if (IsCoordOutOfBounds(currentChunkCoordX, currentChunkCoordY))
+        foreach (Vector2 viewerPos in viewerPositions)
         {
-            // TODO: activate oob effects etc for player
+            int currentChunkCoordX = Mathf.RoundToInt(viewerPos.x / meshWorldSize);
+            int currentChunkCoordY = Mathf.RoundToInt(viewerPos.y / meshWorldSize);
+
+            for (int yOffset = -chunksVisibleInViewDst; yOffset <= chunksVisibleInViewDst; yOffset++)
+            {
+                for (int xOffset = -chunksVisibleInViewDst; xOffset <= chunksVisibleInViewDst; xOffset++)
+                {
+                    coordsToUpdate.Add(new Vector2(currentChunkCoordX + xOffset, currentChunkCoordY + yOffset));
+                }
+            }
         }
 
-        for (int yOffset = -chunksVisibleInViewDst; yOffset <= chunksVisibleInViewDst; yOffset++)
+        foreach (Vector2 coord in coordsToUpdate)
         {
-            for (int xOffset = -chunksVisibleInViewDst; xOffset <= chunksVisibleInViewDst; xOffset++)
-            {
-                UpdateChunk(currentChunkCoordX + xOffset, currentChunkCoordY + yOffset, alreadyUpdatedChunkCoords);
-            }
+            UpdateChunk(Mathf.RoundToInt(coord.x), Mathf.RoundToInt(coord.y), alreadyUpdatedChunkCoords);
         }
     }
 
@@ -132,7 +166,7 @@ public class TerrainGenerator : MonoBehaviour
                 // flatten LODs to lowest when using flat planes
                 LODInfo[] lods = !isFlatChunk ? detailLevels : new[] { detailLevels[detailLevels.Length - 1] };
                 TerrainChunk newChunk = new TerrainChunk(viewedChunkCoord, heightMapSettings, meshSettings, lods,
-                    colliderLODIndex, transform, viewer, mapMaterial, populationSettings);
+                    colliderLODIndex, transform, viewers, mapMaterial, populationSettings);
 
                 terrainChunkDictionary.Add(viewedChunkCoord, newChunk);
                 newChunk.onVisibilityChanged += OnTerrainChunkVisibilityChanged;

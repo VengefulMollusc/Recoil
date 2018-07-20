@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class ScenePlayerController : MonoBehaviour
 {
+    public TerrainGenerator terrainGenerator;
     [Header("Players")]
     [Range(1, 4)]
     public int playerCount;
     public List<PlayerSettings> playerSettingsList;
     public List<ViewportSettings> viewportSettings;
-    
+
     void Awake()
     {
         SetupPlayers();
@@ -17,6 +18,8 @@ public class ScenePlayerController : MonoBehaviour
 
     void SetupPlayers()
     {
+        List<Transform> viewers = new List<Transform>();
+
         for (int i = 0; i < 4; i++)
         {
             PlayerSettings playerSettings = playerSettingsList[i];
@@ -27,10 +30,15 @@ public class ScenePlayerController : MonoBehaviour
             }
 
             bool isActivePlayer = i < playerCount;
+            if (isActivePlayer)
+                viewers.Add(playerSettings.playerGameObject.transform);
+
             playerSettings.playerGameObject.GetComponent<InputController>().SetInputSettings(playerSettings.inputSettings);
             playerSettings.playerGameObject.SetActive(isActivePlayer);
             playerSettings.playerCamera.rect = isActivePlayer ? viewportSettings[playerCount - 1].viewports[i] : Rect.zero;
         }
+
+        terrainGenerator.SetViewers(viewers);
     }
 
     void OnValidate()
