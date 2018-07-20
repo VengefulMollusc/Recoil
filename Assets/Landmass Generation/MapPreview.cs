@@ -45,6 +45,7 @@ public class MapPreview : MonoBehaviour
     public void DrawMapInEditor()
     {
         UpdateTerrainDataVariables();
+        UpdateDataCallbacks();
 
         textureData.ApplyToMaterial(terrainMaterial);
         textureData.UpdateMeshHeights(terrainMaterial, heightMapSettings.minHeight, heightMapSettings.maxHeight);
@@ -253,7 +254,7 @@ public class MapPreview : MonoBehaviour
         textureData.ApplyToMaterial(terrainMaterial);
     }
 
-    void OnValidate()
+    void UpdateDataCallbacks()
     {
         if (terrainDataPackage != null)
         {
@@ -275,5 +276,10 @@ public class MapPreview : MonoBehaviour
             textureData.OnValuesUpdated -= OnTextureValuesUpdated;
             textureData.OnValuesUpdated += OnTextureValuesUpdated;
         }
+    }
+
+    void OnValidate()
+    {
+        UpdateDataCallbacks();
     }
 }
