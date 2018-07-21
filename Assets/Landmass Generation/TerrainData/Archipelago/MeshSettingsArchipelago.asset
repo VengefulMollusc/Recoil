@@ -13,9 +13,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   autoUpdate: 1
   meshScale: 12
-  useFlatShading: 1
-  chunkSizeIndex: 2
+  useFlatShading: 0
+  chunkSizeIndex: 1
   flatShadedChunkSizeIndex: 1
   generateFixedSizeTerrain: 1
   fixedTerrainSize: 2
-  flattenOutsideTerrain: 1
+  flattenOutsideTerrain: 0

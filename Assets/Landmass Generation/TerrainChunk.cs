@@ -35,7 +35,7 @@ public class TerrainChunk
     private TerrainPopulationSettings populationSettings;
     private List<GameObject> populationObjects;
 
-    private bool isOutOfBoundsChunk;
+    private bool isInBoundsChunk;
 
 
     public TerrainChunk(Vector2 coord, HeightMapSettings heightMapSettings, MeshSettings meshSettings, LODInfo[] detailLevels, int colliderLODIndex, Transform parent, List<Transform> viewers, Material material, TerrainPopulationSettings populationSettings)
@@ -81,9 +81,11 @@ public class TerrainChunk
 
     }
 
-    public void Load(bool isOutOfBounds, bool isFlatChunk)
+    public void Load(bool isInBounds, bool isFlatChunk)
     {
-        isOutOfBoundsChunk = isOutOfBounds;
+        isInBoundsChunk = isInBounds;
+        if (isInBoundsChunk)
+            Debug.Log("inbounds");
         if (isFlatChunk)
         {
             // Create flat heightMap
@@ -104,8 +106,9 @@ public class TerrainChunk
         }
     }
 
-    public void Load(float[,] falloffMap, int falloffStartX, int falloffStartY)
+    public void Load(bool isInBounds, float[,] falloffMap, int falloffStartX, int falloffStartY)
     {
+        isInBoundsChunk = isInBounds;
         ThreadedDataRequester.RequestData(() => HeightMapGenerator.GenerateHeightMapWithFalloff(meshSettings.numVertsPerLine, heightMapSettings, sampleCentre, falloffMap, falloffStartX, falloffStartY), OnHeightMapReceived);
     }
 
@@ -117,7 +120,7 @@ public class TerrainChunk
         CreateWaterPlane();
         UpdateTerrainChunk();
 
-        if (!isOutOfBoundsChunk)
+        if (isInBoundsChunk)
         {
             // Populate chunk once heightmap received
             //ThreadedDataRequester.RequestData(() => TerrainPopulator.Populate(populationSettings, meshTransform, heightMap, meshSettings, heightMapSettings, sampleCentre), OnPopulationReceived);
@@ -221,7 +224,7 @@ public class TerrainChunk
         {
             float sqrDistFromViewerToEdge = closestViewerDistance;
 
-            if (sqrDistFromViewerToEdge < detailLevels[colliderLODIndex].sqrVisibleDistanceThreshold)
+            if (isInBoundsChunk || sqrDistFromViewerToEdge < detailLevels[colliderLODIndex].sqrVisibleDistanceThreshold)
             {
                 if (!lodMeshes[colliderLODIndex].hasRequestedMesh)
                 {
@@ -229,7 +232,7 @@ public class TerrainChunk
                 }
             }
 
-            if (sqrDistFromViewerToEdge < colliderGenerationDistanceThreshold * colliderGenerationDistanceThreshold)
+            if (isInBoundsChunk || sqrDistFromViewerToEdge < colliderGenerationDistanceThreshold * colliderGenerationDistanceThreshold)
             {
                 if (lodMeshes[colliderLODIndex].hasMesh)
                 {

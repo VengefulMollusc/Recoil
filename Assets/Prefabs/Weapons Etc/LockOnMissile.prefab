@@ -247,7 +247,7 @@ MonoBehaviour:
   acceleration: 1000
   lifeSpan: 10
   launchTime: 1
-  launchVelocity: 30
+  launchVelocity: 50
   initialGravity: 200
   homingStrength: 2
 --- !u!114 &114477731062510758

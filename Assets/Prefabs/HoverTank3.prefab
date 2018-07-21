@@ -245,7 +245,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 3000
+  far clip plane: 6000
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -457,7 +457,7 @@ MonoBehaviour:
   missileLaunchCount: 120
   launchRate: 0.1
   lockOnAngle: 45
-  lockOnRange: 500
+  lockOnRange: 800
   lockOnTime: 0.5
   launchPointTransforms:
   - {fileID: 4473046618728804}

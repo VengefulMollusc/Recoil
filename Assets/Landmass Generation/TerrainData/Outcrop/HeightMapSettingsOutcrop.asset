@@ -14,14 +14,14 @@ MonoBehaviour:
   autoUpdate: 1
   noiseSettings:
     normaliseMode: 1
-    scale: 100
+    scale: 80
     octaves: 6
-    persistance: 0.5
+    persistance: 0.45
     lacunarity: 2
     seedString: 
     seed: 46
     offset: {x: 0, y: -200}
-  useFalloff: 0
+  useFalloff: 1
   falloffMode: 0
   heightMultiplier: 500
   heightCurve:
@@ -72,6 +72,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
-  useWaterPlane: 0
-  waterHeight: 0.215
+  useWaterPlane: 1
+  waterHeight: 0.01
   waterMaterial: {fileID: 2100000, guid: e21432cc620ab9e48a6017f9cbc85907, type: 2}

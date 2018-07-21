@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 993edd743d6ec2f49af5c45163f8cdfe, type: 3}
+  m_Name: HeightMapSettingsValleys
+  m_EditorClassIdentifier: 
+  autoUpdate: 1
+  noiseSettings:
+    normaliseMode: 1
+    scale: 75
+    octaves: 6
+    persistance: 0.42
+    lacunarity: 2
+    seedString: 
+    seed: 46
+    offset: {x: 0, y: -200}
+  useFalloff: 1
+  falloffMode: 0
+  heightMultiplier: 500
+  heightCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 2.4121134
+      outSlope: 2.4121134
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.21281272
+      value: 0.444166
+      inSlope: 1.424551
+      outSlope: 1.424551
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.65030164
+      value: 0.7549146
+      inSlope: 0.15400001
+      outSlope: 0.15400001
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1.1508096
+      value: 0.9951322
+      inSlope: 1.0508798
+      outSlope: 1.0508798
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  useWaterPlane: 1
+  waterHeight: 0.005
+  waterMaterial: {fileID: 2100000, guid: e21432cc620ab9e48a6017f9cbc85907, type: 2}

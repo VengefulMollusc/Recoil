@@ -160,8 +160,8 @@ public class TerrainGenerator : MonoBehaviour
             else
             {
                 bool useGlobalFalloff = generateFixedSizeTerrain && heightMapSettings.useFalloff;
-                bool isOutOfBounds = IsCoordOutOfBounds(x, y);
-                bool isFlatChunk = meshSettings.flattenOutsideTerrain && useGlobalFalloff && isOutOfBounds;
+                bool isInBounds = IsCoordInBounds(x, y);
+                bool isFlatChunk = meshSettings.flattenOutsideTerrain && useGlobalFalloff && !isInBounds;
 
                 // flatten LODs to lowest when using flat planes
                 LODInfo[] lods = !isFlatChunk ? detailLevels : new[] { detailLevels[detailLevels.Length - 1] };
@@ -176,20 +176,20 @@ public class TerrainGenerator : MonoBehaviour
                     int falloffStartX = (numVertsPerLine - 3) * (x + fixedTerrainSize);
                     int falloffStartY = falloffMapSize - 3 - (numVertsPerLine - 3) * (y + fixedTerrainSize + 1);
 
-                    newChunk.Load(falloffMap, falloffStartX, falloffStartY);
+                    newChunk.Load(isInBounds, falloffMap, falloffStartX, falloffStartY);
                 }
                 else
                 {
-                    newChunk.Load(isOutOfBounds, isFlatChunk);
+                    newChunk.Load(isInBounds, isFlatChunk);
                 }
             }
         }
     }
 
-    bool IsCoordOutOfBounds(int x, int y)
+    bool IsCoordInBounds(int x, int y)
     {
-        return generateFixedSizeTerrain && (x < -fixedTerrainSize || x > fixedTerrainSize ||
-                                            y < -fixedTerrainSize || y > fixedTerrainSize);
+        return generateFixedSizeTerrain && (x >= -fixedTerrainSize && x <= fixedTerrainSize &&
+                                            y >= -fixedTerrainSize && y <= fixedTerrainSize);
     }
 
     void OnTerrainChunkVisibilityChanged(TerrainChunk chunk, bool isVisible)
