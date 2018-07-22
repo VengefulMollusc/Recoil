@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a985996d922b4e84698c922b8ff40e20, type: 3}
+  m_Name: TextureDataOutcrop
+  m_EditorClassIdentifier: 
+  autoUpdate: 1
+  layers:
+  - texture: {fileID: 2800000, guid: 9be2bc76baaf60c4ea85fe0d3eecb9cc, type: 3}
+    tint: {r: 0.30882353, g: 0.1852941, b: 0, a: 0}
+    tintStrength: 0.826
+    startHeight: 0
+    blendStength: 0
+    textureScale: 40
+  - texture: {fileID: 2800000, guid: 9be2bc76baaf60c4ea85fe0d3eecb9cc, type: 3}
+    tint: {r: 1, g: 0.95212984, b: 0.5661765, a: 0}
+    tintStrength: 0.13
+    startHeight: 0
+    blendStength: 0.087
+    textureScale: 40
+  - texture: {fileID: 2800000, guid: dd8064a2942e7204c8f7d8fb62dc46f8, type: 3}
+    tint: {r: 0.42647058, g: 0.42647058, b: 0.42647058, a: 0}
+    tintStrength: 0.23
+    startHeight: 0.18
+    blendStength: 0.14
+    textureScale: 100
+  - texture: {fileID: 2800000, guid: dd8064a2942e7204c8f7d8fb62dc46f8, type: 3}
+    tint: {r: 0.8235294, g: 0.5281947, b: 0, a: 0}
+    tintStrength: 0.51
+    startHeight: 0.37
+    blendStength: 0.3
+    textureScale: 100

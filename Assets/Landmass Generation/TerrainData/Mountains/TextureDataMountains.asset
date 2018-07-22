@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a985996d922b4e84698c922b8ff40e20, type: 3}
+  m_Name: TextureDataMountains
+  m_EditorClassIdentifier: 
+  autoUpdate: 1
+  layers:
+  - texture: {fileID: 2800000, guid: c054a65b9d88c9f4493146f8d5ec16e3, type: 3}
+    tint: {r: 0.16911763, g: 0.16911763, b: 0.16911763, a: 0}
+    tintStrength: 0.378
+    startHeight: 0
+    blendStength: 0
+    textureScale: 120
+  - texture: {fileID: 2800000, guid: dd8064a2942e7204c8f7d8fb62dc46f8, type: 3}
+    tint: {r: 0.50735295, g: 0.50735295, b: 0.50735295, a: 0}
+    tintStrength: 0.297
+    startHeight: 0.16
+    blendStength: 0.362
+    textureScale: 40
+  - texture: {fileID: 2800000, guid: 7ff0558addec28c47a38b8313b86a51b, type: 3}
+    tint: {r: 0.44117647, g: 0.3043044, b: 0.009731817, a: 0}
+    tintStrength: 0.23
+    startHeight: 0.323
+    blendStength: 0.359
+    textureScale: 100
+  - texture: {fileID: 2800000, guid: 4276d1a1b225a4940a25ae003e5c59aa, type: 3}
+    tint: {r: 0.49264705, g: 0.3887215, b: 0.25719073, a: 0}
+    tintStrength: 0.424
+    startHeight: 0.741
+    blendStength: 0.4
+    textureScale: 200

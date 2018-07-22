@@ -9,42 +9,51 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 993edd743d6ec2f49af5c45163f8cdfe, type: 3}
-  m_Name: HeightMapSettings
+  m_Name: HeightMapSettingsValleys
   m_EditorClassIdentifier: 
   autoUpdate: 1
   noiseSettings:
     normaliseMode: 1
-    scale: 100
+    scale: 75
     octaves: 6
-    persistance: 0.5
+    persistance: 0.42
     lacunarity: 2
     seedString: 
-    seed: 12
+    seed: 46
     offset: {x: 0, y: -200}
   useFalloff: 1
   falloffMode: 0
-  heightMultiplier: 200
+  heightMultiplier: 500
   heightCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 2
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: 2.4121134
+      outSlope: 2.4121134
       tangentMode: 0
     - serializedVersion: 2
-      time: 0.5079908
-      value: 0.39429376
-      inSlope: 0.3048554
-      outSlope: 0.3048554
+      time: 0.21281272
+      value: 0.444166
+      inSlope: 1.424551
+      outSlope: 1.424551
       tangentMode: 0
     - serializedVersion: 2
-      time: 1.181429
-      value: 1.1749605
-      inSlope: 2.9970207
-      outSlope: 2.9970207
+      time: 0.65030164
+      value: 0.7549146
+      inSlope: 0.15400001
+      outSlope: 0.15400001
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1.1508096
+      value: 0.9951322
+      inSlope: 1.0508798
+      outSlope: 1.0508798
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+  useWaterPlane: 1
+  waterHeight: 0.005
+  waterMaterial: {fileID: 2100000, guid: e21432cc620ab9e48a6017f9cbc85907, type: 2}

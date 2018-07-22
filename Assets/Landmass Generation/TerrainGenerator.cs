@@ -10,15 +10,17 @@ public class TerrainGenerator : MonoBehaviour
     public int colliderLODIndex;
     public LODInfo[] detailLevels;
 
-    public MeshSettings meshSettings;
-    public HeightMapSettings heightMapSettings;
-    public TextureData textureSettings;
+    public TerrainDataPackage terrainDataPackage;
+    private HeightMapSettings heightMapSettings;
+    private MeshSettings meshSettings;
+    private TextureData textureSettings;
+    private TerrainPopulationSettings populationSettings;
 
-    public Transform viewer;
+    public List<Transform> viewers;
+    private List<Vector2> viewerPositions;
+    private List<Vector2> oldViewerPositions;
+
     public Material mapMaterial;
-
-    private Vector2 viewerPosition;
-    private Vector2 viewerPositionOld;
 
     float meshWorldSize;
     int chunksVisibleInViewDst;
@@ -34,6 +36,8 @@ public class TerrainGenerator : MonoBehaviour
 
     void Start()
     {
+        UpdateTerrainDataVariables();
+
         textureSettings.ApplyToMaterial(mapMaterial);
         textureSettings.UpdateMeshHeights(mapMaterial, heightMapSettings.minHeight, heightMapSettings.maxHeight);
 
@@ -58,9 +62,27 @@ public class TerrainGenerator : MonoBehaviour
 
     void Update()
     {
-        viewerPosition = new Vector2(viewer.position.x, viewer.position.z);
+        if (viewers == null)
+            return;
 
-        if (viewerPosition != viewerPositionOld)
+        bool updateCollisionMeshes = false;
+        bool updateVisibleChunks = false;
+        for (int i = 0; i < viewers.Count; i++)
+        {
+            viewerPositions[i] = new Vector2(viewers[i].position.x, viewers[i].position.z);
+            if (!updateCollisionMeshes && viewerPositions[i] != oldViewerPositions[i])
+            {
+                updateCollisionMeshes = true;
+            }
+
+            if ((oldViewerPositions[i] - viewerPositions[i]).sqrMagnitude > sqrViewerMoveThresholdForChunkUpdate)
+            {
+                oldViewerPositions[i] = viewerPositions[i];
+                updateVisibleChunks = true;
+            }
+        }
+
+        if (updateCollisionMeshes)
         {
             foreach (TerrainChunk chunk in visibleTerrainChunks)
             {
@@ -68,11 +90,30 @@ public class TerrainGenerator : MonoBehaviour
             }
         }
 
-        if ((viewerPositionOld - viewerPosition).sqrMagnitude > sqrViewerMoveThresholdForChunkUpdate)
+        if (updateVisibleChunks)
         {
-            viewerPositionOld = viewerPosition;
             UpdateVisibleChunks();
         }
+    }
+
+    public void SetViewers(List<Transform> viewers)
+    {
+        this.viewers = viewers;
+        viewerPositions = new List<Vector2>();
+        oldViewerPositions = new List<Vector2>();
+        for (int i = 0; i < viewers.Count; i++)
+        {
+            viewerPositions.Add(new Vector2());
+            oldViewerPositions.Add(new Vector2());
+        }
+    }
+
+    void UpdateTerrainDataVariables()
+    {
+        heightMapSettings = terrainDataPackage.heightMapSettings;
+        meshSettings = terrainDataPackage.meshSettings;
+        textureSettings = terrainDataPackage.textureData;
+        populationSettings = terrainDataPackage.populationSettings;
     }
 
     void UpdateVisibleChunks()
@@ -85,28 +126,25 @@ public class TerrainGenerator : MonoBehaviour
             visibleTerrainChunks[i].UpdateTerrainChunk();
         }
 
-        if (generateFixedSizeTerrain)
+        HashSet<Vector2> coordsToUpdate = new HashSet<Vector2>();
+
+        foreach (Vector2 viewerPos in viewerPositions)
         {
-            for (int y = -fixedTerrainSize; y <= fixedTerrainSize; y++)
-            {
-                for (int x = -fixedTerrainSize; x <= fixedTerrainSize; x++)
-                {
-                    UpdateChunk(x, y, alreadyUpdatedChunkCoords);
-                }
-            }
-        }
-        else
-        {
-            int currentChunkCoordX = Mathf.RoundToInt(viewerPosition.x / meshWorldSize);
-            int currentChunkCoordY = Mathf.RoundToInt(viewerPosition.y / meshWorldSize);
+            int currentChunkCoordX = Mathf.RoundToInt(viewerPos.x / meshWorldSize);
+            int currentChunkCoordY = Mathf.RoundToInt(viewerPos.y / meshWorldSize);
 
             for (int yOffset = -chunksVisibleInViewDst; yOffset <= chunksVisibleInViewDst; yOffset++)
             {
                 for (int xOffset = -chunksVisibleInViewDst; xOffset <= chunksVisibleInViewDst; xOffset++)
                 {
-                    UpdateChunk(currentChunkCoordX + xOffset, currentChunkCoordY + yOffset, alreadyUpdatedChunkCoords);
+                    coordsToUpdate.Add(new Vector2(currentChunkCoordX + xOffset, currentChunkCoordY + yOffset));
                 }
             }
+        }
+
+        foreach (Vector2 coord in coordsToUpdate)
+        {
+            UpdateChunk(Mathf.RoundToInt(coord.x), Mathf.RoundToInt(coord.y), alreadyUpdatedChunkCoords);
         }
     }
 
@@ -121,25 +159,37 @@ public class TerrainGenerator : MonoBehaviour
             }
             else
             {
-                TerrainChunk newChunk = new TerrainChunk(viewedChunkCoord, heightMapSettings, meshSettings, detailLevels,
-                    colliderLODIndex, transform, viewer, mapMaterial);
-                
+                bool useGlobalFalloff = generateFixedSizeTerrain && heightMapSettings.useFalloff;
+                bool isInBounds = IsCoordInBounds(x, y);
+                bool isFlatChunk = meshSettings.flattenOutsideTerrain && useGlobalFalloff && !isInBounds;
+
+                // flatten LODs to lowest when using flat planes
+                LODInfo[] lods = !isFlatChunk ? detailLevels : new[] { detailLevels[detailLevels.Length - 1] };
+                TerrainChunk newChunk = new TerrainChunk(viewedChunkCoord, heightMapSettings, meshSettings, lods,
+                    colliderLODIndex, transform, viewers, mapMaterial, populationSettings);
+
                 terrainChunkDictionary.Add(viewedChunkCoord, newChunk);
                 newChunk.onVisibilityChanged += OnTerrainChunkVisibilityChanged;
 
-                if (generateFixedSizeTerrain && heightMapSettings.useFalloff)
+                if (useGlobalFalloff && !isFlatChunk)
                 {
                     int falloffStartX = (numVertsPerLine - 3) * (x + fixedTerrainSize);
                     int falloffStartY = falloffMapSize - 3 - (numVertsPerLine - 3) * (y + fixedTerrainSize + 1);
 
-                    newChunk.Load(falloffMap, falloffStartX, falloffStartY);
+                    newChunk.Load(isInBounds, falloffMap, falloffStartX, falloffStartY);
                 }
                 else
                 {
-                    newChunk.Load();
+                    newChunk.Load(isInBounds, isFlatChunk);
                 }
             }
         }
+    }
+
+    bool IsCoordInBounds(int x, int y)
+    {
+        return generateFixedSizeTerrain && (x >= -fixedTerrainSize && x <= fixedTerrainSize &&
+                                            y >= -fixedTerrainSize && y <= fixedTerrainSize);
     }
 
     void OnTerrainChunkVisibilityChanged(TerrainChunk chunk, bool isVisible)

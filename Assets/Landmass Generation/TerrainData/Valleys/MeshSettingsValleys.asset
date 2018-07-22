@@ -9,12 +9,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 69d0b57391132574a95420e3684b41ec, type: 3}
-  m_Name: MeshSettings
+  m_Name: MeshSettingsValleys
   m_EditorClassIdentifier: 
   autoUpdate: 1
-  meshScale: 4
-  useFlatShading: 1
-  chunkSizeIndex: 2
+  meshScale: 12
+  useFlatShading: 0
+  chunkSizeIndex: 1
   flatShadedChunkSizeIndex: 1
   generateFixedSizeTerrain: 1
-  fixedTerrainSize: 2
+  fixedTerrainSize: 3
+  flattenOutsideTerrain: 0

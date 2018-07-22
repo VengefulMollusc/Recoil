@@ -21,6 +21,7 @@ public class MeshSettings : UpdatableData
     // set size generation
     public bool generateFixedSizeTerrain;
     public int fixedTerrainSize;
+    public bool flattenOutsideTerrain;
 
 
     // num of vertices per line of a mesh rendered at LOD = 0 (including border vertices used for calculating normals)

@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d14daf0d1fc5c741a7375edfe600311, type: 3}
+  m_Name: Player2InputSettings
+  m_EditorClassIdentifier: 
+  xMovAxis: HorizontalP2
+  yMovAxis: VerticalP2
+  xCamAxis: LookXP2
+  yCamAxis: LookYP2
+  useWeaponAxes: 1
+  mainWeaponAxis: WeaponMainP2
+  secondaryWeaponAxis: WeaponSecondaryP2
+  boostButton: JumpP2
+  mainWeaponButton: Fire1P2
+  secondaryWeaponButton: Fire2P2

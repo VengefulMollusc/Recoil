@@ -17,9 +17,10 @@ public class MapPreview : MonoBehaviour
 
     public DrawMode drawMode;
 
-    public MeshSettings meshSettings;
-    public HeightMapSettings heightMapSettings;
-    public TextureData textureData;
+    public TerrainDataPackage terrainDataPackage;
+    private HeightMapSettings heightMapSettings;
+    private MeshSettings meshSettings;
+    private TextureData textureData;
 
     public Material terrainMaterial;
 
@@ -34,9 +35,18 @@ public class MapPreview : MonoBehaviour
 
     private List<GameObject> previewChunks;
 
+    private void UpdateTerrainDataVariables()
+    {
+        heightMapSettings = terrainDataPackage.heightMapSettings;
+        meshSettings = terrainDataPackage.meshSettings;
+        textureData = terrainDataPackage.textureData;
+    }
 
     public void DrawMapInEditor()
     {
+        UpdateTerrainDataVariables();
+        UpdateDataCallbacks();
+
         textureData.ApplyToMaterial(terrainMaterial);
         textureData.UpdateMeshHeights(terrainMaterial, heightMapSettings.minHeight, heightMapSettings.maxHeight);
 
@@ -107,7 +117,7 @@ public class MapPreview : MonoBehaviour
             previewChunks = new List<GameObject>();
             foreach (GameObject chunk in GameObject.FindGameObjectsWithTag("PreviewChunk"))
             {
-                DestroyImmediate(chunk);
+                previewChunks.Add(chunk);
             }
         }
         else if (previewChunks.Count > 0 && previewChunks[0] == null)
@@ -164,6 +174,8 @@ public class MapPreview : MonoBehaviour
                 MeshData meshData =
                     MeshGenerator.GenerateTerrainMesh(heightMap.values, meshSettings, editorPreviewLOD);
                 previewMeshFilter.sharedMesh = meshData.CreateMesh();
+
+                CreateWaterPlane(previewMeshObject, position);
             }
         }
 
@@ -179,6 +191,35 @@ public class MapPreview : MonoBehaviour
 
         textureRenderer.gameObject.SetActive(false);
         meshFilter.gameObject.SetActive(false);
+    }
+
+    private void CreateWaterPlane(GameObject previewMeshObject, Vector2 position)
+    {
+        GameObject waterPlaneObject = null;
+        if (previewMeshObject.transform.childCount > 0)
+        {
+            waterPlaneObject = previewMeshObject.transform.GetChild(0).gameObject;
+            if (!heightMapSettings.useWaterPlane)
+            {
+                DestroyImmediate(waterPlaneObject);
+            }
+        }
+
+        if (heightMapSettings.useWaterPlane)
+        {
+            if (waterPlaneObject == null)
+            {
+                waterPlaneObject = GameObject.CreatePrimitive(PrimitiveType.Plane);
+                waterPlaneObject.transform.SetParent(previewMeshObject.transform);
+                waterPlaneObject.GetComponent<MeshRenderer>().sharedMaterial = heightMapSettings.waterMaterial;
+            }
+            // set height and scale for water plane
+            float waterHeight = heightMapSettings.heightCurve.Evaluate(heightMapSettings.waterHeight) *
+                                heightMapSettings.heightMultiplier;
+            waterPlaneObject.transform.position = new Vector3(position.x, waterHeight, position.y);
+            float scale = meshSettings.meshWorldSize / 10f;
+            waterPlaneObject.transform.localScale = new Vector3(scale, 1, scale);
+        }
     }
 
     public void DrawTexture(Texture2D texture, int gridSize)
@@ -200,6 +241,8 @@ public class MapPreview : MonoBehaviour
 
     void OnValuesUpdated()
     {
+        UpdateTerrainDataVariables();
+
         if (!Application.isPlaying)
         {
             DrawMapInEditor();
@@ -211,8 +254,13 @@ public class MapPreview : MonoBehaviour
         textureData.ApplyToMaterial(terrainMaterial);
     }
 
-    void OnValidate()
+    void UpdateDataCallbacks()
     {
+        if (terrainDataPackage != null)
+        {
+            terrainDataPackage.OnValuesUpdated -= OnValuesUpdated;
+            terrainDataPackage.OnValuesUpdated += OnValuesUpdated;
+        }
         if (meshSettings != null)
         {
             meshSettings.OnValuesUpdated -= OnValuesUpdated;
@@ -228,5 +276,10 @@ public class MapPreview : MonoBehaviour
             textureData.OnValuesUpdated -= OnTextureValuesUpdated;
             textureData.OnValuesUpdated += OnTextureValuesUpdated;
         }
+    }
+
+    void OnValidate()
+    {
+        UpdateDataCallbacks();
     }
 }
