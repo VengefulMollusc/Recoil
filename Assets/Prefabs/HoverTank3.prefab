@@ -394,6 +394,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1514c39e34f4f549a986a661f0d2987, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxLockOnCount: 6
+  lockOnBaseTime: 1
 --- !u!114 &114823834796332608
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -458,7 +460,6 @@ MonoBehaviour:
   launchRate: 0.1
   lockOnAngle: 45
   lockOnRange: 800
-  lockOnTime: 0.5
   launchPointTransforms:
   - {fileID: 4473046618728804}
   - {fileID: 4522083949207640}
