@@ -198,8 +198,8 @@ public class HoverMotor : MonoBehaviour
         else
         {
             // Not boosting: apply default movement force
-            Vector3 movementForce = (forwardFlat * moveInputVector.y)
-                + (rightFlat * moveInputVector.x);
+            Vector3 movementForce = (forward * moveInputVector.y)
+                + (right * moveInputVector.x);
             rb.AddForce(movementForce * moveForce * Time.fixedDeltaTime, ForceMode.Impulse);
         }
 
