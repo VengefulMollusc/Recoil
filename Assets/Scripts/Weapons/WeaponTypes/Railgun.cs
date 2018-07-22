@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class RailgunWeapon : Weapon
+public class Railgun : Weapon
 {
     private const float range = 200f;
     private const float fireRate = 0.25f;

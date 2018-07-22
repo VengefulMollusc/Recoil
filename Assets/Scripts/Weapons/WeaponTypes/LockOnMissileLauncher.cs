@@ -40,23 +40,28 @@ public class LockOnMissileLauncher : Weapon
             Debug.LogError("No launchPointTransforms defined");
     }
 
-    void Update()
-    {
-        if (lockOnTargets == null || firing)
-            return;
-
-        foreach (LockOnTargetTracker tracker in lockOnTargets)
-        {
-            tracker.IncreaseLevel(Time.deltaTime);
-        }
-    }
-
     public override void FireWeapon(bool pressed)
     {
         lockingOn = pressed;
-        if (pressed)
+        if (lockingOn)
         {
             StartCoroutine(LockOnCoroutine());
+            StartCoroutine(LockOnLevelUpdate());
+        }
+    }
+
+    private IEnumerator LockOnLevelUpdate()
+    {
+        while (lockingOn)
+        {
+            if (!firing)
+            {
+                foreach (LockOnTargetTracker tracker in lockOnTargets)
+                {
+                    tracker.IncreaseLevel(Time.deltaTime);
+                }
+            }
+            yield return 0;
         }
     }
 
