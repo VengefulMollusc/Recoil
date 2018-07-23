@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 4360378497478508}
   - component: {fileID: 114855387578521370}
   m_Layer: 8
-  m_Name: Railgun
+  m_Name: ChargeCannon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

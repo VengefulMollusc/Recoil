@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class Railgun : Weapon
+public class ChargeCannon : Weapon
 {
     public float range = 200f;
     public float beamRadius = 1f;
