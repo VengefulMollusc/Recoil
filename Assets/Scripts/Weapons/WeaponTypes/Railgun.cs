@@ -52,7 +52,7 @@ public class Railgun : Weapon
 
         // Apply recoil force
         if (rb == null)
-            rb = GetComponent<Rigidbody>();
+            rb = transform.parent.GetComponent<Rigidbody>();
         rb.AddForceAtPosition(-direction * impactForce, origin, ForceMode.Impulse);
 
         RaycastHit[] hits = Physics.SphereCastAll(origin, beamThickness, direction, range, layerMask);

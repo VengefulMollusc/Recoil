@@ -17,6 +17,8 @@ public class MachineGun : Weapon
     private string poolableBulletKey;
     private int firingPointIndex;
 
+    private Rigidbody rb;
+
     void Start()
     {
         poolableBulletKey = bulletPrefab.GetComponent<Poolable>().key;
@@ -25,6 +27,8 @@ public class MachineGun : Weapon
 
         if (firingPoints.Count <= 0)
             Debug.LogError("No firingPoints defined");
+
+        rb = transform.parent.GetComponent<Rigidbody>();
     }
 
     public override void FireWeapon(bool pressed)
@@ -61,6 +65,10 @@ public class MachineGun : Weapon
         Vector3 direction = GetDirection();
 
         Bullet bullet = GameObjectPoolController.Dequeue(poolableBulletKey).GetComponent<Bullet>();
+
+        // recoil force
+        rb.AddForceAtPosition(-direction * bullet.impactForce, origin, ForceMode.Impulse);
+
         bullet.Launch(origin, direction, gameObject);
     }
 
@@ -79,6 +87,6 @@ public class MachineGun : Weapon
         direction.x += Random.Range(-spread, spread);
         direction.y += Random.Range(-spread, spread);
         direction.z += Random.Range(-spread, spread);
-        return direction;
+        return direction.normalized;
     }
 }
