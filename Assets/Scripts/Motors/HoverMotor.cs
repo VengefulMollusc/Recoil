@@ -75,8 +75,6 @@ public class HoverMotor : MonoBehaviour
 
     /*
      * Normalise hover raycasts.
-     *
-     * TODO: when using fixed hover height, verticalSpread can be baked in here
      */
     void ProcessHoverRays()
     {

@@ -49,11 +49,22 @@ public class ScenePlayerController : MonoBehaviour
                 viewers.Add(playerSettings.playerGameObject.transform);
 
             playerSettings.playerGameObject.GetComponent<InputController>().SetInputSettings(playerSettings.inputSettings);
-            playerSettings.playerGameObject.SetActive(isActivePlayer);
+            //playerSettings.playerGameObject.SetActive(isActivePlayer);
+            playerSettings.playerGameObject.SetActive(false);
             playerSettings.playerCamera.rect = isActivePlayer ? viewportSettings[playerCount - 1].viewports[i] : Rect.zero;
         }
 
         terrainGenerator.SetViewers(viewers);
+        terrainGenerator.OnTerrainLoaded += OnTerrainLoaded;
+    }
+
+    void OnTerrainLoaded()
+    {
+        for (int i = 0; i < playerCount; i++)
+        {
+            playerSettingsList[i].playerGameObject.SetActive(true);
+        }
+        Debug.Log("Players Enabled");
     }
 
     void OnValidate()

@@ -34,6 +34,9 @@ public class TerrainGenerator : MonoBehaviour
     Dictionary<Vector2, TerrainChunk> terrainChunkDictionary = new Dictionary<Vector2, TerrainChunk>();
     List<TerrainChunk> visibleTerrainChunks = new List<TerrainChunk>();
 
+    public event System.Action OnTerrainLoaded;
+    private bool loading;
+
     void Start()
     {
         UpdateTerrainDataVariables();
@@ -57,12 +60,54 @@ public class TerrainGenerator : MonoBehaviour
                 falloffMap = FalloffGenerator.GenerateFalloffMap(falloffMapSize, heightMapSettings.falloffMode);
         }
 
-        UpdateVisibleChunks();
+        //UpdateVisibleChunks();
+
+        loading = true;
+        StartCoroutine(InitialTerrainLoad());
+    }
+
+    IEnumerator InitialTerrainLoad()
+    {
+        while (!FixedTerrainLoaded())
+        {
+            UpdateVisibleChunks();
+            foreach (TerrainChunk chunk in visibleTerrainChunks)
+            {
+                chunk.UpdateCollisionMesh();
+            }
+            yield return null;
+        }
+
+        loading = false;
+        OnTerrainLoaded();
+    }
+
+    bool FixedTerrainLoaded()
+    {
+        for (int x = -fixedTerrainSize; x <= fixedTerrainSize; x++)
+        {
+            for (int y = -fixedTerrainSize; y <= fixedTerrainSize; y++)
+            {
+                Vector2 chunkCoord = new Vector2(x, y);
+                TerrainChunk chunk;
+                if (terrainChunkDictionary.TryGetValue(chunkCoord, out chunk))
+                {
+                    if (!chunk.IsLoaded())
+                        return false;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     void Update()
     {
-        if (viewers == null)
+        if (viewers == null || loading)
             return;
 
         bool updateCollisionMeshes = false;
