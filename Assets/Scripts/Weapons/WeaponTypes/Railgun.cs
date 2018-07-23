@@ -43,7 +43,7 @@ public class Railgun : Weapon
     }
 
     /*
-     * Raycast to maximum range and damage any damageable objects hit
+     * Spherecast to maximum range and damage any damageable objects hit
      */
     private void Fire()
     {
