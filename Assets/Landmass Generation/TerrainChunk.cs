@@ -239,27 +239,6 @@ public class TerrainChunk
                 }
             }
         }
-        //if (!hasSetCollider)
-        //{
-        //    //float sqrDistFromViewerToEdge = bounds.SqrDistance(viewerPosition);
-
-        //    //if (sqrDistFromViewerToEdge < detailLevels[colliderLODIndex].sqrVisibleDistanceThreshold)
-        //    //{
-        //    if (!lodMeshes[colliderLODIndex].hasRequestedMesh)
-        //    {
-        //        lodMeshes[colliderLODIndex].RequestMesh(heightMap, meshSettings);
-        //    }
-        //    //}
-
-        //    //if (sqrDistFromViewerToEdge < colliderGenerationDistanceThreshold * colliderGenerationDistanceThreshold)
-        //    //{
-        //    if (lodMeshes[colliderLODIndex].hasMesh)
-        //    {
-        //        meshCollider.sharedMesh = lodMeshes[colliderLODIndex].mesh;
-        //        hasSetCollider = true;
-        //    }
-        //    //}
-        //}
     }
 
     public bool IsLoaded()

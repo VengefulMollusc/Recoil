@@ -33,6 +33,9 @@ public class ScenePlayerController : MonoBehaviour
         SetupPlayers();
     }
 
+    /*
+     * Enable/disable players and set up viewports according to selected number of players
+     */
     void SetupPlayers()
     {
         List<Transform> viewers = new List<Transform>();
@@ -51,7 +54,6 @@ public class ScenePlayerController : MonoBehaviour
                 viewers.Add(playerSettings.playerGameObject.transform);
 
             playerSettings.playerGameObject.GetComponent<InputController>().SetInputSettings(playerSettings.inputSettings);
-            //playerSettings.playerGameObject.SetActive(isActivePlayer);
             playerSettings.playerGameObject.SetActive(false);
             playerSettings.playerCamera.rect = isActivePlayer ? viewportSettings[playerCount - 1].viewports[i] : Rect.zero;
         }
@@ -60,6 +62,11 @@ public class ScenePlayerController : MonoBehaviour
         terrainGenerator.OnTerrainLoaded += OnTerrainLoaded;
     }
 
+    /*
+     * Called when TerrainGenerator has loaded the entire fixed size area, including collision meshes.
+     *
+     * Disables load camera and enables players
+     */
     void OnTerrainLoaded()
     {
         for (int i = 0; i < playerCount; i++)

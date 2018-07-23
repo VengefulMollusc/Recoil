@@ -60,12 +60,14 @@ public class TerrainGenerator : MonoBehaviour
                 falloffMap = FalloffGenerator.GenerateFalloffMap(falloffMapSize, heightMapSettings.falloffMode);
         }
 
-        //UpdateVisibleChunks();
-
         loading = true;
         StartCoroutine(InitialTerrainLoad());
     }
 
+    /*
+     * Forces updates of visible chunks and collision meshes until entire fixed area loaded.
+     * Then triggers player spawns
+     */
     IEnumerator InitialTerrainLoad()
     {
         while (!FixedTerrainLoaded())
@@ -82,8 +84,14 @@ public class TerrainGenerator : MonoBehaviour
         OnTerrainLoaded();
     }
 
+    /*
+     * Checks if all terrain chunks in fixed size area have been loaded
+     */
     bool FixedTerrainLoaded()
     {
+        if (!generateFixedSizeTerrain)
+            return true;
+
         for (int x = -fixedTerrainSize; x <= fixedTerrainSize; x++)
         {
             for (int y = -fixedTerrainSize; y <= fixedTerrainSize; y++)
