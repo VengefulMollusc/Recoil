@@ -7,7 +7,8 @@ public class ChargeCannon : Weapon
 {
     public float range = 200f;
     public float beamRadius = 1f;
-    public float chargeTime = 1.5f;
+    public float minChargeTime = 0.25f;
+    public float maxChargeTime = 1.5f;
     public float damage = 10f;
     public float impactForce = 10f;
     public Vector3 firingPoint;
@@ -32,14 +33,13 @@ public class ChargeCannon : Weapon
     private IEnumerator ChargingSequence()
     {
         charge = 0f;
-        while (charging)
+        while (charging && charge <= maxChargeTime + 0.5f)
         {
             charge += Time.deltaTime;
             yield return null;
         }
 
-        if (charge >= chargeTime)
-            Fire();
+        Fire();
     }
 
     /*
@@ -47,14 +47,19 @@ public class ChargeCannon : Weapon
      */
     private void Fire()
     {
+        if (charge < minChargeTime)
+            return;
+
+        float chargeLevel = Mathf.Clamp01(charge / maxChargeTime);
+
         Vector3 origin = transform.TransformPoint(firingPoint);
         Vector3 direction = transform.forward;
 
         // Apply recoil force
         if (parentRb == null)
             parentRb = GetComponentInParent<Rigidbody>();
-        parentRb.AddForceAtPosition(-direction * impactForce, origin, ForceMode.Impulse);
-        parentRb.AddForce(-direction * impactForce, ForceMode.Impulse);
+        parentRb.AddForceAtPosition(-direction * impactForce * chargeLevel, origin, ForceMode.Impulse);
+        parentRb.AddForce(-direction * impactForce * chargeLevel, ForceMode.Impulse);
 
         RaycastHit[] hits = Physics.SphereCastAll(origin, beamRadius, direction, range, layerMask);
 
@@ -79,25 +84,26 @@ public class ChargeCannon : Weapon
             HealthController healthController = hit.collider.GetComponent<HealthController>();
             if (healthController != null)
             {
-                healthController.Damage(damage);
+                healthController.Damage(damage * chargeLevel);
             }
 
             Rigidbody impactRb = hit.collider.GetComponent<Rigidbody>();
             if (impactRb != null)
             {
-                impactRb.AddForceAtPosition(direction * impactForce, hit.point, ForceMode.Impulse);
-                impactRb.AddForce(direction * impactForce, ForceMode.Impulse);
+                impactRb.AddForceAtPosition(direction * impactForce * chargeLevel, hit.point, ForceMode.Impulse);
+                impactRb.AddForce(direction * impactForce * chargeLevel, ForceMode.Impulse);
             }
         }
 
-        ActivateFiringEffects(origin, direction, endDist);
+        ActivateFiringEffects(origin, direction, endDist, chargeLevel);
     }
 
-    private void ActivateFiringEffects(Vector3 origin, Vector3 direction, float distance)
+    private void ActivateFiringEffects(Vector3 origin, Vector3 direction, float distance, float chargeLevel)
     {
         bool hitTerrain = distance < range; // if true, use explosion effect at end
         Vector3 endPoint = origin + direction * distance;
 
+        Debug.Log("Fired: " + (chargeLevel * 100f) + "%");
         // TODO: activate visual effects from origin to endPoint
     }
 }
