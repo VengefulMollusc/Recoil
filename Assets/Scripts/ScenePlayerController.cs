@@ -11,6 +11,21 @@ public class ScenePlayerController : MonoBehaviour
     public List<PlayerSettings> playerSettingsList;
     public List<ViewportSettings> viewportSettings;
 
+    private static ScenePlayerController instance;
+
+    public static ScenePlayerController Instance()
+    {
+        if (instance == null)
+            instance = FindObjectOfType<ScenePlayerController>();
+
+        return instance;
+    }
+
+    public static int GetPlayerCount()
+    {
+        return Instance().playerCount;
+    }
+
     void Awake()
     {
         SetupPlayers();

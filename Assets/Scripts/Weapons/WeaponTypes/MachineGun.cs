@@ -23,7 +23,7 @@ public class MachineGun : Weapon
     {
         poolableBulletKey = bulletPrefab.GetComponent<Poolable>().key;
         int poolableCount = (int) (bulletPrefab.GetComponent<Bullet>().lifeSpan / fireRate);
-        GameObjectPoolController.AddEntry(poolableBulletKey, bulletPrefab, poolableCount, poolableCount * 4);
+        GameObjectPoolController.AddEntry(poolableBulletKey, bulletPrefab, poolableCount, poolableCount * ScenePlayerController.GetPlayerCount());
 
         if (firingPoints.Count <= 0)
             Debug.LogError("No firingPoints defined");

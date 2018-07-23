@@ -32,7 +32,7 @@ public class LockOnMissileLauncher : Weapon
     {
         poolableMissileKey = lockOnMissilePrefab.GetComponent<Poolable>().key;
         int poolableCount = missileLaunchCount;
-        GameObjectPoolController.AddEntry(poolableMissileKey, lockOnMissilePrefab, poolableCount, poolableCount * 4);
+        GameObjectPoolController.AddEntry(poolableMissileKey, lockOnMissilePrefab, poolableCount, poolableCount * ScenePlayerController.GetPlayerCount());
 
         parentRb = GetComponentInParent<Rigidbody>();
 
