@@ -5,6 +5,7 @@ using UnityEngine;
 public class ScenePlayerController : MonoBehaviour
 {
     public TerrainGenerator terrainGenerator;
+    public Camera loadCamera;
     [Header("Players")]
     [Range(1, 4)]
     public int playerCount;
@@ -28,6 +29,7 @@ public class ScenePlayerController : MonoBehaviour
 
     void Awake()
     {
+        loadCamera.enabled = true;
         SetupPlayers();
     }
 
@@ -64,6 +66,8 @@ public class ScenePlayerController : MonoBehaviour
         {
             playerSettingsList[i].playerGameObject.SetActive(true);
         }
+
+        loadCamera.enabled = false;
         Debug.Log("Players Enabled");
     }
 
