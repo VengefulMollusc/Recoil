@@ -162,8 +162,9 @@ public class LockOnMissile : MonoBehaviour
             Rigidbody rigidbody = col.GetComponent<Rigidbody>();
             if (rigidbody != null)
             {
-                Vector3 force = (col.transform.position - position).normalized * explosionForce;
-                rigidbody.AddForce(force, ForceMode.Impulse);
+                rigidbody.AddExplosionForce(explosionForce, position, explosionRadius, 2f, ForceMode.Impulse);
+                //Vector3 force = (col.transform.position - position).normalized * explosionForce;
+                //rigidbody.AddForce(force, ForceMode.Impulse);
             }
         }
 

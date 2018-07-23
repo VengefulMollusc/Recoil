@@ -485,10 +485,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   range: 200
-  beamThickness: 1
+  beamRadius: 1
   chargeTime: 1.5
   damage: 25
-  impactForce: 10
+  impactForce: 25
   firingPoint: {x: 0, y: 0.5, z: 0}
   layerMask:
     serializedVersion: 2

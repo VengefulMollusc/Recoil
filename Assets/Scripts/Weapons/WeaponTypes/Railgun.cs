@@ -6,7 +6,7 @@ using UnityEngine;
 public class Railgun : Weapon
 {
     public float range = 200f;
-    public float beamThickness = 1f;
+    public float beamRadius = 1f;
     public float chargeTime = 1.5f;
     public float damage = 10f;
     public float impactForce = 10f;
@@ -54,8 +54,9 @@ public class Railgun : Weapon
         if (parentRb == null)
             parentRb = GetComponentInParent<Rigidbody>();
         parentRb.AddForceAtPosition(-direction * impactForce, origin, ForceMode.Impulse);
+        parentRb.AddForce(-direction * impactForce, ForceMode.Impulse);
 
-        RaycastHit[] hits = Physics.SphereCastAll(origin, beamThickness, direction, range, layerMask);
+        RaycastHit[] hits = Physics.SphereCastAll(origin, beamRadius, direction, range, layerMask);
 
         float endDist = range;
 
@@ -85,6 +86,7 @@ public class Railgun : Weapon
             if (impactRb != null)
             {
                 impactRb.AddForceAtPosition(direction * impactForce, hit.point, ForceMode.Impulse);
+                impactRb.AddForce(direction * impactForce, ForceMode.Impulse);
             }
         }
 
