@@ -5,38 +5,41 @@ using UnityEngine;
 
 public class Railgun : Weapon
 {
-    private const float range = 200f;
-    private const float fireRate = 0.25f;
-    private const float damage = 10f;
+    public float range = 200f;
+    public float beamThickness = 1f;
+    public float chargeTime = 1.5f;
+    public float damage = 10f;
+    public float impactForce = 10f;
+    public Vector3 firingPoint;
+    public LayerMask layerMask;
 
-    private bool firing;
-    private bool firingSequenceActive;
-
-    private Vector3 hitPosition;
+    private bool charging;
+    private float charge;
+    private Rigidbody rb;
 
     public override void FireWeapon(bool pressed)
     {
-        firing = pressed;
-        if (pressed && !firingSequenceActive)
+        charging = pressed;
+        if (charging)
         {
-            StartCoroutine(FiringSequenceCoroutine());
+            StartCoroutine(ChargingSequence());
         }
     }
 
     /*
-     * Handles timing of weapon firing to not exceed firerate
+     * Handles charging and firing of weapon
      */
-    private IEnumerator FiringSequenceCoroutine()
+    private IEnumerator ChargingSequence()
     {
-        firingSequenceActive = true;
-
-        while (firing)
+        charge = 0f;
+        while (charging)
         {
-            Fire();
-            yield return new WaitForSeconds(fireRate);
+            charge += Time.deltaTime;
+            yield return 0;
         }
 
-        firingSequenceActive = false;
+        if (charge >= chargeTime)
+            Fire();
     }
 
     /*
@@ -44,33 +47,55 @@ public class Railgun : Weapon
      */
     private void Fire()
     {
-        Vector3 origin = transform.position;
+        Vector3 origin = transform.TransformPoint(firingPoint);
         Vector3 direction = transform.forward;
-        RaycastHit hitInfo;
 
-        hitPosition = origin + (direction * range);
+        // Apply recoil force
+        if (rb == null)
+            rb = GetComponent<Rigidbody>();
+        rb.AddForceAtPosition(-direction * impactForce, origin, ForceMode.Impulse);
 
-        if (Physics.Raycast(origin, direction, out hitInfo, range))
+        RaycastHit[] hits = Physics.SphereCastAll(origin, beamThickness, direction, range, layerMask);
+
+        float endDist = range;
+
+        // loop through once to find terrain distance
+        foreach (RaycastHit hit in hits)
         {
-            hitPosition = hitInfo.point;
+            if (hit.collider.gameObject.layer == 11 && hit.distance < endDist)
+            {
+                endDist = hit.distance;
+            }
+        }
 
-            HealthController healthController = hitInfo.collider.gameObject.GetComponent<HealthController>();
+        foreach (RaycastHit hit in hits)
+        {
+            if (hit.distance > endDist)
+            {
+                continue;
+            }
+
+            HealthController healthController = hit.collider.GetComponent<HealthController>();
             if (healthController != null)
             {
                 healthController.Damage(damage);
             }
+
+            Rigidbody impactRb = hit.collider.GetComponent<Rigidbody>();
+            if (impactRb != null)
+            {
+                impactRb.AddForceAtPosition(direction * impactForce, hit.point, ForceMode.Impulse);
+            }
         }
+
+        ActivateFiringEffects(origin, direction, endDist);
     }
 
-    /*
-     * Temporary VFX
-     */
-    void OnDrawGizmos()
+    private void ActivateFiringEffects(Vector3 origin, Vector3 direction, float distance)
     {
-        if (firing)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, hitPosition);
-        }
+        bool hitTerrain = distance < range; // if true, use explosion effect at end
+        Vector3 endPoint = origin + direction * distance;
+
+        // TODO: activate visual effects from origin to endPoint
     }
 }
