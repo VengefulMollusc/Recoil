@@ -61,7 +61,7 @@ public class LockOnMissileLauncher : Weapon
                     tracker.IncreaseLevel(Time.deltaTime);
                 }
             }
-            yield return 0;
+            yield return null;
         }
     }
 

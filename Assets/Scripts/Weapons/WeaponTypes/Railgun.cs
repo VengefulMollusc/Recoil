@@ -35,7 +35,7 @@ public class Railgun : Weapon
         while (charging)
         {
             charge += Time.deltaTime;
-            yield return 0;
+            yield return null;
         }
 
         if (charge >= chargeTime)
@@ -70,7 +70,7 @@ public class Railgun : Weapon
 
         foreach (RaycastHit hit in hits)
         {
-            if (hit.distance > endDist)
+            if (hit.distance > endDist || transform.IsChildOf(hit.collider.transform))
             {
                 continue;
             }
