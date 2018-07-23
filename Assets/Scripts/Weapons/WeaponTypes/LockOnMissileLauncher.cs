@@ -163,7 +163,12 @@ public class LockOnMissileLauncher : Weapon
             {
                 LockOnMissile missile = GameObjectPoolController.Dequeue(poolableMissileKey).GetComponent<LockOnMissile>();
                 Transform launchTransform = GetLaunchTransform();
-                missile.Launch(launchTransform.position, launchTransform.forward, launchTransform.up, tracker.targetTransform, parentRb.velocity);
+                Vector3 launchPosition = launchTransform.position;
+                Vector3 launchDirection = launchTransform.up;
+                missile.Launch(launchPosition, launchTransform.forward, launchDirection, tracker.targetTransform, parentRb.velocity);
+
+                // Add launch recoil force
+                parentRb.AddForceAtPosition(-launchDirection * missile.launchForce, launchPosition, ForceMode.Impulse);
                 yield return new WaitForSeconds(launchRate);
             }
         }

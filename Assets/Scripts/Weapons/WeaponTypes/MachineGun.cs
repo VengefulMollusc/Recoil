@@ -17,18 +17,18 @@ public class MachineGun : Weapon
     private string poolableBulletKey;
     private int firingPointIndex;
 
-    private Rigidbody rb;
+    private Rigidbody parentRb;
 
     void Start()
     {
         poolableBulletKey = bulletPrefab.GetComponent<Poolable>().key;
-        int poolableCount = (int)(bulletPrefab.GetComponent<Bullet>().lifeSpan / fireRate);
+        int poolableCount = (int) (bulletPrefab.GetComponent<Bullet>().lifeSpan / fireRate);
         GameObjectPoolController.AddEntry(poolableBulletKey, bulletPrefab, poolableCount, poolableCount * 4);
 
         if (firingPoints.Count <= 0)
             Debug.LogError("No firingPoints defined");
 
-        rb = transform.parent.GetComponent<Rigidbody>();
+        parentRb = GetComponentInParent<Rigidbody>();
     }
 
     public override void FireWeapon(bool pressed)
@@ -67,7 +67,7 @@ public class MachineGun : Weapon
         Bullet bullet = GameObjectPoolController.Dequeue(poolableBulletKey).GetComponent<Bullet>();
 
         // recoil force
-        rb.AddForceAtPosition(-direction * bullet.impactForce, origin, ForceMode.Impulse);
+        parentRb.AddForceAtPosition(-direction * bullet.impactForce, origin, ForceMode.Impulse);
 
         bullet.Launch(origin, direction, gameObject);
     }

@@ -18,7 +18,7 @@ public class LockOnMissile : MonoBehaviour
     public float acceleration;
     public float lifeSpan;
     public float launchTime;
-    public float launchVelocity;
+    public float launchForce;
     public float initialGravity;
     public float homingStrength;
 
@@ -52,7 +52,8 @@ public class LockOnMissile : MonoBehaviour
 
         rb.isKinematic = false;
         rb.detectCollisions = true;
-        rb.velocity = (launchDirection * launchVelocity) + parentVelocity;
+        rb.velocity = parentVelocity;
+        rb.AddForce(launchDirection * launchForce, ForceMode.Impulse);
 
         trail.Clear();
     }

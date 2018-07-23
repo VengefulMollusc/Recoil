@@ -15,7 +15,7 @@ public class Railgun : Weapon
 
     private bool charging;
     private float charge;
-    private Rigidbody rb;
+    private Rigidbody parentRb;
 
     public override void FireWeapon(bool pressed)
     {
@@ -51,9 +51,9 @@ public class Railgun : Weapon
         Vector3 direction = transform.forward;
 
         // Apply recoil force
-        if (rb == null)
-            rb = transform.parent.GetComponent<Rigidbody>();
-        rb.AddForceAtPosition(-direction * impactForce, origin, ForceMode.Impulse);
+        if (parentRb == null)
+            parentRb = GetComponentInParent<Rigidbody>();
+        parentRb.AddForceAtPosition(-direction * impactForce, origin, ForceMode.Impulse);
 
         RaycastHit[] hits = Physics.SphereCastAll(origin, beamThickness, direction, range, layerMask);
 
