@@ -11,7 +11,7 @@ public class LockOnMissileLauncher : Weapon
     public float lockOnAngle = 20f;
     public float lockOnRange = 200f;
 
-    public List<Transform> launchPointTransforms;
+    public List<FiringPoint> firingPoints;
 
     public LayerMask lockOnLayerMask;
     public LayerMask lockOnRayCastLayerMask;
@@ -26,7 +26,7 @@ public class LockOnMissileLauncher : Weapon
 
     private bool lockingOn;
     private bool firing;
-    private int launchPointIndex;
+    private int firingPointIndex;
 
     void Start()
     {
@@ -36,8 +36,8 @@ public class LockOnMissileLauncher : Weapon
 
         parentRb = GetComponentInParent<Rigidbody>();
 
-        if (launchPointTransforms.Count <= 0)
-            Debug.LogError("No launchPointTransforms defined");
+        if (firingPoints.Count <= 0)
+            Debug.LogError("No firingPoints defined");
     }
 
     public override void FireWeapon(bool pressed)
@@ -162,10 +162,15 @@ public class LockOnMissileLauncher : Weapon
             for (int i = 0; i < tracker.lockOnCount; i++)
             {
                 LockOnMissile missile = GameObjectPoolController.Dequeue(poolableMissileKey).GetComponent<LockOnMissile>();
-                Transform launchTransform = GetLaunchTransform();
+                Transform launchTransform = firingPoints[firingPointIndex].transform;
                 Vector3 launchPosition = launchTransform.position;
                 Vector3 launchDirection = launchTransform.up;
                 missile.Launch(launchPosition, launchTransform.forward, launchDirection, tracker.targetTransform, parentRb.velocity);
+
+                firingPoints[firingPointIndex].Fire();
+                firingPointIndex++;
+                if (firingPointIndex >= firingPoints.Count)
+                    firingPointIndex = 0;
 
                 // Add launch recoil force
                 parentRb.AddForceAtPosition(-launchDirection * missile.launchForce, launchPosition, ForceMode.Impulse);
@@ -175,15 +180,6 @@ public class LockOnMissileLauncher : Weapon
 
         lockOnTargets = null;
         firing = false;
-    }
-
-    private Transform GetLaunchTransform()
-    {
-        Transform launchTransform = launchPointTransforms[launchPointIndex];
-        launchPointIndex++;
-        if (launchPointIndex >= launchPointTransforms.Count)
-            launchPointIndex = 0;
-        return launchTransform;
     }
 
     private class LockOnTargetTracker

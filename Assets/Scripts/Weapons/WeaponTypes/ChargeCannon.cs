@@ -11,7 +11,7 @@ public class ChargeCannon : Weapon
     public float maxChargeTime = 1.5f;
     public float damage = 10f;
     public float impactForce = 10f;
-    public Vector3 firingPoint;
+    public FiringPoint firingPoint;
     public LayerMask layerMask;
 
     private bool charging;
@@ -51,15 +51,9 @@ public class ChargeCannon : Weapon
             return;
 
         float chargeLevel = Mathf.Clamp01(charge / maxChargeTime);
-
-        Vector3 origin = transform.TransformPoint(firingPoint);
-        Vector3 direction = transform.forward;
-
-        // Apply recoil force
-        if (parentRb == null)
-            parentRb = GetComponentInParent<Rigidbody>();
-        parentRb.AddForceAtPosition(-direction * impactForce * chargeLevel, origin, ForceMode.Impulse);
-        parentRb.AddForce(-direction * impactForce * chargeLevel, ForceMode.Impulse);
+        
+        Vector3 origin = firingPoint.transform.position;
+        Vector3 direction = firingPoint.transform.forward;
 
         RaycastHit[] hits = Physics.SphereCastAll(origin, beamRadius, direction, range, layerMask);
 
@@ -100,6 +94,14 @@ public class ChargeCannon : Weapon
 
     private void ActivateFiringEffects(Vector3 origin, Vector3 direction, float distance, float chargeLevel)
     {
+        // Apply recoil force
+        if (parentRb == null)
+            parentRb = GetComponentInParent<Rigidbody>();
+        parentRb.AddForceAtPosition(-direction * impactForce * chargeLevel, origin, ForceMode.Impulse);
+        parentRb.AddForce(-direction * impactForce * chargeLevel, ForceMode.Impulse);
+
+        firingPoint.Fire();
+
         bool hitTerrain = distance < range; // if true, use explosion effect at end
         Vector3 endPoint = origin + direction * distance;
 
