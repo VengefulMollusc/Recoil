@@ -97,8 +97,9 @@ public class ChargeCannon : Weapon
         // Apply recoil force
         if (parentRb == null)
             parentRb = GetComponentInParent<Rigidbody>();
-        parentRb.AddForceAtPosition(-direction * impactForce * chargeLevel, origin, ForceMode.Impulse);
-        parentRb.AddForce(-direction * impactForce * chargeLevel, ForceMode.Impulse);
+        Vector3 force = -direction * impactForce * chargeLevel;
+        parentRb.AddForceAtPosition(force * knockbackModifier, origin, ForceMode.Impulse);
+        parentRb.AddForce(force, ForceMode.Impulse);
 
         firingPoint.Fire();
 

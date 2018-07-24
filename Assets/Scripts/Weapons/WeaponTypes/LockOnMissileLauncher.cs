@@ -173,7 +173,7 @@ public class LockOnMissileLauncher : Weapon
                     firingPointIndex = 0;
 
                 // Add launch recoil force
-                parentRb.AddForceAtPosition(-launchDirection * missile.launchForce, launchPosition, ForceMode.Impulse);
+                parentRb.AddForceAtPosition(-launchDirection * missile.launchForce * knockbackModifier, launchPosition, ForceMode.Impulse);
                 yield return new WaitForSeconds(launchRate);
             }
         }

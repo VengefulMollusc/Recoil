@@ -66,7 +66,7 @@ public class MachineGun : Weapon
         Bullet bullet = GameObjectPoolController.Dequeue(poolableBulletKey).GetComponent<Bullet>();
 
         // recoil force
-        parentRb.AddForceAtPosition(-direction * bullet.impactForce, origin, ForceMode.Impulse);
+        parentRb.AddForceAtPosition(-direction * bullet.impactForce * knockbackModifier, origin, ForceMode.Impulse);
 
         bullet.Launch(origin, direction, gameObject);
         firingPoints[firingPointIndex].Fire();
