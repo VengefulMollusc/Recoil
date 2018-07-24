@@ -22,11 +22,15 @@ public class LockOnMissile : MonoBehaviour
     public float initialGravity;
     public float homingStrength;
 
+    [Header("Particles")]
+    public ParticleSystem trailParticles;
+    public ParticleSystem explosionParticles;
+
     private Transform target;
     private Rigidbody rb;
     private HealthController health;
     private TrailRenderer trail;
-    
+
     private float timer;
 
     public void Launch(Vector3 position, Vector3 facingDirection, Vector3 launchDirection, Transform target, Vector3 parentVelocity)
@@ -55,6 +59,8 @@ public class LockOnMissile : MonoBehaviour
         rb.velocity = parentVelocity;
         rb.AddForce(launchDirection * launchForce, ForceMode.Impulse);
 
+        // start trail effects
+        trailParticles.Play();
         trail.Clear();
     }
 
@@ -86,26 +92,26 @@ public class LockOnMissile : MonoBehaviour
 
         //if (timer > launchTime)
         //{
-            // Apply direction correction force
-            Vector3 velocity = rb.velocity;
-            Vector3 projected = Vector3.Project(rb.velocity, forward);
+        // Apply direction correction force
+        Vector3 velocity = rb.velocity;
+        Vector3 projected = Vector3.Project(rb.velocity, forward);
 
-            if (Vector3.Dot(velocity, projected) > 0f)
-            {
-                Vector3 diff = projected - velocity;
-                force += diff * acceleration * launchRatio;
-            }
+        if (Vector3.Dot(velocity, projected) > 0f)
+        {
+            Vector3 diff = projected - velocity;
+            force += diff * acceleration * launchRatio;
+        }
 
-            if (target != null)
-            {
-                //transform.LookAt(target.position);
+        if (target != null)
+        {
+            //transform.LookAt(target.position);
 
-                Vector3 toTarget = (target.position - transform.position).normalized;
-                Vector3 newFacing = Vector3.RotateTowards(forward, toTarget, homingStrength * Time.fixedDeltaTime * launchRatio, 0f);
-                rb.rotation = Quaternion.LookRotation(newFacing);
+            Vector3 toTarget = (target.position - transform.position).normalized;
+            Vector3 newFacing = Vector3.RotateTowards(forward, toTarget, homingStrength * Time.fixedDeltaTime * launchRatio, 0f);
+            rb.rotation = Quaternion.LookRotation(newFacing);
 
-                //Debug.DrawLine(transform.position, target.position);
-            }
+            //Debug.DrawLine(transform.position, target.position);
+        }
         //}
 
         // Apply forces
@@ -145,6 +151,10 @@ public class LockOnMissile : MonoBehaviour
         rb.detectCollisions = false;
 
         // TODO: explosion particle effects here
+        trailParticles.Stop();
+
+        if (explosionParticles != null)
+            explosionParticles.Play();
 
         // Apply explosion damage and force
         Vector3 position = transform.position;
@@ -173,7 +183,7 @@ public class LockOnMissile : MonoBehaviour
 
     private IEnumerator Despawn()
     {
-        yield return new WaitForSeconds(trail.time);
+        yield return new WaitForSeconds(Mathf.Max(trail.time, explosionParticles.main.duration));
         GameObjectPoolController.Enqueue(GetComponent<Poolable>());
     }
 }
