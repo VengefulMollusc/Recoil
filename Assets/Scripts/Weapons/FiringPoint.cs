@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class FiringPoint : MonoBehaviour
 {
+    public bool enableParticles;
     private ParticleSystem particleSystem;
 
     public void Fire()
     {
-        //if (particleSystem == null)
-        //    particleSystem = GetComponent<ParticleSystem>();
+        if (!enableParticles)
+            return;
 
-        //particleSystem.Play();
+        if (particleSystem == null)
+            particleSystem = GetComponent<ParticleSystem>();
+
+        particleSystem.Play();
     }
 }
