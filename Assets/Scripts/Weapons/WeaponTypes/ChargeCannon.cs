@@ -78,7 +78,8 @@ public class ChargeCannon : Weapon
             HealthController healthController = hit.collider.GetComponent<HealthController>();
             if (healthController != null)
             {
-                healthController.Damage(damage * chargeLevel);
+                float deathDelay = hit.distance * 0.1f;
+                healthController.Damage(damage * chargeLevel, deathDelay);
             }
 
             Rigidbody impactRb = hit.collider.GetComponent<Rigidbody>();

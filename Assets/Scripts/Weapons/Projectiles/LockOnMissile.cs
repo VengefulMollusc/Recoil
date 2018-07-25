@@ -165,7 +165,8 @@ public class LockOnMissile : MonoBehaviour
             HealthController health = col.GetComponent<HealthController>();
             if (health != null)
             {
-                health.Damage(explosionDamage);
+                float deathDelay = (col.transform.position - transform.position).sqrMagnitude * 0.1f;
+                health.Damage(explosionDamage, deathDelay);
             }
 
             // add explosion force

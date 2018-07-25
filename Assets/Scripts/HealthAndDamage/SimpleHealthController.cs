@@ -9,9 +9,11 @@ public class SimpleHealthController : HealthController
 
     private float currentHealth;
 
+    private bool canDie;
+
     private void Start()
     {
-        currentHealth = healthMax;
+        ResetHealth();
     }
 
     public override void Damage(float damageAmount)
@@ -21,20 +23,36 @@ public class SimpleHealthController : HealthController
 
         currentHealth -= damageAmount;
 
-        if (IsDead())
+        if (currentHealth <= 0)
         {
             currentHealth = 0f;
             Debug.Log(gameObject.name + " Deaded");
         }
     }
 
+    public override void Damage(float damageAmount, float deathDelay)
+    {
+        Damage(damageAmount);
+        if (IsDead())
+            StartCoroutine(DelayDeathEffect(deathDelay));
+
+    }
+
+    private IEnumerator DelayDeathEffect(float delay)
+    {
+        canDie = false;
+        yield return new WaitForSeconds(delay);
+        canDie = true;
+    }
+
     public override bool IsDead()
     {
-        return currentHealth <= 0f;
+        return currentHealth <= 0f && canDie;
     }
 
     public override void ResetHealth()
     {
         currentHealth = healthMax;
+        canDie = true;
     }
 }
