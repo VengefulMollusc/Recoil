@@ -60,7 +60,7 @@ public class LockOnMissile : MonoBehaviour
         rb.AddForce(launchDirection * launchForce, ForceMode.Impulse);
 
         // start trail effects
-        trailParticles.Play();
+        trailParticles.Play(false);
         trail.Clear();
     }
 
@@ -151,7 +151,7 @@ public class LockOnMissile : MonoBehaviour
         rb.detectCollisions = false;
 
         // TODO: explosion particle effects here
-        trailParticles.Stop();
+        trailParticles.Stop(false);
 
         if (explosionParticles != null)
             explosionParticles.Play();
