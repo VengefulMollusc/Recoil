@@ -73,7 +73,7 @@ public class MachineGun : Weapon
         if (useRecoil)
             parentRb.AddForceAtPosition(-direction * bullet.impactForce * knockbackModifier, origin, ForceMode.Impulse);
 
-        bullet.Launch(origin, direction, gameObject);
+        bullet.Launch(origin, direction, transform.parent.gameObject);
         firingPoints[firingPointIndex].Fire();
 
         // increment firingpointindex

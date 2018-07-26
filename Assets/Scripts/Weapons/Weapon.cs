@@ -15,6 +15,10 @@ public abstract class Weapon : MonoBehaviour
         if (weaponController == null)
             weaponController = GetComponentInParent<WeaponController>();
 
+        // TODO: figure out better system for this
+        if (weaponController == null)
+            return true;
+
         return weaponController.IsActiveWeapon(this);
     }
 }

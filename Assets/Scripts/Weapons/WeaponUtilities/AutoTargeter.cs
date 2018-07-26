@@ -145,6 +145,11 @@ public class AutoTargeter : MonoBehaviour
         return false;
     }
 
+    public bool HasTarget()
+    {
+        return target != null;
+    }
+
     public bool IsTarget(LockOnTarget other)
     {
         return other == target;

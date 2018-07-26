@@ -50,6 +50,38 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1206320649279876
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4393294554064816}
+  - component: {fileID: 114447318885342448}
+  m_Layer: 8
+  m_Name: AutoTurretLauncher
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1254718416455222
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4248802744460570}
+  - component: {fileID: 114614025670716740}
+  m_Layer: 8
+  m_Name: FiringPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1272476515856432
 GameObject:
   m_ObjectHideFlags: 1
@@ -203,6 +235,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!4 &4248802744460570
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1254718416455222}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4360378497478508}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4360378497478508
 Transform:
   m_ObjectHideFlags: 1
@@ -213,9 +258,23 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 4471819928991832}
+  - {fileID: 4248802744460570}
   m_Father: {fileID: 4521391129715992}
   m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4393294554064816
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1206320649279876}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4471819928991832}
+  m_Father: {fileID: 4521391129715992}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4402641521846340
 Transform:
@@ -228,7 +287,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4521391129715992}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4405568190937450
 Transform:
@@ -262,11 +321,11 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1322374611222574}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 4360378497478508}
+  m_Father: {fileID: 4393294554064816}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4473046618728804
@@ -309,6 +368,7 @@ Transform:
   - {fileID: 4872103930232760}
   - {fileID: 4360378497478508}
   - {fileID: 4848458561024994}
+  - {fileID: 4393294554064816}
   - {fileID: 4402641521846340}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -490,7 +550,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40e99d3b57c7c0b4ab442958891ddc11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainWeapon: {fileID: 114891179090081510}
+  mainWeapon: {fileID: 114447318885342448}
   secondaryWeapon: {fileID: 114265689279775902}
 --- !u!114 &114233938080451684
 MonoBehaviour:
@@ -547,6 +607,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enableParticles: 1
+--- !u!114 &114447318885342448
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1206320649279876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73175e1de08420142bf967cd9f866e6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turretPrefab: {fileID: 1639429056112950, guid: 241a1b37cd76d6e40961450038714beb,
+    type: 2}
+  maxTurrets: 3
+  fireRate: 1
+  firingPoint: {fileID: 114603920561631322}
+  useRecoil: 1
 --- !u!114 &114551078993121346
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -587,6 +664,18 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1322374611222574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c6b069f799f1d4681f2a841b3d01e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableParticles: 0
+--- !u!114 &114614025670716740
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1254718416455222}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c5c6b069f799f1d4681f2a841b3d01e2, type: 3}
@@ -678,7 +767,7 @@ MonoBehaviour:
   maxChargeTime: 1.5
   damage: 25
   impactForce: 25
-  firingPoint: {fileID: 114603920561631322}
+  firingPoint: {fileID: 114614025670716740}
   layerMask:
     serializedVersion: 2
     m_Bits: 2817
