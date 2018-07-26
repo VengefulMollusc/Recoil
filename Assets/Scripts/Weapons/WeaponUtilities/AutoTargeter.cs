@@ -61,10 +61,18 @@ public class AutoTargeter : MonoBehaviour
         Collider[] cols = Physics.OverlapCapsule(position + (parentForward * radius), position + (parentForward * range), radius, layerMask,
             QueryTriggerInteraction.Ignore);
 
+        List<LockOnTarget> alreadyTargeted = new List<LockOnTarget>();
+
         foreach (Collider col in cols)
         {
             LockOnTarget t = col.GetComponent<LockOnTarget>();
-            if (t == null || IsAlreadyTargeted(t))
+            if (IsAlreadyTargeted(t))
+            {
+                alreadyTargeted.Add(t);
+                continue;
+            }
+
+            if (t == null)
                 continue;
 
             float distance = ViableTargetDistance(t);
@@ -76,6 +84,11 @@ public class AutoTargeter : MonoBehaviour
                 target = t;
                 targetDistance = distance;
             }
+        }
+
+        if (target == null && alreadyTargeted.Count > 0)
+        {
+            target = alreadyTargeted[Random.Range(0, alreadyTargeted.Count)];
         }
     }
 
