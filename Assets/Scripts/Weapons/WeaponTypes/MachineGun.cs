@@ -8,6 +8,7 @@ public class MachineGun : Weapon
     public float fireRate = 0.2f;
     public float spread = 0.02f;
     public List<FiringPoint> firingPoints;
+    public bool useRecoil;
 
     private bool firing;
     private bool firingSequenceActive;
@@ -23,7 +24,7 @@ public class MachineGun : Weapon
     {
         adjustedFireRate = fireRate / firingPoints.Count;
         poolableBulletKey = bulletPrefab.GetComponent<Poolable>().key;
-        int poolableCount = (int) (bulletPrefab.GetComponent<Bullet>().lifeSpan / adjustedFireRate);
+        int poolableCount = (int)(bulletPrefab.GetComponent<Bullet>().lifeSpan / adjustedFireRate);
         GameObjectPoolController.AddEntry(poolableBulletKey, bulletPrefab, poolableCount, poolableCount * ScenePlayerController.GetPlayerCount());
 
         if (firingPoints.Count <= 0)
@@ -69,7 +70,8 @@ public class MachineGun : Weapon
         Bullet bullet = GameObjectPoolController.Dequeue(poolableBulletKey).GetComponent<Bullet>();
 
         // recoil force
-        parentRb.AddForceAtPosition(-direction * bullet.impactForce * knockbackModifier, origin, ForceMode.Impulse);
+        if (useRecoil)
+            parentRb.AddForceAtPosition(-direction * bullet.impactForce * knockbackModifier, origin, ForceMode.Impulse);
 
         bullet.Launch(origin, direction, gameObject);
         firingPoints[firingPointIndex].Fire();

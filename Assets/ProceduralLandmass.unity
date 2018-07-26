@@ -181,12 +181,12 @@ Transform:
 GameObject:
   m_PrefabParentObject: {fileID: 1054013353523638, guid: de60a3e26bc129744af5a032f06c19c5,
     type: 2}
-  m_PrefabInternal: {fileID: 1054160174}
+  m_PrefabInternal: {fileID: 203908150}
 --- !u!20 &184191521 stripped
 Camera:
   m_PrefabParentObject: {fileID: 20616853299988494, guid: de60a3e26bc129744af5a032f06c19c5,
     type: 2}
-  m_PrefabInternal: {fileID: 1054160174}
+  m_PrefabInternal: {fileID: 203908150}
 --- !u!1 &191982893
 GameObject:
   m_ObjectHideFlags: 0
@@ -299,6 +299,52 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &203908150
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4521391129715992, guid: de60a3e26bc129744af5a032f06c19c5, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4521391129715992, guid: de60a3e26bc129744af5a032f06c19c5, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 4521391129715992, guid: de60a3e26bc129744af5a032f06c19c5, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4521391129715992, guid: de60a3e26bc129744af5a032f06c19c5, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4521391129715992, guid: de60a3e26bc129744af5a032f06c19c5, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4521391129715992, guid: de60a3e26bc129744af5a032f06c19c5, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4521391129715992, guid: de60a3e26bc129744af5a032f06c19c5, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4521391129715992, guid: de60a3e26bc129744af5a032f06c19c5, type: 2}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1054013353523638, guid: de60a3e26bc129744af5a032f06c19c5, type: 2}
+      propertyPath: m_Name
+      value: HoverTank3 P1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: de60a3e26bc129744af5a032f06c19c5, type: 2}
+  m_IsPrefabParent: 0
 --- !u!20 &364585022 stripped
 Camera:
   m_PrefabParentObject: {fileID: 20616853299988494, guid: de60a3e26bc129744af5a032f06c19c5,
@@ -608,52 +654,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1054160174
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4521391129715992, guid: de60a3e26bc129744af5a032f06c19c5, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4521391129715992, guid: de60a3e26bc129744af5a032f06c19c5, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 500
-      objectReference: {fileID: 0}
-    - target: {fileID: 4521391129715992, guid: de60a3e26bc129744af5a032f06c19c5, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4521391129715992, guid: de60a3e26bc129744af5a032f06c19c5, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4521391129715992, guid: de60a3e26bc129744af5a032f06c19c5, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4521391129715992, guid: de60a3e26bc129744af5a032f06c19c5, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4521391129715992, guid: de60a3e26bc129744af5a032f06c19c5, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4521391129715992, guid: de60a3e26bc129744af5a032f06c19c5, type: 2}
-      propertyPath: m_RootOrder
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1054013353523638, guid: de60a3e26bc129744af5a032f06c19c5, type: 2}
-      propertyPath: m_Name
-      value: HoverTank3 P1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: de60a3e26bc129744af5a032f06c19c5, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &1272853039
 GameObject:
   m_ObjectHideFlags: 0

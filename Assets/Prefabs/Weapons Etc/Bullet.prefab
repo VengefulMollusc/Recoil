@@ -157,7 +157,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lifeSpan: 2
   damage: 1
-  impactForce: 0.5
+  impactForce: 0.4
   distancePerSecond: 500
   layerMask:
     serializedVersion: 2

@@ -10,6 +10,7 @@ public class LockOnMissileLauncher : Weapon
     public float launchRate = 0.2f;
     public float lockOnAngle = 20f;
     public float lockOnRange = 200f;
+    public bool useRecoil;
 
     public List<FiringPoint> firingPoints;
 
@@ -175,7 +176,8 @@ public class LockOnMissileLauncher : Weapon
                     firingPointIndex = 0;
 
                 // Add launch recoil force
-                parentRb.AddForceAtPosition(-launchDirection * missile.launchForce * knockbackModifier, launchPosition, ForceMode.Impulse);
+                if (useRecoil)
+                    parentRb.AddForceAtPosition(-launchDirection * missile.launchForce * knockbackModifier, launchPosition, ForceMode.Impulse);
                 yield return new WaitForSeconds(adjustedLaunchRate);
             }
         }
@@ -186,7 +188,7 @@ public class LockOnMissileLauncher : Weapon
 
     private class LockOnTargetTracker
     {
-        public readonly LockOnTarget target; 
+        public readonly LockOnTarget target;
         public readonly Transform targetTransform;
         public float lockOnLevel;
         public bool visible;

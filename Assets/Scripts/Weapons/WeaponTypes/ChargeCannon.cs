@@ -13,6 +13,7 @@ public class ChargeCannon : Weapon
     public float impactForce = 10f;
     public FiringPoint firingPoint;
     public LayerMask layerMask;
+    public bool useRecoil;
 
     private bool charging;
     private float charge;
@@ -96,11 +97,14 @@ public class ChargeCannon : Weapon
     private void ActivateFiringEffects(Vector3 origin, Vector3 direction, float distance, float chargeLevel)
     {
         // Apply recoil force
-        if (parentRb == null)
-            parentRb = GetComponentInParent<Rigidbody>();
-        Vector3 force = -direction * impactForce * chargeLevel;
-        parentRb.AddForceAtPosition(force * knockbackModifier, origin, ForceMode.Impulse);
-        parentRb.AddForce(force, ForceMode.Impulse);
+        if (useRecoil)
+        {
+            if (parentRb == null)
+                parentRb = GetComponentInParent<Rigidbody>();
+            Vector3 force = -direction * impactForce * chargeLevel;
+            parentRb.AddForceAtPosition(force * knockbackModifier, origin, ForceMode.Impulse);
+            parentRb.AddForce(force, ForceMode.Impulse);
+        }
 
         firingPoint.Fire();
 
