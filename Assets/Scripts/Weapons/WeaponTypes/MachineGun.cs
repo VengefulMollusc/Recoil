@@ -15,12 +15,15 @@ public class MachineGun : Weapon
     private string poolableBulletKey;
     private int firingPointIndex;
 
+    private float adjustedFireRate;
+
     private Rigidbody parentRb;
 
     void Start()
     {
+        adjustedFireRate = fireRate / firingPoints.Count;
         poolableBulletKey = bulletPrefab.GetComponent<Poolable>().key;
-        int poolableCount = (int) (bulletPrefab.GetComponent<Bullet>().lifeSpan / fireRate);
+        int poolableCount = (int) (bulletPrefab.GetComponent<Bullet>().lifeSpan / adjustedFireRate);
         GameObjectPoolController.AddEntry(poolableBulletKey, bulletPrefab, poolableCount, poolableCount * ScenePlayerController.GetPlayerCount());
 
         if (firingPoints.Count <= 0)
@@ -48,7 +51,7 @@ public class MachineGun : Weapon
         while (firing)
         {
             Fire();
-            yield return new WaitForSeconds(fireRate);
+            yield return new WaitForSeconds(adjustedFireRate);
         }
 
         firingSequenceActive = false;

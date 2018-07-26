@@ -18,7 +18,7 @@ public class LockOnMissileLauncher : Weapon
 
     private List<LockOnTargetTracker> lockOnTargets;
 
-    private const float lockOnCheckInterval = 0.1f;
+    private const float lockOnCheckInterval = 0.2f;
 
     private Rigidbody parentRb;
 

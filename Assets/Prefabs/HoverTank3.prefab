@@ -75,6 +75,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4554215033990088}
   - component: {fileID: 114862436061470434}
+  - component: {fileID: 114187159908338124}
   - component: {fileID: 199241151930163614}
   - component: {fileID: 198035297261290686}
   m_Layer: 8
@@ -159,6 +160,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4453371450600822}
   - component: {fileID: 114276864666377620}
+  - component: {fileID: 114632530666422944}
   - component: {fileID: 199880044948779778}
   - component: {fileID: 198078765551841242}
   m_Layer: 8
@@ -490,6 +492,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainWeapon: {fileID: 114891179090081510}
   secondaryWeapon: {fileID: 114265689279775902}
+--- !u!114 &114187159908338124
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1272994777674436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b2eab648d933324dac1840df6c49c2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  raycastMask:
+    serializedVersion: 2
+    m_Bits: 3072
+  checkAngle: 45
+  range: 200
+  otherTargeters:
+  - {fileID: 114632530666422944}
 --- !u!114 &114233938080451684
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -557,6 +580,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enableParticles: 0
+--- !u!114 &114632530666422944
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1540296839630616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b2eab648d933324dac1840df6c49c2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  raycastMask:
+    serializedVersion: 2
+    m_Bits: 3072
+  checkAngle: 45
+  range: 200
+  otherTargeters:
+  - {fileID: 114187159908338124}
 --- !u!114 &114823834796332608
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -766,7 +810,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 746950078
+  randomSeed: 1746087874
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -4104,7 +4148,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 746950078
+  randomSeed: -1552616153
   InitialModule:
     serializedVersion: 3
     enabled: 1

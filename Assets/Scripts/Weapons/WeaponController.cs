@@ -28,6 +28,11 @@ public class WeaponController : MonoBehaviour
         }
     }
 
+    public bool IsActiveWeapon(Weapon weapon)
+    {
+        return weapon == mainWeapon || weapon == secondaryWeapon;
+    }
+
     /*
      *  This class will also handle weapon switching etc.
      */
