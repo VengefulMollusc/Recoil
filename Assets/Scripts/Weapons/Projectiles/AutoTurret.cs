@@ -13,19 +13,24 @@ public class AutoTurret : MonoBehaviour
     private Rigidbody rb;
     private HealthController health;
     private TrailRenderer trail;
+    private Transform owner;
 
     private bool deployed;
     private Vector3 deployedPosition;
     private bool despawning;
     private bool hasTarget;
 
-    public void Launch(Vector3 origin, Vector3 direction)
+    public void Launch(Vector3 origin, Vector3 direction, Transform newOwner)
     {
+        owner = newOwner;
+        targeter.owner = owner;
+
         deployed = false;
         despawning = false;
+        hasTarget = false;
 
         transform.position = origin;
-        transform.rotation = Quaternion.LookRotation(direction);
+        //transform.rotation = Quaternion.LookRotation(direction);
 
         if (health == null)
             health = GetComponent<HealthController>();
@@ -41,10 +46,11 @@ public class AutoTurret : MonoBehaviour
             rb = GetComponent<Rigidbody>();
 
         rb.drag = 0f;
+        rb.useGravity = true;
+        rb.isKinematic = false;
 
         gameObject.SetActive(true);
 
-        rb.velocity = Vector3.zero;
         rb.AddForce(direction * launchForce, ForceMode.Impulse);
     }
 
@@ -52,8 +58,8 @@ public class AutoTurret : MonoBehaviour
     {
         deployedPosition = col.contacts[0].point + (col.contacts[0].normal * bounceDistance);
         rb.drag = 1f;
+        rb.useGravity = false;
         deployed = true;
-        hasTarget = false;
     }
 
     void FixedUpdate()
@@ -85,17 +91,25 @@ public class AutoTurret : MonoBehaviour
         }
     }
 
+    public bool IsOwner(Transform t)
+    {
+        return t == owner;
+    }
+
     public void TriggerDespawn()
     {
+        if (despawning)
+            return;
+
         StartCoroutine(Despawn());
     }
 
     IEnumerator Despawn()
     {
+        rb.isKinematic = true;
         hasTarget = false;
         despawning = true;
-        deployed = false;
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.2f);
         GameObjectPoolController.Enqueue(GetComponent<Poolable>());
     }
 }

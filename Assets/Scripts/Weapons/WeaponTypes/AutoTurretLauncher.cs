@@ -10,6 +10,8 @@ public class AutoTurretLauncher : Weapon
     public FiringPoint firingPoint;
     public bool useRecoil;
 
+    public Transform owner;
+
     private string poolableTurretKey;
 
     private bool firing;
@@ -21,14 +23,14 @@ public class AutoTurretLauncher : Weapon
     void Start()
     {
         poolableTurretKey = turretPrefab.GetComponent<Poolable>().key;
-        int poolableCount = maxTurrets + 1;
+        int poolableCount = maxTurrets + 2;
         GameObjectPoolController.AddEntry(poolableTurretKey, turretPrefab, poolableCount, poolableCount * ScenePlayerController.GetPlayerCount());
 
         if (firingPoint == null)
             Debug.LogError("No firingPoints defined");
 
         parentRb = GetComponentInParent<Rigidbody>();
-        turrets = new List<AutoTurret>(maxTurrets);
+        turrets = new List<AutoTurret>();
     }
 
     public override void FireWeapon(bool pressed)
@@ -72,9 +74,9 @@ public class AutoTurretLauncher : Weapon
 
         // recoil force
         if (useRecoil)
-            parentRb.AddForce(-direction * turret.launchForce * knockbackModifier, ForceMode.Impulse);
+            parentRb.AddForceAtPosition(-direction * turret.launchForce * knockbackModifier, origin, ForceMode.Impulse);
 
-        turret.Launch(origin, direction);
+        turret.Launch(origin, direction, owner);
         firingPoint.Fire();
     }
 }

@@ -22,6 +22,8 @@ public class AutoTargeter : MonoBehaviour
     private float radiusAngle;
     private float targetDistance;
 
+    public Transform owner;
+
     void OnEnable()
     {
         weapon = GetComponentInParent<Weapon>();
@@ -127,6 +129,16 @@ public class AutoTargeter : MonoBehaviour
 
     float ViableTargetDistance(LockOnTarget t)
     {
+        if (owner != null)
+        {
+            if (t.transform.IsChildOf(owner))
+                return -1f;
+
+            AutoTurret turret = t.GetComponentInParent<AutoTurret>();
+            if (turret != null && turret.IsOwner(owner))
+                return -1f;
+        }
+
         Vector3 tPos = t.transform.position;
 
         if (!useSphereRange)
