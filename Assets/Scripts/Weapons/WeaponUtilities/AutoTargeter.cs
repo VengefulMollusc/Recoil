@@ -21,7 +21,7 @@ public class AutoTargeter : MonoBehaviour
     private float radiusAngle;
     private float targetDistance;
 
-    void Start()
+    void OnEnable()
     {
         weapon = GetComponentInParent<Weapon>();
 
@@ -29,6 +29,14 @@ public class AutoTargeter : MonoBehaviour
 
         // random float here to offset checks so all autotargeters arent called on same frame
         InvokeRepeating("TargetCheck", Random.Range(0f, checkFreq), checkFreq);
+    }
+
+    void OnDisable()
+    {
+        CancelInvoke("TargetCheck");
+
+        target = null;
+        Aim();
     }
 
     void Update()
