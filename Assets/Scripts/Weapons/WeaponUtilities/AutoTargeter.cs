@@ -12,6 +12,7 @@ public class AutoTargeter : MonoBehaviour
     public List<AutoTargeter> otherTargeters;
 
     private const float checkFreq = 0.2f;
+    private const float aimSpeed = 90f;
 
     private Weapon weapon;
     private LockOnTarget target;
@@ -102,14 +103,13 @@ public class AutoTargeter : MonoBehaviour
 
     void Aim()
     {
-        if (target == null)
-        {
-            transform.localRotation = Quaternion.identity;
-            return;
-        }
+        Vector3 currentAimDirection = transform.forward;
+        Vector3 targetAimDirection = (target == null) ? parentForward : target.transform.position - position;
 
-        Vector3 toTarget = target.transform.position - position;
-        transform.rotation = Quaternion.LookRotation(toTarget);
+        targetAimDirection =
+            Vector3.RotateTowards(currentAimDirection, targetAimDirection, aimSpeed * Mathf.Deg2Rad * Time.deltaTime, 0f);
+
+        transform.rotation = Quaternion.LookRotation(targetAimDirection);
     }
 
     float ViableTargetDistance(LockOnTarget t)
