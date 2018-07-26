@@ -81,7 +81,7 @@ GameObject:
   - component: {fileID: 114027481185088812}
   - component: {fileID: 96054982795594400}
   m_Layer: 9
-  m_Name: AutoTurret
+  m_Name: AutoMachineGunTurret
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

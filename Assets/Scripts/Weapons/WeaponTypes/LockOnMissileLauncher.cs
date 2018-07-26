@@ -103,7 +103,7 @@ public class LockOnMissileLauncher : Weapon
         foreach (Collider col in cols)
         {
             LockOnTarget target = col.GetComponent<LockOnTarget>();
-            if (target == null)
+            if (target == null || target.GetOwner() == owner)
                 continue;
 
             RaycastHit hitInfo;
@@ -168,7 +168,7 @@ public class LockOnMissileLauncher : Weapon
                 Transform launchTransform = firingPoints[firingPointIndex].transform;
                 Vector3 launchPosition = launchTransform.position;
                 Vector3 launchDirection = launchTransform.up;
-                missile.Launch(launchPosition, launchTransform.forward, launchDirection, tracker.targetTransform, parentRb.velocity);
+                missile.Launch(launchPosition, launchTransform.forward, launchDirection, tracker.targetTransform, parentRb.velocity, owner);
 
                 firingPoints[firingPointIndex].Fire();
                 firingPointIndex++;

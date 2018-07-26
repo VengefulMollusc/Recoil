@@ -33,8 +33,10 @@ public class LockOnMissile : MonoBehaviour
 
     private float timer;
 
-    public void Launch(Vector3 position, Vector3 facingDirection, Vector3 launchDirection, Transform target, Vector3 parentVelocity)
+    public void Launch(Vector3 position, Vector3 facingDirection, Vector3 launchDirection, Transform target, Vector3 parentVelocity, GameObject owner)
     {
+        GetComponentInChildren<LockOnTarget>().SetOwner(owner);
+
         transform.position = position;
         transform.rotation = Quaternion.LookRotation(facingDirection, launchDirection);
 
