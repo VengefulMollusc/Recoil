@@ -321,13 +321,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1322374611222574}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 1}
+  m_LocalRotation: {x: -0.17364825, y: 0, z: 0, w: 0.9848078}
+  m_LocalPosition: {x: 0, y: 1.2, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4393294554064816}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -20, y: 0, z: 0}
 --- !u!4 &4473046618728804
 Transform:
   m_ObjectHideFlags: 1
@@ -623,7 +623,7 @@ MonoBehaviour:
   maxTurrets: 3
   fireRate: 1
   firingPoint: {fileID: 114603920561631322}
-  useRecoil: 1
+  useRecoil: 0
 --- !u!114 &114551078993121346
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -655,6 +655,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 3328
   checkAngle: 60
+  useSphereRange: 0
   range: 200
   otherTargeters:
   - {fileID: 114632530666422944}
@@ -700,6 +701,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 3328
   checkAngle: 60
+  useSphereRange: 0
   range: 200
   otherTargeters:
   - {fileID: 114579269456964486}

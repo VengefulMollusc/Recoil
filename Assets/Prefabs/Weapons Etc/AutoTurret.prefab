@@ -163,7 +163,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 1
 --- !u!114 &114020688609879008
 MonoBehaviour:
@@ -182,7 +182,6 @@ MonoBehaviour:
   spread: 0.01
   firingPoints:
   - {fileID: 114142136066261412}
-  - {fileID: 0}
   useRecoil: 1
 --- !u!114 &114142136066261412
 MonoBehaviour:
@@ -208,7 +207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   launchForce: 20
-  bounceDistance: 2
+  bounceDistance: 5
   turretWeapon: {fileID: 114020688609879008}
   targeter: {fileID: 114451321043008690}
 --- !u!114 &114402218237829466
@@ -241,7 +240,8 @@ MonoBehaviour:
   raycastMask:
     serializedVersion: 2
     m_Bits: 3328
-  checkAngle: 360
+  checkAngle: 60
+  useSphereRange: 1
   range: 100
   otherTargeters: []
 --- !u!114 &114905833601845212

@@ -72,7 +72,7 @@ public class AutoTurretLauncher : Weapon
 
         // recoil force
         if (useRecoil)
-            parentRb.AddForceAtPosition(-direction * turret.launchForce * knockbackModifier, origin, ForceMode.Impulse);
+            parentRb.AddForce(-direction * turret.launchForce * knockbackModifier, ForceMode.Impulse);
 
         turret.Launch(origin, direction);
         firingPoint.Fire();

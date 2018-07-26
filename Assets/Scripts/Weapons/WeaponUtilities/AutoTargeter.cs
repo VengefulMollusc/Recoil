@@ -7,6 +7,7 @@ public class AutoTargeter : MonoBehaviour
     public LayerMask layerMask;
     public LayerMask raycastMask;
     public float checkAngle;
+    public bool useSphereRange;
     public float range;
     public List<AutoTargeter> otherTargeters;
 
@@ -64,10 +65,17 @@ public class AutoTargeter : MonoBehaviour
 
     void FindTarget()
     {
-        float radius = Mathf.Tan(radiusAngle * Mathf.Deg2Rad) * range;
-
-        Collider[] cols = Physics.OverlapCapsule(position + (parentForward * radius), position + (parentForward * range), radius, layerMask,
-            QueryTriggerInteraction.Ignore);
+        Collider[] cols;
+        if (useSphereRange)
+        {
+            cols = Physics.OverlapSphere(position, range, layerMask, QueryTriggerInteraction.Ignore);
+        }
+        else
+        {
+            float radius = Mathf.Tan(radiusAngle * Mathf.Deg2Rad) * range;
+            cols = Physics.OverlapCapsule(position + (parentForward * radius), position + (parentForward * range), radius, layerMask,
+                QueryTriggerInteraction.Ignore);
+        }
 
         List<LockOnTarget> alreadyTargeted = new List<LockOnTarget>();
 
@@ -120,9 +128,13 @@ public class AutoTargeter : MonoBehaviour
     float ViableTargetDistance(LockOnTarget t)
     {
         Vector3 tPos = t.transform.position;
-        float angle = Vector3.Angle(parentForward, tPos - position);
-        if (angle > radiusAngle)
-            return -1f;
+
+        if (!useSphereRange)
+        {
+            float angle = Vector3.Angle(parentForward, tPos - position);
+            if (angle > radiusAngle)
+                return -1f;
+        }
 
         RaycastHit hitInfo;
         Vector3 toTarget = tPos - position;
