@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(FiringPoint))]
 public class AutoTargeter : MonoBehaviour
 {
     public LayerMask layerMask;
@@ -56,7 +55,7 @@ public class AutoTargeter : MonoBehaviour
         if (target != null)
         {
             targetDistance = ViableTargetDistance(target);
-            if (targetDistance < 0f)
+            if (targetDistance < 0f || IsAlreadyTargeted(target))
                 target = null;
         }
 
@@ -123,7 +122,7 @@ public class AutoTargeter : MonoBehaviour
         Vector3 toTarget = tPos - position;
         if (Physics.Raycast(position, toTarget, out hitInfo, range, raycastMask))
         {
-            if (hitInfo.collider.transform == t.transform)
+            if (hitInfo.collider.transform == t.transform || t.transform.IsChildOf(hitInfo.collider.transform))
                 return hitInfo.distance;
         }
 

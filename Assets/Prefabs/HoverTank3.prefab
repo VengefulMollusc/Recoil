@@ -508,7 +508,7 @@ MonoBehaviour:
     m_Bits: 1024
   raycastMask:
     serializedVersion: 2
-    m_Bits: 3072
+    m_Bits: 3328
   checkAngle: 60
   range: 200
   otherTargeters:
@@ -596,7 +596,7 @@ MonoBehaviour:
     m_Bits: 1024
   raycastMask:
     serializedVersion: 2
-    m_Bits: 3072
+    m_Bits: 3328
   checkAngle: 60
   range: 200
   otherTargeters:
@@ -810,7 +810,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 1530361965
+  randomSeed: 2021754786
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -4148,7 +4148,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -1511811746
+  randomSeed: -456547867
   InitialModule:
     serializedVersion: 3
     enabled: 1
