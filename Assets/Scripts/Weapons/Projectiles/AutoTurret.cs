@@ -12,6 +12,7 @@ public class AutoTurret : MonoBehaviour
 
     private Rigidbody rb;
     private HealthController health;
+    private TrailRenderer trail;
 
     private bool deployed;
     private Vector3 deployedPosition;
@@ -30,6 +31,11 @@ public class AutoTurret : MonoBehaviour
             health = GetComponent<HealthController>();
 
         health.ResetHealth();
+
+        if (trail == null)
+            trail = GetComponent<TrailRenderer>();
+
+        trail.Clear();
 
         if (rb == null)
             rb = GetComponent<Rigidbody>();
