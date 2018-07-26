@@ -22,14 +22,17 @@ public class AutoTargeter : MonoBehaviour
     private float radiusAngle;
     private float targetDistance;
 
-    public Transform owner;
+    private string owner;
 
-    void OnEnable()
+    void Start()
     {
         weapon = GetComponentInParent<Weapon>();
 
         radiusAngle = checkAngle * 0.5f;
+    }
 
+    void OnEnable()
+    {
         // random float here to offset checks so all autotargeters arent called on same frame
         InvokeRepeating("TargetCheck", Random.Range(0f, checkFreq), checkFreq);
     }
@@ -129,15 +132,13 @@ public class AutoTargeter : MonoBehaviour
 
     float ViableTargetDistance(LockOnTarget t)
     {
-        if (owner != null)
-        {
-            if (t.transform.IsChildOf(owner))
-                return -1f;
+        AutoTurret turret = t.GetComponentInParent<AutoTurret>();
+        if (turret != null && turret.IsOwner(owner))
+            return -1f;
 
-            AutoTurret turret = t.GetComponentInParent<AutoTurret>();
-            if (turret != null && turret.IsOwner(owner))
-                return -1f;
-        }
+        Weapon weapon = t.GetComponentInParent<Weapon>();
+        if (weapon != null && weapon.GetOwnerString().Equals(owner))
+            return -1f;
 
         Vector3 tPos = t.transform.position;
 
@@ -177,5 +178,10 @@ public class AutoTargeter : MonoBehaviour
     public bool IsTarget(LockOnTarget other)
     {
         return other == target;
+    }
+
+    public void SetOwner(string newOwner)
+    {
+        owner = newOwner;
     }
 }

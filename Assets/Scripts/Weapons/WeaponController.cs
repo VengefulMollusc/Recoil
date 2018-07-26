@@ -7,8 +7,20 @@ public class WeaponController : MonoBehaviour
     public Weapon mainWeapon;
     public Weapon secondaryWeapon;
 
+    private string ownerString;
+
     private bool mainWeaponState;
     private bool secondaryWeaponState;
+
+    void Start()
+    {
+        ownerString = ToString();
+        Debug.Log("Setting owner string: " + ownerString);
+        foreach (Weapon weapon in GetComponents<Weapon>())
+        {
+            weapon.SetOwnerString(ownerString);
+        }
+    }
 
     public void UseMainWeapon(bool pressed)
     {

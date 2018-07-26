@@ -13,17 +13,15 @@ public class AutoTurret : MonoBehaviour
     private Rigidbody rb;
     private HealthController health;
     private TrailRenderer trail;
-    private Transform owner;
 
     private bool deployed;
     private Vector3 deployedPosition;
     private bool despawning;
     private bool hasTarget;
 
-    public void Launch(Vector3 origin, Vector3 direction, Transform newOwner)
+    public void Launch(Vector3 origin, Vector3 direction, string newOwner)
     {
-        owner = newOwner;
-        targeter.owner = owner;
+        turretWeapon.SetOwnerString(newOwner);
 
         deployed = false;
         despawning = false;
@@ -91,9 +89,12 @@ public class AutoTurret : MonoBehaviour
         }
     }
 
-    public bool IsOwner(Transform t)
+    public bool IsOwner(string other)
     {
-        return t == owner;
+        string owner = turretWeapon.GetOwnerString();
+        if (owner == null)
+            return false;
+        return other.Equals(owner);
     }
 
     public void TriggerDespawn()

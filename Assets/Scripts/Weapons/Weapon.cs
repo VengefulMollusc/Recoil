@@ -7,8 +7,24 @@ public abstract class Weapon : MonoBehaviour
     protected const float knockbackModifier = 0.5f;
 
     protected WeaponController weaponController;
+    protected string ownerString;
 
     public abstract void FireWeapon(bool pressed);
+
+    public void SetOwnerString(string owner)
+    {
+        ownerString = owner;
+
+        foreach (AutoTargeter targeter in GetComponentsInChildren<AutoTargeter>())
+        {
+            targeter.SetOwner(owner);
+        }
+    }
+
+    public string GetOwnerString()
+    {
+        return ownerString;
+    }
 
     public bool IsActive()
     {

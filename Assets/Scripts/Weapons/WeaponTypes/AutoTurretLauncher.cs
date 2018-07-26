@@ -10,8 +10,6 @@ public class AutoTurretLauncher : Weapon
     public FiringPoint firingPoint;
     public bool useRecoil;
 
-    public Transform owner;
-
     private string poolableTurretKey;
 
     private bool firing;
@@ -76,7 +74,7 @@ public class AutoTurretLauncher : Weapon
         if (useRecoil)
             parentRb.AddForceAtPosition(-direction * turret.launchForce * knockbackModifier, origin, ForceMode.Impulse);
 
-        turret.Launch(origin, direction, owner);
+        turret.Launch(origin, direction, ownerString);
         firingPoint.Fire();
     }
 }
