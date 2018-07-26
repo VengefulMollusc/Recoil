@@ -55,7 +55,7 @@ public class AutoTargeter : MonoBehaviour
         if (target != null)
         {
             targetDistance = ViableTargetDistance(target);
-            if (targetDistance < 0f || IsAlreadyTargeted(target))
+            if (targetDistance < 0f)
                 target = null;
         }
 
@@ -70,6 +70,12 @@ public class AutoTargeter : MonoBehaviour
             QueryTriggerInteraction.Ignore);
 
         List<LockOnTarget> alreadyTargeted = new List<LockOnTarget>();
+
+        if (IsAlreadyTargeted(target))
+        {
+            alreadyTargeted.Add(target);
+            target = null;
+        }
 
         foreach (Collider col in cols)
         {
