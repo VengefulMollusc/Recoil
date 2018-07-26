@@ -23,6 +23,7 @@ public class LockOnMissileLauncher : Weapon
     private Rigidbody parentRb;
 
     private string poolableMissileKey;
+    private float adjustedLaunchRate;
 
     private bool lockingOn;
     private bool firing;
@@ -30,6 +31,7 @@ public class LockOnMissileLauncher : Weapon
 
     void Start()
     {
+        adjustedLaunchRate = launchRate / firingPoints.Count;
         poolableMissileKey = lockOnMissilePrefab.GetComponent<Poolable>().key;
         int poolableCount = missileLaunchCount;
         GameObjectPoolController.AddEntry(poolableMissileKey, lockOnMissilePrefab, poolableCount, poolableCount * ScenePlayerController.GetPlayerCount());
@@ -174,7 +176,7 @@ public class LockOnMissileLauncher : Weapon
 
                 // Add launch recoil force
                 parentRb.AddForceAtPosition(-launchDirection * missile.launchForce * knockbackModifier, launchPosition, ForceMode.Impulse);
-                yield return new WaitForSeconds(launchRate);
+                yield return new WaitForSeconds(adjustedLaunchRate);
             }
         }
 

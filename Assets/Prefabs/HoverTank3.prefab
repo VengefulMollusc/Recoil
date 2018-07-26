@@ -707,7 +707,7 @@ MonoBehaviour:
   lockOnMissilePrefab: {fileID: 1347379887538322, guid: e267fd62f74332c4d8f581353904e8a9,
     type: 2}
   missileLaunchCount: 120
-  launchRate: 0.1
+  launchRate: 0.2
   lockOnAngle: 45
   lockOnRange: 800
   firingPoints:
