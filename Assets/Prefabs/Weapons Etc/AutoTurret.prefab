@@ -273,8 +273,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 1641463690968118, guid: d1eaf308e92f0fb4ba3f76e8f3cbba4a,
     type: 2}
-  fireRate: 0.05
-  spread: 0.01
+  fireRate: 0.1
+  spread: 0.02
   firingPoints:
   - {fileID: 114142136066261412}
   useRecoil: 1
