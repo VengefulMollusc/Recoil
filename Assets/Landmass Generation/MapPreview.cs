@@ -243,7 +243,7 @@ public class MapPreview : MonoBehaviour
     {
         UpdateTerrainDataVariables();
 
-        if (!Application.isPlaying)
+        if (!Application.isPlaying && autoUpdate)
         {
             DrawMapInEditor();
         }
