@@ -7,23 +7,23 @@ public abstract class Weapon : MonoBehaviour
     protected const float knockbackModifier = 0.5f;
 
     protected WeaponController weaponController;
-    protected string ownerString;
+    protected GameObject owner;
 
     public abstract void FireWeapon(bool pressed);
 
-    public void SetOwnerString(string owner)
+    public void SetOwner(GameObject newOwner)
     {
-        ownerString = owner;
+        owner = newOwner;
 
         foreach (AutoTargeter targeter in GetComponentsInChildren<AutoTargeter>())
         {
-            targeter.SetOwner(owner);
+            targeter.SetOwner(newOwner);
         }
     }
 
-    public string GetOwnerString()
+    public GameObject GetOwner()
     {
-        return ownerString;
+        return owner;
     }
 
     public bool IsActive()

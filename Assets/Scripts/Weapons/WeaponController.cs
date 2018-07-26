@@ -7,18 +7,21 @@ public class WeaponController : MonoBehaviour
     public Weapon mainWeapon;
     public Weapon secondaryWeapon;
 
-    private string ownerString;
+    private GameObject owner;
 
     private bool mainWeaponState;
     private bool secondaryWeaponState;
 
     void Start()
     {
-        ownerString = ToString();
-        Debug.Log("Setting owner string: " + ownerString);
-        foreach (Weapon weapon in GetComponents<Weapon>())
+        owner = gameObject;
+        foreach (LockOnTarget target in GetComponentsInChildren<LockOnTarget>())
         {
-            weapon.SetOwnerString(ownerString);
+            target.SetOwner(owner);
+        }
+        foreach (Weapon weapon in GetComponentsInChildren<Weapon>())
+        {
+            weapon.SetOwner(owner);
         }
     }
 

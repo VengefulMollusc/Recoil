@@ -22,7 +22,7 @@ public class AutoTargeter : MonoBehaviour
     private float radiusAngle;
     private float targetDistance;
 
-    private string owner;
+    private GameObject owner;
 
     void Start()
     {
@@ -132,13 +132,11 @@ public class AutoTargeter : MonoBehaviour
 
     float ViableTargetDistance(LockOnTarget t)
     {
-        AutoTurret turret = t.GetComponentInParent<AutoTurret>();
-        if (turret != null && turret.IsOwner(owner))
-            return -1f;
-
-        Weapon weapon = t.GetComponentInParent<Weapon>();
-        if (weapon != null && weapon.GetOwnerString().Equals(owner))
-            return -1f;
+        if (owner != null)
+        {
+            if (t.GetOwner() == owner)
+                return -1f;
+        }
 
         Vector3 tPos = t.transform.position;
 
@@ -180,7 +178,7 @@ public class AutoTargeter : MonoBehaviour
         return other == target;
     }
 
-    public void SetOwner(string newOwner)
+    public void SetOwner(GameObject newOwner)
     {
         owner = newOwner;
     }

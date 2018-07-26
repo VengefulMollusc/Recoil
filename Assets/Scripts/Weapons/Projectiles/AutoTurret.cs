@@ -19,9 +19,10 @@ public class AutoTurret : MonoBehaviour
     private bool despawning;
     private bool hasTarget;
 
-    public void Launch(Vector3 origin, Vector3 direction, string newOwner)
+    public void Launch(Vector3 origin, Vector3 direction, GameObject newOwner)
     {
-        turretWeapon.SetOwnerString(newOwner);
+        turretWeapon.SetOwner(newOwner);
+        GetComponentInChildren<LockOnTarget>().SetOwner(newOwner);
 
         deployed = false;
         despawning = false;
@@ -87,14 +88,6 @@ public class AutoTurret : MonoBehaviour
             hasTarget = targeterHasTarget;
             turretWeapon.FireWeapon(hasTarget);
         }
-    }
-
-    public bool IsOwner(string other)
-    {
-        string owner = turretWeapon.GetOwnerString();
-        if (owner == null)
-            return false;
-        return other.Equals(owner);
     }
 
     public void TriggerDespawn()
