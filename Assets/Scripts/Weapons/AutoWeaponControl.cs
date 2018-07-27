@@ -12,7 +12,7 @@ public class AutoWeaponControl : MonoBehaviour
 
     private const float updateInterval = 0.1f;
 
-    private Weapon weapon;
+    private DamageWeapon weapon;
     private bool fireState;
     private bool firing;
 
@@ -20,7 +20,7 @@ public class AutoWeaponControl : MonoBehaviour
     
     void OnEnable()
     {
-        weapon = GetComponent<Weapon>();
+        weapon = GetComponent<DamageWeapon>();
 
         if (!continuousFire)
             InvokeRepeating("UpdateFiring", Random.Range(0, updateInterval), updateInterval);

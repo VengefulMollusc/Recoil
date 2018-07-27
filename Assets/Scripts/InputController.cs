@@ -69,6 +69,11 @@ public class InputController : MonoBehaviour
                 if (Input.GetButtonUp(inputSettings.secondaryWeaponButton))
                     weaponController.UseSecondaryWeapon(false);
             }
+
+            if (Input.GetButtonDown(inputSettings.utilityWeaponButton))
+                weaponController.UseUtilityWeapon(true);
+            if (Input.GetButtonUp(inputSettings.utilityWeaponButton))
+                weaponController.UseUtilityWeapon(false);
         }
     }
 }

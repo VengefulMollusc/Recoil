@@ -15,7 +15,7 @@ public class AutoTargeter : MonoBehaviour
 
     private const float checkFreq = 0.2f;
 
-    private Weapon weapon;
+    private DamageWeapon weapon;
     private LockOnTarget target;
 
     private Vector3 parentForward;
@@ -27,7 +27,7 @@ public class AutoTargeter : MonoBehaviour
 
     void Start()
     {
-        weapon = GetComponentInParent<Weapon>();
+        weapon = GetComponentInParent<DamageWeapon>();
 
         radiusAngle = checkAngle * 0.5f;
     }
@@ -128,8 +128,9 @@ public class AutoTargeter : MonoBehaviour
         Vector3 currentAimDirection = transform.forward;
         Vector3 targetAimDirection = (target == null) ? parentForward : target.transform.position - position;
 
-        targetAimDirection =
-            Vector3.RotateTowards(currentAimDirection, targetAimDirection, aimSpeed * Mathf.Deg2Rad * Time.deltaTime, 0f);
+        if (aimSpeed > 0f)
+            targetAimDirection =
+                Vector3.RotateTowards(currentAimDirection, targetAimDirection, aimSpeed * Mathf.Deg2Rad * Time.deltaTime, 0f);
 
         transform.rotation = Quaternion.LookRotation(targetAimDirection);
     }

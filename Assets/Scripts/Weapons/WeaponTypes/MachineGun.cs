@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MachineGun : Weapon
+public class MachineGun : DamageWeapon
 {
     public GameObject bulletPrefab;
     public float fireRate = 0.2f;

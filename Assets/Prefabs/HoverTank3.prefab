@@ -576,6 +576,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f04ddbfc8523d446a2c1ef5e09d96e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  turretPrefab: {fileID: 1639429056112950, guid: 241a1b37cd76d6e40961450038714beb,
+    type: 2}
   bulletPrefab: {fileID: 1641463690968118, guid: d1eaf308e92f0fb4ba3f76e8f3cbba4a,
     type: 2}
   fireRate: 0.05
@@ -619,8 +621,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73175e1de08420142bf967cd9f866e6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turretPrefab: {fileID: 1639429056112950, guid: 241a1b37cd76d6e40961450038714beb,
-    type: 2}
   maxTurrets: 3
   fireRate: 1
   firingPoint: {fileID: 114603920561631322}
@@ -768,6 +768,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a9bf2389313bb64886b606111a8ffc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  turretPrefab: {fileID: 0}
   range: 200
   beamRadius: 1
   minChargeTime: 0.25
@@ -802,6 +803,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b16a952b6608ac4c8b4cc9180f10a20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  turretPrefab: {fileID: 1629740464462002, guid: 2faa2bfb46f3dce44a3723108c0e74c3,
+    type: 2}
   lockOnMissilePrefab: {fileID: 1347379887538322, guid: e267fd62f74332c4d8f581353904e8a9,
     type: 2}
   missileLaunchCount: 120

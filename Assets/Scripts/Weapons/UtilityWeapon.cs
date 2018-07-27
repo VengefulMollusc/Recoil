@@ -4,9 +4,9 @@ using UnityEngine;
 
 public abstract class UtilityWeapon : Weapon
 {
-    protected Weapon utilityReferenceWeapon;
+    protected DamageWeapon utilityReferenceWeapon;
 
-    public void SetUtilityReferenceWeapon(Weapon weapon)
+    public virtual void SetUtilityReferenceWeapon(DamageWeapon weapon)
     {
         utilityReferenceWeapon = weapon;
     }

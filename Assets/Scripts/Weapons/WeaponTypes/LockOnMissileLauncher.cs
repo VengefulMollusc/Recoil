@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.WSA.Input;
 
-public class LockOnMissileLauncher : Weapon
+public class LockOnMissileLauncher : DamageWeapon
 {
     public GameObject lockOnMissilePrefab;
     public int missileLaunchCount = 6;
@@ -57,10 +57,12 @@ public class LockOnMissileLauncher : Weapon
     {
         while (lockingOn)
         {
-            if (!firing)
+            if (!firing && lockOnTargets != null)
             {
                 foreach (LockOnTargetTracker tracker in lockOnTargets)
                 {
+                    if (firing)
+                        break;
                     tracker.IncreaseLevel(Time.deltaTime);
                 }
             }
@@ -150,7 +152,7 @@ public class LockOnMissileLauncher : Weapon
 
     private void Launch()
     {
-        if (lockOnTargets.Count > 0)
+        if (lockOnTargets != null && lockOnTargets.Count > 0)
         {
             firing = true;
             List<LockOnTargetTracker> targets = new List<LockOnTargetTracker>(lockOnTargets);

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class WeaponController : MonoBehaviour
 {
-    public Weapon mainWeapon;
-    public Weapon secondaryWeapon;
+    public DamageWeapon mainWeapon;
+    public DamageWeapon secondaryWeapon;
     public UtilityWeapon utilityWeapon;
 
     private GameObject owner;

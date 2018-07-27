@@ -216,7 +216,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   terrainGenerator: {fileID: 1926648406}
   loadCamera: {fileID: 537539667}
-  playerCount: 2
+  playerCount: 1
   playerSettingsList:
   - playerGameObject: {fileID: 184191520}
     playerCamera: {fileID: 184191521}
@@ -342,11 +342,6 @@ Prefab:
       propertyPath: m_Name
       value: HoverTank3 P1
       objectReference: {fileID: 0}
-    - target: {fileID: 114129856107104522, guid: de60a3e26bc129744af5a032f06c19c5,
-        type: 2}
-      propertyPath: mainWeapon
-      value: 
-      objectReference: {fileID: 1904972527}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: de60a3e26bc129744af5a032f06c19c5, type: 2}
   m_IsPrefabParent: 0
@@ -918,12 +913,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: de60a3e26bc129744af5a032f06c19c5, type: 2}
   m_IsPrefabParent: 0
---- !u!114 &1904972527 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114447318885342448, guid: de60a3e26bc129744af5a032f06c19c5,
-    type: 2}
-  m_PrefabInternal: {fileID: 203908150}
-  m_Script: {fileID: 11500000, guid: 73175e1de08420142bf967cd9f866e6d, type: 3}
 --- !u!1 &1926648402
 GameObject:
   m_ObjectHideFlags: 0

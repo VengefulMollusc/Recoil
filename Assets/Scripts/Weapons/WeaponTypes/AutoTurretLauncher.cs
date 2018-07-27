@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class AutoTurretLauncher : UtilityWeapon
 {
-    public GameObject turretPrefab;
     public int maxTurrets;
     public float fireRate;
     public FiringPoint firingPoint;
@@ -20,15 +19,21 @@ public class AutoTurretLauncher : UtilityWeapon
 
     void Start()
     {
-        poolableTurretKey = turretPrefab.GetComponent<Poolable>().key;
-        int poolableCount = maxTurrets + 2;
-        GameObjectPoolController.AddEntry(poolableTurretKey, turretPrefab, poolableCount, poolableCount * ScenePlayerController.GetPlayerCount());
-
         if (firingPoint == null)
             Debug.LogError("No firingPoints defined");
 
         parentRb = GetComponentInParent<Rigidbody>();
         turrets = new List<AutoTurret>();
+    }
+
+    public override void SetUtilityReferenceWeapon(DamageWeapon weapon)
+    {
+        base.SetUtilityReferenceWeapon(weapon);
+
+        GameObject turretPrefab = utilityReferenceWeapon.turretPrefab;
+        poolableTurretKey = turretPrefab.GetComponent<Poolable>().key;
+        int poolableCount = maxTurrets + 2;
+        GameObjectPoolController.AddEntry(poolableTurretKey, turretPrefab, poolableCount, poolableCount * ScenePlayerController.GetPlayerCount());
     }
 
     public override void FireWeapon(bool pressed)

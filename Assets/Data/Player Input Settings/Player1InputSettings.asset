@@ -21,3 +21,4 @@ MonoBehaviour:
   boostButton: JumpP1
   mainWeaponButton: Fire1P1
   secondaryWeaponButton: Fire2P1
+  utilityWeaponButton: Fire3P1

@@ -20,4 +20,5 @@ public class PlayerInputSettings : ScriptableObject
 
     public string mainWeaponButton = "Fire1";
     public string secondaryWeaponButton = "Fire2";
+    public string utilityWeaponButton = "Fire3";
 }
