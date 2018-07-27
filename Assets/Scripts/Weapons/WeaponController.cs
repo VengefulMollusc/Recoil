@@ -6,11 +6,13 @@ public class WeaponController : MonoBehaviour
 {
     public Weapon mainWeapon;
     public Weapon secondaryWeapon;
+    public UtilityWeapon utilityWeapon;
 
     private GameObject owner;
 
     private bool mainWeaponState;
     private bool secondaryWeaponState;
+    private bool utilityWeaponState;
 
     void Start()
     {
@@ -23,6 +25,8 @@ public class WeaponController : MonoBehaviour
         {
             weapon.SetOwner(owner);
         }
+
+        utilityWeapon.SetUtilityReferenceWeapon(mainWeapon);
     }
 
     public void UseMainWeapon(bool pressed)
@@ -40,6 +44,15 @@ public class WeaponController : MonoBehaviour
         {
             secondaryWeapon.FireWeapon(pressed);
             secondaryWeaponState = pressed;
+        }
+    }
+
+    public void UseUtilityWeapon(bool pressed)
+    {
+        if (utilityWeapon != null && pressed != utilityWeaponState)
+        {
+            utilityWeapon.FireWeapon(pressed);
+            utilityWeaponState = pressed;
         }
     }
 

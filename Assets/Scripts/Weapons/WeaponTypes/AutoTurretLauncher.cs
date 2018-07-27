@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AutoTurretLauncher : Weapon
+public class AutoTurretLauncher : UtilityWeapon
 {
     public GameObject turretPrefab;
     public int maxTurrets;
