@@ -339,7 +339,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1514c39e34f4f549a986a661f0d2987, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxLockOnCount: 6
+  maxLockOnCount: 1
   lockOnBaseTime: 1
 --- !u!135 &135647415242485610
 SphereCollider:

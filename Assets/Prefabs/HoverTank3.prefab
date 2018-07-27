@@ -550,8 +550,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40e99d3b57c7c0b4ab442958891ddc11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainWeapon: {fileID: 114447318885342448}
+  mainWeapon: {fileID: 114891179090081510}
   secondaryWeapon: {fileID: 114265689279775902}
+  utilityWeapon: {fileID: 114447318885342448}
 --- !u!114 &114233938080451684
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -582,7 +583,7 @@ MonoBehaviour:
   firingPoints:
   - {fileID: 114276864666377620}
   - {fileID: 114414044199943968}
-  useRecoil: 1
+  useRecoil: 0
 --- !u!114 &114276864666377620
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -654,6 +655,7 @@ MonoBehaviour:
   raycastMask:
     serializedVersion: 2
     m_Bits: 3328
+  aimSpeed: 90
   checkAngle: 60
   useSphereRange: 0
   recenterIfNoTarget: 1
@@ -701,6 +703,7 @@ MonoBehaviour:
   raycastMask:
     serializedVersion: 2
     m_Bits: 3328
+  aimSpeed: 90
   checkAngle: 60
   useSphereRange: 0
   recenterIfNoTarget: 1
@@ -769,13 +772,13 @@ MonoBehaviour:
   beamRadius: 1
   minChargeTime: 0.25
   maxChargeTime: 1.5
-  damage: 25
-  impactForce: 25
+  damage: 10
+  impactForce: 10
   firingPoint: {fileID: 114614025670716740}
   layerMask:
     serializedVersion: 2
     m_Bits: 2817
-  useRecoil: 1
+  useRecoil: 0
 --- !u!114 &114884399168793196
 MonoBehaviour:
   m_ObjectHideFlags: 1

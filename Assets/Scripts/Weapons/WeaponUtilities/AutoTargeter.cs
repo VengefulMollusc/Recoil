@@ -6,6 +6,7 @@ public class AutoTargeter : MonoBehaviour
 {
     public LayerMask layerMask;
     public LayerMask raycastMask;
+    public float aimSpeed = 90f;
     public float checkAngle;
     public bool useSphereRange;
     public bool recenterIfNoTarget;
@@ -13,7 +14,6 @@ public class AutoTargeter : MonoBehaviour
     public List<AutoTargeter> otherTargeters;
 
     private const float checkFreq = 0.2f;
-    private const float aimSpeed = 90f;
 
     private Weapon weapon;
     private LockOnTarget target;
@@ -85,7 +85,7 @@ public class AutoTargeter : MonoBehaviour
 
         List<LockOnTarget> alreadyTargeted = new List<LockOnTarget>();
 
-        if (IsAlreadyTargeted(target))
+        if (target != null && HasMaxLockOns(target))
         {
             alreadyTargeted.Add(target);
             target = null;
@@ -94,7 +94,7 @@ public class AutoTargeter : MonoBehaviour
         foreach (Collider col in cols)
         {
             LockOnTarget t = col.GetComponent<LockOnTarget>();
-            if (IsAlreadyTargeted(t))
+            if (HasMaxLockOns(t))
             {
                 alreadyTargeted.Add(t);
                 continue;
@@ -162,14 +162,15 @@ public class AutoTargeter : MonoBehaviour
         return -1f;
     }
 
-    bool IsAlreadyTargeted(LockOnTarget t)
+    bool HasMaxLockOns(LockOnTarget t)
     {
+        int targetCount = 0;
         foreach (AutoTargeter targeter in otherTargeters)
         {
             if (targeter.IsTarget(t))
-                return true;
+                targetCount++;
         }
-        return false;
+        return targetCount >= t.maxLockOnCount;
     }
 
     public bool HasTarget()

@@ -410,8 +410,10 @@ MonoBehaviour:
   raycastMask:
     serializedVersion: 2
     m_Bits: 3328
+  aimSpeed: 180
   checkAngle: 60
   useSphereRange: 1
+  recenterIfNoTarget: 0
   range: 100
   otherTargeters: []
 --- !u!114 &114905833601845212
