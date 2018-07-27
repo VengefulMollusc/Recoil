@@ -39,6 +39,7 @@ GameObject:
   - component: {fileID: 4168099689398700}
   - component: {fileID: 114020688609879008}
   - component: {fileID: 114451321043008690}
+  - component: {fileID: 114215439359875916}
   m_Layer: 9
   m_Name: MachineGun
   m_TagString: Untagged
@@ -337,6 +338,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enableParticles: 1
+--- !u!114 &114215439359875916
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1166560305927848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c23ee251094b0094f9b5f8d0ff64ef09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  continuousFire: 0
+  fireDuration: 1
+  pauseDuration: 1
 --- !u!114 &114262152878919136
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -350,7 +365,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   launchForce: 15
   bounceDistance: 10
-  turretWeapon: {fileID: 114020688609879008}
+  autoWeaponControl: {fileID: 114215439359875916}
   targeter: {fileID: 114451321043008690}
 --- !u!114 &114402218237829466
 MonoBehaviour:

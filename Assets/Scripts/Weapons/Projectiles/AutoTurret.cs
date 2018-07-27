@@ -7,7 +7,7 @@ public class AutoTurret : MonoBehaviour
 {
     public float launchForce;
     public float bounceDistance;
-    public Weapon turretWeapon;
+    public AutoWeaponControl autoWeaponControl;
     public AutoTargeter targeter;
 
     private Rigidbody rb;
@@ -21,7 +21,7 @@ public class AutoTurret : MonoBehaviour
 
     public void Launch(Vector3 origin, Vector3 direction, GameObject newOwner)
     {
-        turretWeapon.SetOwner(newOwner);
+        autoWeaponControl.SetOwner(newOwner);
         GetComponentInChildren<LockOnTarget>().SetOwner(newOwner);
 
         deployed = false;
@@ -86,7 +86,7 @@ public class AutoTurret : MonoBehaviour
         if (targeterHasTarget != hasTarget)
         {
             hasTarget = targeterHasTarget;
-            turretWeapon.FireWeapon(hasTarget);
+            autoWeaponControl.SetFireState(hasTarget);
         }
     }
 
