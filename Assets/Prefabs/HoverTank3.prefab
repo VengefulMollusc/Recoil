@@ -624,7 +624,6 @@ MonoBehaviour:
   fireRate: 1
   firingPoint: {fileID: 114603920561631322}
   useRecoil: 0
-  owner: {fileID: 4521391129715992}
 --- !u!114 &114551078993121346
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -657,10 +656,10 @@ MonoBehaviour:
     m_Bits: 3328
   checkAngle: 60
   useSphereRange: 0
+  recenterIfNoTarget: 1
   range: 200
   otherTargeters:
   - {fileID: 114632530666422944}
-  owner: {fileID: 4521391129715992}
 --- !u!114 &114603920561631322
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -704,10 +703,10 @@ MonoBehaviour:
     m_Bits: 3328
   checkAngle: 60
   useSphereRange: 0
+  recenterIfNoTarget: 1
   range: 200
   otherTargeters:
   - {fileID: 114579269456964486}
-  owner: {fileID: 4521391129715992}
 --- !u!114 &114823834796332608
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -907,7 +906,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 1830209858
+  randomSeed: 343726388
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -4245,7 +4244,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 415668049
+  randomSeed: -1964156662
   InitialModule:
     serializedVersion: 3
     enabled: 1

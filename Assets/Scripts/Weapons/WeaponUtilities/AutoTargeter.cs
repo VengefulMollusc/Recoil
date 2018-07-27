@@ -8,6 +8,7 @@ public class AutoTargeter : MonoBehaviour
     public LayerMask raycastMask;
     public float checkAngle;
     public bool useSphereRange;
+    public bool recenterIfNoTarget;
     public float range;
     public List<AutoTargeter> otherTargeters;
 
@@ -121,6 +122,9 @@ public class AutoTargeter : MonoBehaviour
 
     void Aim()
     {
+        if (!recenterIfNoTarget && target == null)
+            return;
+
         Vector3 currentAimDirection = transform.forward;
         Vector3 targetAimDirection = (target == null) ? parentForward : target.transform.position - position;
 
