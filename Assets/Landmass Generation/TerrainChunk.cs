@@ -114,8 +114,7 @@ public class TerrainChunk
     {
         heightMap = (HeightMap)heightMapObject;
         heightMapReceived = true;
-
-        CreateWaterPlane();
+        
         UpdateTerrainChunk();
 
         if (isInBoundsChunk)
@@ -147,22 +146,25 @@ public class TerrainChunk
         }
     }
 
-    private void CreateWaterPlane()
+    public void UseWaterPlane(Mesh waterMesh)
     {
-        if (heightMapSettings.useWaterPlane)
+        GameObject waterPlaneObject = new GameObject("WaterPlane")
         {
-            GameObject waterPlaneObject = GameObject.CreatePrimitive(PrimitiveType.Plane);
-            waterPlaneObject.layer = 11;
-            waterPlaneObject.transform.SetParent(meshObject.transform);
-            waterPlaneObject.GetComponent<MeshRenderer>().sharedMaterial = heightMapSettings.waterMaterial;
+            layer = 11
+        };
+        waterPlaneObject.transform.SetParent(meshObject.transform);
 
-            // set height and scale for water plane
-            float waterHeight = heightMapSettings.heightCurve.Evaluate(heightMapSettings.waterHeight) *
-                                heightMapSettings.heightMultiplier;
-            waterPlaneObject.transform.position = new Vector3(meshObject.transform.position.x, waterHeight, meshObject.transform.position.z);
-            float scale = meshSettings.meshWorldSize / 10f;
-            waterPlaneObject.transform.localScale = new Vector3(scale, 1, scale);
-        }
+        MeshFilter waterPlaneMeshFilter = waterPlaneObject.AddComponent<MeshFilter>();
+        waterPlaneMeshFilter.sharedMesh = waterMesh;
+        MeshCollider waterPlaneMeshCollider = waterPlaneObject.AddComponent<MeshCollider>();
+        waterPlaneMeshCollider.sharedMesh = waterMesh;
+        MeshRenderer waterPlaneMeshRenderer = waterPlaneObject.AddComponent<MeshRenderer>();
+        waterPlaneMeshRenderer.sharedMaterial = heightMapSettings.waterMaterial;
+
+        // set height and scale for water plane
+        float waterHeight = heightMapSettings.heightCurve.Evaluate(heightMapSettings.waterHeight) *
+                            heightMapSettings.heightMultiplier;
+        waterPlaneObject.transform.position = new Vector3(meshObject.transform.position.x, waterHeight, meshObject.transform.position.z);
     }
 
     public void UpdateTerrainChunk()

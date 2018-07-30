@@ -4,7 +4,7 @@ using System.Globalization;
 
 public static class MeshGenerator
 {
-    public static MeshData GenerateWaterMesh(MeshSettings meshSettings, int levelOfDetail, float waterHeight)
+    public static MeshData GenerateWaterMesh(MeshSettings meshSettings, int levelOfDetail)
     {
         int skipIncrement = (levelOfDetail == 0) ? 1 : levelOfDetail * 2;
         int numVertsPerLine = meshSettings.numVertsPerLine;
@@ -57,7 +57,7 @@ public static class MeshGenerator
                     Vector2 percent = new Vector2(x - 1, y - 1) / (numVertsPerLine - 3);
                     Vector2 vertexPosition2D = topLeft + new Vector2(percent.x, -percent.y) * meshSettings.meshWorldSize;
 
-                    meshData.AddVertex(new Vector3(vertexPosition2D.x, waterHeight, vertexPosition2D.y), percent, vertexIndex);
+                    meshData.AddVertex(new Vector3(vertexPosition2D.x, 0f, vertexPosition2D.y), percent, vertexIndex); // height here (the 0f)
 
                     bool createTriangle = x < numVertsPerLine - 1 && y < numVertsPerLine - 1 &&
                                           (!isEdgeConnectionVertex || (x != 2 && y != 2));

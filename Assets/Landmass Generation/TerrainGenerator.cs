@@ -37,6 +37,8 @@ public class TerrainGenerator : MonoBehaviour
     public event System.Action OnTerrainLoaded;
     private bool loading;
 
+    private Mesh waterMesh;
+
     void Start()
     {
         UpdateTerrainDataVariables();
@@ -59,6 +61,9 @@ public class TerrainGenerator : MonoBehaviour
             if (heightMapSettings.useFalloff)
                 falloffMap = FalloffGenerator.GenerateFalloffMap(falloffMapSize, heightMapSettings.falloffMode);
         }
+
+        if (heightMapSettings.useWaterPlane)
+            waterMesh = MeshGenerator.GenerateWaterMesh(meshSettings, 0).CreateMesh();
 
         loading = true;
         StartCoroutine(InitialTerrainLoad());
@@ -220,6 +225,9 @@ public class TerrainGenerator : MonoBehaviour
                 LODInfo[] lods = !isFlatChunk ? detailLevels : new[] { detailLevels[detailLevels.Length - 1] };
                 TerrainChunk newChunk = new TerrainChunk(viewedChunkCoord, heightMapSettings, meshSettings, lods,
                     colliderLODIndex, transform, viewers, mapMaterial, populationSettings);
+
+                if (heightMapSettings.useWaterPlane)
+                    newChunk.UseWaterPlane(waterMesh);
 
                 terrainChunkDictionary.Add(viewedChunkCoord, newChunk);
                 newChunk.onVisibilityChanged += OnTerrainChunkVisibilityChanged;
