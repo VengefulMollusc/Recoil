@@ -75,8 +75,6 @@ public class HoverMotor : MonoBehaviour
 
     /*
      * Normalise hover raycasts.
-     *
-     * TODO: when using fixed hover height, verticalSpread can be baked in here
      */
     void ProcessHoverRays()
     {
@@ -198,6 +196,7 @@ public class HoverMotor : MonoBehaviour
         else
         {
             // Not boosting: apply default movement force
+            // TODO: look at benefits for using direct vs. flattened directions
             Vector3 movementForce = (forward * moveInputVector.y)
                 + (right * moveInputVector.x);
             rb.AddForce(movementForce * moveForce * Time.fixedDeltaTime, ForceMode.Impulse);

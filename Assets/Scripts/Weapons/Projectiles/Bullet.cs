@@ -16,6 +16,8 @@ public class Bullet : MonoBehaviour
     private Vector3 movementVector;
     private TrailRenderer trailRenderer;
 
+    private ParticleSystem particleSystem;
+
     private bool despawning;
 
     private GameObject sourceObject;
@@ -26,15 +28,18 @@ public class Bullet : MonoBehaviour
     {
         sourceObject = source;
         transform.position = position;
+        transform.rotation = Quaternion.identity;
         movementVector = direction.normalized * distancePerSecond;
         timer = 0f;
         gameObject.SetActive(true);
         despawning = false;
 
         if (trailRenderer == null)
-        {
             trailRenderer = GetComponent<TrailRenderer>();
-        }
+
+        if (particleSystem == null)
+            particleSystem = GetComponent<ParticleSystem>();
+
         trailRenderer.Clear();
     }
 
@@ -69,6 +74,8 @@ public class Bullet : MonoBehaviour
     void Collide(RaycastHit hitInfo)
     {
         // trigger impact particle effect
+        transform.rotation = Quaternion.LookRotation(hitInfo.normal);
+        particleSystem.Play();
 
         Collider col = hitInfo.collider;
 
@@ -93,7 +100,7 @@ public class Bullet : MonoBehaviour
     IEnumerator Despawn()
     {
         despawning = true;
-        yield return new WaitForSeconds(trailRenderer.time);
+        yield return new WaitForSeconds(Mathf.Max(trailRenderer.time, particleSystem.main.duration));
         GameObjectPoolController.Enqueue(GetComponent<Poolable>());
     }
 }

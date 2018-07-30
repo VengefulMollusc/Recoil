@@ -18,15 +18,19 @@ public class LockOnMissile : MonoBehaviour
     public float acceleration;
     public float lifeSpan;
     public float launchTime;
-    public float launchVelocity;
+    public float launchForce;
     public float initialGravity;
     public float homingStrength;
+
+    [Header("Particles")]
+    public ParticleSystem trailParticles;
+    public ParticleSystem explosionParticles;
 
     private Transform target;
     private Rigidbody rb;
     private HealthController health;
     private TrailRenderer trail;
-    
+
     private float timer;
 
     public void Launch(Vector3 position, Vector3 facingDirection, Vector3 launchDirection, Transform target, Vector3 parentVelocity)
@@ -52,8 +56,11 @@ public class LockOnMissile : MonoBehaviour
 
         rb.isKinematic = false;
         rb.detectCollisions = true;
-        rb.velocity = (launchDirection * launchVelocity) + parentVelocity;
+        rb.velocity = parentVelocity;
+        rb.AddForce(launchDirection * launchForce, ForceMode.Impulse);
 
+        // start trail effects
+        trailParticles.Play(false);
         trail.Clear();
     }
 
@@ -85,26 +92,26 @@ public class LockOnMissile : MonoBehaviour
 
         //if (timer > launchTime)
         //{
-            // Apply direction correction force
-            Vector3 velocity = rb.velocity;
-            Vector3 projected = Vector3.Project(rb.velocity, forward);
+        // Apply direction correction force
+        Vector3 velocity = rb.velocity;
+        Vector3 projected = Vector3.Project(rb.velocity, forward);
 
-            if (Vector3.Dot(velocity, projected) > 0f)
-            {
-                Vector3 diff = projected - velocity;
-                force += diff * acceleration * launchRatio;
-            }
+        if (Vector3.Dot(velocity, projected) > 0f)
+        {
+            Vector3 diff = projected - velocity;
+            force += diff * acceleration * launchRatio;
+        }
 
-            if (target != null)
-            {
-                //transform.LookAt(target.position);
+        if (target != null)
+        {
+            //transform.LookAt(target.position);
 
-                Vector3 toTarget = (target.position - transform.position).normalized;
-                Vector3 newFacing = Vector3.RotateTowards(forward, toTarget, homingStrength * Time.fixedDeltaTime * launchRatio, 0f);
-                rb.rotation = Quaternion.LookRotation(newFacing);
+            Vector3 toTarget = (target.position - transform.position).normalized;
+            Vector3 newFacing = Vector3.RotateTowards(forward, toTarget, homingStrength * Time.fixedDeltaTime * launchRatio, 0f);
+            rb.rotation = Quaternion.LookRotation(newFacing);
 
-                //Debug.DrawLine(transform.position, target.position);
-            }
+            //Debug.DrawLine(transform.position, target.position);
+        }
         //}
 
         // Apply forces
@@ -144,6 +151,10 @@ public class LockOnMissile : MonoBehaviour
         rb.detectCollisions = false;
 
         // TODO: explosion particle effects here
+        trailParticles.Stop(false);
+
+        if (explosionParticles != null)
+            explosionParticles.Play();
 
         // Apply explosion damage and force
         Vector3 position = transform.position;
@@ -154,15 +165,17 @@ public class LockOnMissile : MonoBehaviour
             HealthController health = col.GetComponent<HealthController>();
             if (health != null)
             {
-                health.Damage(explosionDamage);
+                float deathDelay = (col.transform.position - transform.position).sqrMagnitude * 0.1f;
+                health.Damage(explosionDamage, deathDelay);
             }
 
             // add explosion force
             Rigidbody rigidbody = col.GetComponent<Rigidbody>();
             if (rigidbody != null)
             {
-                Vector3 force = (col.transform.position - position).normalized * explosionForce;
-                rigidbody.AddForce(force, ForceMode.Impulse);
+                rigidbody.AddExplosionForce(explosionForce, position, explosionRadius, 2f, ForceMode.Impulse);
+                //Vector3 force = (col.transform.position - position).normalized * explosionForce;
+                //rigidbody.AddForce(force, ForceMode.Impulse);
             }
         }
 
@@ -171,7 +184,7 @@ public class LockOnMissile : MonoBehaviour
 
     private IEnumerator Despawn()
     {
-        yield return new WaitForSeconds(trail.time);
+        yield return new WaitForSeconds(Mathf.Max(trail.time, explosionParticles.main.duration));
         GameObjectPoolController.Enqueue(GetComponent<Poolable>());
     }
 }

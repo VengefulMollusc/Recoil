@@ -7,9 +7,7 @@ public class MachineGun : Weapon
     public GameObject bulletPrefab;
     public float fireRate = 0.2f;
     public float spread = 0.02f;
-    public List<Vector3> firingPoints;
-
-    [Header("Editor")] public bool editFiringPoints;
+    public List<FiringPoint> firingPoints;
 
     private bool firing;
     private bool firingSequenceActive;
@@ -17,14 +15,21 @@ public class MachineGun : Weapon
     private string poolableBulletKey;
     private int firingPointIndex;
 
+    private float adjustedFireRate;
+
+    private Rigidbody parentRb;
+
     void Start()
     {
+        adjustedFireRate = fireRate / firingPoints.Count;
         poolableBulletKey = bulletPrefab.GetComponent<Poolable>().key;
-        int poolableCount = (int)(bulletPrefab.GetComponent<Bullet>().lifeSpan / fireRate);
-        GameObjectPoolController.AddEntry(poolableBulletKey, bulletPrefab, poolableCount, poolableCount * 4);
+        int poolableCount = (int) (bulletPrefab.GetComponent<Bullet>().lifeSpan / adjustedFireRate);
+        GameObjectPoolController.AddEntry(poolableBulletKey, bulletPrefab, poolableCount, poolableCount * ScenePlayerController.GetPlayerCount());
 
         if (firingPoints.Count <= 0)
             Debug.LogError("No firingPoints defined");
+
+        parentRb = GetComponentInParent<Rigidbody>();
     }
 
     public override void FireWeapon(bool pressed)
@@ -46,7 +51,7 @@ public class MachineGun : Weapon
         while (firing)
         {
             Fire();
-            yield return new WaitForSeconds(fireRate);
+            yield return new WaitForSeconds(adjustedFireRate);
         }
 
         firingSequenceActive = false;
@@ -57,28 +62,29 @@ public class MachineGun : Weapon
      */
     private void Fire()
     {
-        Vector3 origin = GetFiringPoint();
-        Vector3 direction = GetDirection();
+        Transform firingPoint = firingPoints[firingPointIndex].transform;
+        Vector3 origin = firingPoint.position;
+        Vector3 direction = Scatter(firingPoint.forward);
 
         Bullet bullet = GameObjectPoolController.Dequeue(poolableBulletKey).GetComponent<Bullet>();
-        bullet.Launch(origin, direction, gameObject);
-    }
 
-    private Vector3 GetFiringPoint()
-    {
-        Vector3 point = transform.TransformPoint(firingPoints[firingPointIndex]);
+        // recoil force
+        parentRb.AddForceAtPosition(-direction * bullet.impactForce * knockbackModifier, origin, ForceMode.Impulse);
+
+        bullet.Launch(origin, direction, gameObject);
+        firingPoints[firingPointIndex].Fire();
+
+        // increment firingpointindex
         firingPointIndex++;
         if (firingPointIndex >= firingPoints.Count)
             firingPointIndex = 0;
-        return point;
     }
 
-    private Vector3 GetDirection()
+    private Vector3 Scatter(Vector3 direction)
     {
-        Vector3 direction = transform.forward;
         direction.x += Random.Range(-spread, spread);
         direction.y += Random.Range(-spread, spread);
         direction.z += Random.Range(-spread, spread);
-        return direction;
+        return direction.normalized;
     }
 }

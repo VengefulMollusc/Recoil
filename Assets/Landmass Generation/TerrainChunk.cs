@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class TerrainChunk
 {
-    private const float colliderGenerationDistanceThreshold = 100f; // 10f
+    private const float colliderGenerationDistanceThreshold = 10f; // 10f
     public event System.Action<TerrainChunk, bool> onVisibilityChanged;
     public Vector2 coord;
 
@@ -84,8 +84,6 @@ public class TerrainChunk
     public void Load(bool isInBounds, bool isFlatChunk)
     {
         isInBoundsChunk = isInBounds;
-        if (isInBoundsChunk)
-            Debug.Log("inbounds");
         if (isFlatChunk)
         {
             // Create flat heightMap
@@ -241,27 +239,11 @@ public class TerrainChunk
                 }
             }
         }
-        //if (!hasSetCollider)
-        //{
-        //    //float sqrDistFromViewerToEdge = bounds.SqrDistance(viewerPosition);
+    }
 
-        //    //if (sqrDistFromViewerToEdge < detailLevels[colliderLODIndex].sqrVisibleDistanceThreshold)
-        //    //{
-        //    if (!lodMeshes[colliderLODIndex].hasRequestedMesh)
-        //    {
-        //        lodMeshes[colliderLODIndex].RequestMesh(heightMap, meshSettings);
-        //    }
-        //    //}
-
-        //    //if (sqrDistFromViewerToEdge < colliderGenerationDistanceThreshold * colliderGenerationDistanceThreshold)
-        //    //{
-        //    if (lodMeshes[colliderLODIndex].hasMesh)
-        //    {
-        //        meshCollider.sharedMesh = lodMeshes[colliderLODIndex].mesh;
-        //        hasSetCollider = true;
-        //    }
-        //    //}
-        //}
+    public bool IsLoaded()
+    {
+        return hasSetCollider;
     }
 
     public void SetVisible(bool visible)
