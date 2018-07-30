@@ -592,7 +592,7 @@ MonoBehaviour:
   previewParent: {fileID: 930323083}
   editorPreviewLOD: 0
   previewWholeFixedSizeMesh: 1
-  autoUpdate: 1
+  autoUpdate: 0
 --- !u!4 &930323083
 Transform:
   m_ObjectHideFlags: 0
