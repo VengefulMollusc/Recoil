@@ -16,6 +16,7 @@ public class AutoTurretLauncher : UtilityWeapon
 
     private Rigidbody parentRb;
     private List<AutoTurret> turrets;
+    //private Queue<AutoTurret> turretQueue;
 
     void Start()
     {
@@ -24,6 +25,7 @@ public class AutoTurretLauncher : UtilityWeapon
 
         parentRb = GetComponentInParent<Rigidbody>();
         turrets = new List<AutoTurret>();
+        //turretQueue = new Queue<AutoTurret>();
     }
 
     public override void SetUtilityReferenceWeapon(DamageWeapon weapon)
@@ -32,7 +34,7 @@ public class AutoTurretLauncher : UtilityWeapon
 
         GameObject turretPrefab = utilityReferenceWeapon.turretPrefab;
         poolableTurretKey = turretPrefab.GetComponent<Poolable>().key;
-        int poolableCount = maxTurrets + 2;
+        int poolableCount = maxTurrets * 2;
         GameObjectPoolController.AddEntry(poolableTurretKey, turretPrefab, poolableCount, poolableCount * ScenePlayerController.GetPlayerCount());
     }
 
@@ -66,14 +68,29 @@ public class AutoTurretLauncher : UtilityWeapon
         Vector3 origin = firingPoint.transform.position;
         Vector3 direction = firingPoint.transform.forward;
 
-        AutoTurret turret = GameObjectPoolController.Dequeue(poolableTurretKey).GetComponent<AutoTurret>();
+        foreach (AutoTurret t in turrets)
+        {
+            if (!t.gameObject.activeSelf)
+            {
+                turrets.Remove(t);
+            }
+        }
 
+        AutoTurret turret = GameObjectPoolController.Dequeue(poolableTurretKey).GetComponent<AutoTurret>();
+        
         if (turrets.Count >= maxTurrets)
         {
             turrets[0].TriggerDespawn();
             turrets.RemoveAt(0);
         }
         turrets.Add(turret);
+
+        //if (turretQueue.Count >= maxTurrets)
+        //{
+        //    AutoTurret toDespawn = turretQueue.Dequeue();
+        //    toDespawn.TriggerDespawn();
+        //}
+        //turretQueue.Enqueue(turret);
 
         // recoil force
         if (useRecoil)

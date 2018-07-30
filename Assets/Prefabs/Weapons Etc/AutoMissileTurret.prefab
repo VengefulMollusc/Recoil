@@ -324,7 +324,7 @@ MonoBehaviour:
   raycastMask:
     serializedVersion: 2
     m_Bits: 3328
-  aimSpeed: 0
+  aimSpeed: 360
   checkAngle: 60
   useSphereRange: 1
   recenterIfNoTarget: 0
@@ -382,7 +382,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   continuousFire: 0
   fireDuration: 1.5
-  pauseDuration: 0.1
+  pauseDuration: 0.2
 --- !u!114 &114582206699653604
 MonoBehaviour:
   m_ObjectHideFlags: 1

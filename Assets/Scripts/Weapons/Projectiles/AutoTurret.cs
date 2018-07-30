@@ -29,7 +29,7 @@ public class AutoTurret : MonoBehaviour
         hasTarget = false;
 
         transform.position = origin;
-        //transform.rotation = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.identity;
 
         if (health == null)
             health = GetComponent<HealthController>();
