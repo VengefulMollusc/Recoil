@@ -400,13 +400,14 @@ GameObject:
   - component: {fileID: 645541544}
   - component: {fileID: 645541543}
   - component: {fileID: 645541542}
+  - component: {fileID: 645541546}
   m_Layer: 0
   m_Name: Viewer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!23 &645541542
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -473,6 +474,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &645541546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 645541541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ca35d2e7702b8d4b801092c2b4cebc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &748298191
 GameObject:
   m_ObjectHideFlags: 0
