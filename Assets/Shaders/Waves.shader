@@ -55,25 +55,30 @@ Shader "Custom/Waves" {
 		    float steepness = wave.z * distModifier;
 		    float wavelength = wave.w;
 		    float k = 2 * UNITY_PI / wavelength;
-			float c = sqrt(_SpeedGravity / k); // Modify this for speed/"gravity"
+			float c = sqrt(_SpeedGravity / k);
 			float2 d = normalize(wave.xy);
 			float f = k * (dot(d, p.xz) - c * _Time.y);
 			float a = steepness / k;
 
+			float sinF = sin(f);
+			float cosF = cos(f);
+			float steepSinF = steepness * sinF;
+			float steepCosF = steepness * cosF;
+
 			tangent += float3(
-				-d.x * d.x * (steepness * sin(f)),
-				d.x * (steepness * cos(f)),
-				-d.x * d.y * (steepness * sin(f))
+				-d.x * d.x * steepSinF,
+				d.x * steepCosF,
+				-d.x * d.y * steepSinF
 			);
 			binormal += float3(
-				-d.x * d.y * (steepness * sin(f)),
-				d.y * (steepness * cos(f)),
-				-d.y * d.y * (steepness * sin(f))
+				-d.x * d.y * steepSinF,
+				d.y * steepCosF,
+				-d.y * d.y * steepSinF
 			);
 			return float3(
-				d.x * (a * cos(f)),
-				a * sin(f),
-				d.y * (a * cos(f))
+				d.x * (a * cosF),
+				a * sinF,
+				d.y * (a * cosF)
 			);
 		}
 
@@ -84,12 +89,13 @@ Shader "Custom/Waves" {
 			float3 binormal = float3(0, 0, 1);
 
 			float playerDistModifier = 1;
+			float fullRange = _FlatRange + _FlatRangeExt;
 
 			float3 toPlayer = _PlayerPosition.xyz - worldPoint;
-			float yModifier = 1 - (toPlayer.y / (_FlatRange + _FlatRangeExt));
+			float yModifier = 1 - (toPlayer.y / fullRange);
 			if (yModifier > 0){
 				float playerDistXZ = sqrt(toPlayer.x * toPlayer.x + toPlayer.z * toPlayer.z);
-				if (playerDistXZ < (_FlatRange + _FlatRangeExt) * yModifier) {
+				if (playerDistXZ < fullRange * yModifier) {
 					playerDistModifier = (playerDistXZ - _FlatRangeExt * yModifier) / (_FlatRange * yModifier);
 					if (playerDistModifier < 0){
 						playerDistModifier = 0;
