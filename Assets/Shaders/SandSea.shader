@@ -17,6 +17,8 @@
 		[Header(Player Displacement)]
 		_FlatRange ("Flat Range", Float) = 10
 		_FlatRangeExt ("Flat Range Extension", Float) = 2
+		_DispTex ("Displacement (B/W)", 2D) = "white" {}
+		_DispStrength ("Displacement tex strength", Float) = 0.2
 
 		[HideInInspector]
 		_PlayerPosition ("Player Position", Vector) = (0, 0, 0, 0)
@@ -45,7 +47,8 @@
 		float4 _WaveA, _WaveB, _WaveC;
 
 		float3 _PlayerPosition;
-		float _FlatRange , _FlatRangeExt, _SeaDepth;
+		float _FlatRange , _FlatRangeExt, _SeaDepth, _DispStrength;
+		sampler2D _DispTex;
 
 		// Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
 		// See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -85,13 +88,7 @@
 			);
 		}
 
-		void vert(inout appdata_full vertexData) {
-			float3 gridPoint = vertexData.vertex.xyz;
-			float3 worldPoint = mul(unity_ObjectToWorld, vertexData.vertex).xyz;
-			float3 tangent = float3(1, 0, 0);
-			float3 binormal = float3(0, 0, 1);
-
-			float playerDistModifier = 1;
+		float Displacement(float3 worldPoint, float2 texCoord, inout float playerDistModifier) {
 			float depthModifier = 1;
 
 			float3 toPlayer = _PlayerPosition.xyz - worldPoint;
@@ -111,13 +108,30 @@
 					}
 
 					depthModifier = playerDistModifier + (1 - yModifier);
+
+					#if !defined(SHADER_API_OPENGL)
+					fixed4 dispTextSample = tex2Dlod (_DispTex, float4(texCoord, 0, 0));
+					depthModifier += (dispTextSample.r - 0.5) * _DispStrength;
+					#endif
+
 					if (depthModifier > 1)
 						depthModifier = 1;
 				}
 			}
 
+			return _SeaDepth * depthModifier;
+		}
+
+		void vert(inout appdata_full vertexData) {
+			float3 gridPoint = vertexData.vertex.xyz;
+			float3 worldPoint = mul(unity_ObjectToWorld, vertexData.vertex).xyz;
+			float3 tangent = float3(1, 0, 0);
+			float3 binormal = float3(0, 0, 1);
+
+			float playerDistModifier = 1;
+
 			float3 p = gridPoint;
-			p.y += _SeaDepth * depthModifier;
+			p.y += Displacement(worldPoint, vertexData.texcoord.xy, playerDistModifier);
 			p += GerstnerWave(_WaveA, worldPoint, tangent, binormal, playerDistModifier);
 			p += GerstnerWave(_WaveB, worldPoint, tangent, binormal, playerDistModifier);
 			p += GerstnerWave(_WaveC, worldPoint, tangent, binormal, playerDistModifier);
