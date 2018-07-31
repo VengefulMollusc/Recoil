@@ -1,4 +1,6 @@
-﻿Shader "Custom/Waves" {
+﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+
+Shader "Custom/Waves" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
@@ -69,12 +71,13 @@
 
 		void vert(inout appdata_full vertexData) {
 			float3 gridPoint = vertexData.vertex.xyz;
+			float3 worldPoint = mul(unity_ObjectToWorld, vertexData.vertex).xyz;
 			float3 tangent = float3(1, 0, 0);
 			float3 binormal = float3(0, 0, 1);
 			float3 p = gridPoint;
-			p += GerstnerWave(_WaveA, gridPoint, tangent, binormal);
-			p += GerstnerWave(_WaveB, gridPoint, tangent, binormal);
-			p += GerstnerWave(_WaveC, gridPoint, tangent, binormal);
+			p += GerstnerWave(_WaveA, worldPoint, tangent, binormal);
+			p += GerstnerWave(_WaveB, worldPoint, tangent, binormal);
+			p += GerstnerWave(_WaveC, worldPoint, tangent, binormal);
 			float3 normal = normalize(cross(binormal, tangent));
 			vertexData.vertex.xyz = p;
 			vertexData.normal = normal;
