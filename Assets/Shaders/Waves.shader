@@ -12,6 +12,10 @@ Shader "Custom/Waves" {
 		_WaveA ("Wave A (dir, steepness, wavelength)", Vector) = (1, 0, 0.5, 10)
 		_WaveB ("Wave B", Vector) = (0, 1, 0.25, 10)
 		_WaveC ("Wave C", Vector) = (1, 1, 0.15, 4)
+
+		// [HideInInspector]
+		_PlayerPosition ("Player Position", Vector) = (0, 0, 0, 0)
+		_FlatRange ("Flat Range", Float) = 10
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" }
@@ -36,6 +40,9 @@ Shader "Custom/Waves" {
 		float _SpeedGravity;
 		float4 _WaveA, _WaveB, _WaveC;
 
+		float3 _PlayerPosition;
+		float _FlatRange;
+
 		// Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
 		// See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
 		// #pragma instancing_options assumeuniformscaling
@@ -43,10 +50,8 @@ Shader "Custom/Waves" {
 			// put more per-instance properties here
 		UNITY_INSTANCING_CBUFFER_END
 
-		float3 GerstnerWave (
-			float4 wave, float3 p, inout float3 tangent, inout float3 binormal
-		) {
-		    float steepness = wave.z;
+		float3 GerstnerWave (float4 wave, float3 p, inout float3 tangent, inout float3 binormal, float distModifier) {
+		    float steepness = wave.z * distModifier;
 		    float wavelength = wave.w;
 		    float k = 2 * UNITY_PI / wavelength;
 			float c = sqrt(_SpeedGravity / k); // Modify this for speed/"gravity"
@@ -76,10 +81,20 @@ Shader "Custom/Waves" {
 			float3 worldPoint = mul(unity_ObjectToWorld, vertexData.vertex).xyz;
 			float3 tangent = float3(1, 0, 0);
 			float3 binormal = float3(0, 0, 1);
+
+			float3 toPlayer = _PlayerPosition.xyz - worldPoint;
+			// float playerDistY = toPlayer.y;
+			float playerDistXZ = sqrt(toPlayer.x * toPlayer.x + toPlayer.z * toPlayer.z);
+
+			float playerDistModifier = 1;
+			if (playerDistXZ < _FlatRange){
+				playerDistModifier = playerDistXZ / _FlatRange;
+			}
+
 			float3 p = gridPoint;
-			p += GerstnerWave(_WaveA, worldPoint, tangent, binormal);
-			p += GerstnerWave(_WaveB, worldPoint, tangent, binormal);
-			p += GerstnerWave(_WaveC, worldPoint, tangent, binormal);
+			p += GerstnerWave(_WaveA, worldPoint, tangent, binormal, playerDistModifier);
+			p += GerstnerWave(_WaveB, worldPoint, tangent, binormal, playerDistModifier);
+			p += GerstnerWave(_WaveC, worldPoint, tangent, binormal, playerDistModifier);
 			float3 normal = normalize(cross(binormal, tangent));
 			vertexData.vertex.xyz = p;
 			vertexData.normal = normal;
