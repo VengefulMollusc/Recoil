@@ -35,6 +35,8 @@ public class MapPreview : MonoBehaviour
 
     private List<GameObject> previewChunks;
 
+    private Mesh waterMesh;
+
     private void UpdateTerrainDataVariables()
     {
         heightMapSettings = terrainDataPackage.heightMapSettings;
@@ -58,6 +60,9 @@ public class MapPreview : MonoBehaviour
             gridSize = meshSettings.fixedTerrainSize * 2 + 1;
             previewSize = (meshSettings.numVertsPerLine - 3) * gridSize + 3;
         }
+
+        if (heightMapSettings.useWaterPlane)
+            waterMesh = MeshGenerator.GenerateWaterMesh(meshSettings, editorPreviewLOD).CreateMesh();
 
         if (drawMode != DrawMode.DrawMesh || !(previewWholeFixedSizeMesh && meshSettings.generateFixedSizeTerrain))
         {
@@ -209,16 +214,24 @@ public class MapPreview : MonoBehaviour
         {
             if (waterPlaneObject == null)
             {
-                waterPlaneObject = GameObject.CreatePrimitive(PrimitiveType.Plane);
+                waterPlaneObject = new GameObject("WaterPlane")
+                {
+                    layer = 11
+                };
                 waterPlaneObject.transform.SetParent(previewMeshObject.transform);
-                waterPlaneObject.GetComponent<MeshRenderer>().sharedMaterial = heightMapSettings.waterMaterial;
+
+                MeshFilter waterPlaneMeshFilter = waterPlaneObject.AddComponent<MeshFilter>();
+                waterPlaneMeshFilter.sharedMesh = waterMesh;
+                MeshCollider waterPlaneMeshCollider = waterPlaneObject.AddComponent<MeshCollider>();
+                waterPlaneMeshCollider.sharedMesh = waterMesh;
+                MeshRenderer waterPlaneMeshRenderer = waterPlaneObject.AddComponent<MeshRenderer>();
+                waterPlaneMeshRenderer.sharedMaterial = heightMapSettings.waterMaterial;
             }
+
             // set height and scale for water plane
             float waterHeight = heightMapSettings.heightCurve.Evaluate(heightMapSettings.waterHeight) *
                                 heightMapSettings.heightMultiplier;
-            waterPlaneObject.transform.position = new Vector3(position.x, waterHeight, position.y);
-            float scale = meshSettings.meshWorldSize / 10f;
-            waterPlaneObject.transform.localScale = new Vector3(scale, 1, scale);
+            waterPlaneObject.transform.position = new Vector3(previewMeshObject.transform.position.x, waterHeight, previewMeshObject.transform.position.z);
         }
     }
 
