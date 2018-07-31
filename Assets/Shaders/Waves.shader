@@ -7,7 +7,8 @@ Shader "Custom/Waves" {
 		_Glossiness ("Smoothness", Range(0,1)) = 0.5
 		_Metallic ("Metallic", Range(0,1)) = 0.0
 		
-		[Header(Total steepness at most 1)]
+		[Header(Waves total steepness at most 1)]
+		_SpeedGravity ("Speed/Gravity", Float) = 9.8
 		_WaveA ("Wave A (dir, steepness, wavelength)", Vector) = (1, 0, 0.5, 10)
 		_WaveB ("Wave B", Vector) = (0, 1, 0.25, 10)
 		_WaveC ("Wave C", Vector) = (1, 1, 0.15, 4)
@@ -32,6 +33,7 @@ Shader "Custom/Waves" {
 		half _Glossiness;
 		half _Metallic;
 		fixed4 _Color;
+		float _SpeedGravity;
 		float4 _WaveA, _WaveB, _WaveC;
 
 		// Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
@@ -47,7 +49,7 @@ Shader "Custom/Waves" {
 		    float steepness = wave.z;
 		    float wavelength = wave.w;
 		    float k = 2 * UNITY_PI / wavelength;
-			float c = sqrt(9.8 / k); // Modify this for speed/"gravity"
+			float c = sqrt(_SpeedGravity / k); // Modify this for speed/"gravity"
 			float2 d = normalize(wave.xy);
 			float f = k * (dot(d, p.xz) - c * _Time.y);
 			float a = steepness / k;

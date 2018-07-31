@@ -50,4 +50,4 @@ MonoBehaviour:
     m_RotationOrder: 0
   useWaterPlane: 1
   waterHeight: 0.002
-  waterMaterial: {fileID: 2100000, guid: e21432cc620ab9e48a6017f9cbc85907, type: 2}
+  waterMaterial: {fileID: 2100000, guid: 6c887cae6c027cf4abd311736a0fbe1a, type: 2}

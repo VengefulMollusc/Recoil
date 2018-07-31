@@ -599,7 +599,7 @@ MonoBehaviour:
   meshFilter: {fileID: 748298193}
   meshRenderer: {fileID: 748298192}
   drawMode: 1
-  terrainDataPackage: {fileID: 11400000, guid: 9a060aa01326b164b8ccb4e939deba68, type: 2}
+  terrainDataPackage: {fileID: 11400000, guid: f40971bfc58989141920a72958b937a0, type: 2}
   terrainMaterial: {fileID: 2100000, guid: 3c70e9d85aa9cc3478a472f32c89b9fd, type: 2}
   previewParent: {fileID: 930323083}
   editorPreviewLOD: 0
@@ -976,7 +976,7 @@ MonoBehaviour:
     visibleDistThreshold: 1500
   - lod: 4
     visibleDistThreshold: 4000
-  terrainDataPackage: {fileID: 11400000, guid: 9a060aa01326b164b8ccb4e939deba68, type: 2}
+  terrainDataPackage: {fileID: 11400000, guid: f40971bfc58989141920a72958b937a0, type: 2}
   viewers: []
   mapMaterial: {fileID: 2100000, guid: 3c70e9d85aa9cc3478a472f32c89b9fd, type: 2}
 --- !u!114 &1926648407

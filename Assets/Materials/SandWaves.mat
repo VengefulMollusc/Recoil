@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Waves
+  m_Name: SandWaves
   m_Shader: {fileID: 4800000, guid: 47ad3e96aa885164ca57b4a506969032, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -39,8 +39,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
+        m_Texture: {fileID: 2800000, guid: ba480febc8df8724599459a9fff99ea0, type: 3}
+        m_Scale: {x: 10, y: 10}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
@@ -55,13 +55,12 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Amplitude: 1
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _GlossMapScale: 1
-    - _Glossiness: 0.7
+    - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _Metallic: 0
     - _Mode: 0
@@ -69,17 +68,13 @@ Material:
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _Speed: 1
-    - _SpeedGravity: 9.8
+    - _SpeedGravity: 0.3
     - _SrcBlend: 1
-    - _Steepness: 0.5
     - _UVSec: 0
-    - _Wavelength: 10
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.29790226, g: 0.5493304, b: 0.6985294, a: 1}
-    - _Direction: {r: 1, g: 0, b: 0, a: 0}
+    - _Color: {r: 1, g: 0.8323529, b: 0.5808823, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _WaveA: {r: 1, g: 1, b: 0.1, a: 200}
-    - _WaveB: {r: 0.5, g: 0, b: 0.05, a: 120}
-    - _WaveC: {r: 1, g: 0.25, b: 0.05, a: 80}
+    - _WaveA: {r: 1, g: 0, b: 0.5, a: 400}
+    - _WaveB: {r: 0, g: 1, b: 0.25, a: 200}
+    - _WaveC: {r: 1, g: 1, b: 0.15, a: 100}
