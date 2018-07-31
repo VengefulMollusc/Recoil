@@ -13,9 +13,10 @@ Shader "Custom/Waves" {
 		_WaveB ("Wave B", Vector) = (0, 1, 0.25, 10)
 		_WaveC ("Wave C", Vector) = (1, 1, 0.15, 4)
 
-		// [HideInInspector]
+		[HideInInspector]
 		_PlayerPosition ("Player Position", Vector) = (0, 0, 0, 0)
 		_FlatRange ("Flat Range", Float) = 10
+		_FlatRangeExt ("Flat Range Extension", Float) = 2
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" }
@@ -41,7 +42,7 @@ Shader "Custom/Waves" {
 		float4 _WaveA, _WaveB, _WaveC;
 
 		float3 _PlayerPosition;
-		float _FlatRange;
+		float _FlatRange , _FlatRangeExt;
 
 		// Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
 		// See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -82,13 +83,18 @@ Shader "Custom/Waves" {
 			float3 tangent = float3(1, 0, 0);
 			float3 binormal = float3(0, 0, 1);
 
-			float3 toPlayer = _PlayerPosition.xyz - worldPoint;
-			// float playerDistY = toPlayer.y;
-			float playerDistXZ = sqrt(toPlayer.x * toPlayer.x + toPlayer.z * toPlayer.z);
-
 			float playerDistModifier = 1;
-			if (playerDistXZ < _FlatRange){
-				playerDistModifier = playerDistXZ / _FlatRange;
+
+			float3 toPlayer = _PlayerPosition.xyz - worldPoint;
+			float yModifier = 1 - (toPlayer.y / (_FlatRange + _FlatRangeExt));
+			if (yModifier > 0){
+				float playerDistXZ = sqrt(toPlayer.x * toPlayer.x + toPlayer.z * toPlayer.z);
+				if (playerDistXZ < (_FlatRange + _FlatRangeExt) * yModifier) {
+					playerDistModifier = (playerDistXZ - _FlatRangeExt * yModifier) / (_FlatRange * yModifier);
+					if (playerDistModifier < 0){
+						playerDistModifier = 0;
+					}
+				}
 			}
 
 			float3 p = gridPoint;
