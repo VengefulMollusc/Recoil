@@ -90,6 +90,7 @@
 
 		float Displacement(float3 worldPoint, float2 texCoord, inout float3 tangent, inout float3 binormal, inout float playerDistModifier) {
 			float depthModifier = 1;
+			float slope = 0;
 
 			float3 toPlayer = _PlayerPosition.xyz - worldPoint;
 			float yModifier = 1 - (toPlayer.y / _SeaDepth);
@@ -109,9 +110,14 @@
 
 					depthModifier = playerDistModifier + (1 - yModifier);
 
+					// modify depthModifier here to change slope eqn etc.
+					// depthModifier *= depthModifier;
+
+					slope = 1 - abs(depthModifier * 2 - 1); // steepness here
+
 					#if !defined(SHADER_API_OPENGL)
 					fixed4 dispTextSample = tex2Dlod (_DispTex, float4(texCoord, 0, 0));
-					depthModifier += (dispTextSample.r - 0.5) * _DispStrength;
+					depthModifier += (dispTextSample.r - 0.5) * _DispStrength * slope;
 					#endif
 
 					if (depthModifier > 1)
@@ -119,23 +125,19 @@
 				}
 			}
 
-			// modify depthModifier here to change slope eqn etc.
-			depthModifier *= depthModifier;
-
-			// if (depthModifier < 1){
-			// 	float slope = (1 - depthModifier); // steepness here
-			// 	float2 d = normalize(float2(-toPlayer.x, -toPlayer.z));
-			// 	tangent += float3(
-			// 		-d.x * d.x * slope,
-			// 		d.x * slope,
-			// 		-d.x * d.y * slope
-			// 	);
-			// 	binormal += float3(
-			// 		-d.x * d.y * slope,
-			// 		d.y * slope,
-			// 		-d.y * d.y * slope
-			// 	);
-			// }
+			if (depthModifier < 1){
+				float2 d = normalize(float2(-toPlayer.x, -toPlayer.z));
+				tangent += float3(
+					-d.x * d.x * slope,
+					d.x * slope,
+					-d.x * d.y * slope
+				);
+				binormal += float3(
+					-d.x * d.y * slope,
+					d.y * slope,
+					-d.y * d.y * slope
+				);
+			}
 
 			return _SeaDepth * depthModifier;
 		}
