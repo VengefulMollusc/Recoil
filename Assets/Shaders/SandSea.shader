@@ -119,19 +119,23 @@
 				}
 			}
 
-			if (depthModifier < 1){
-				float2 d = normalize(float2(-toPlayer.x, -toPlayer.z));
-				tangent += float3(
-					-d.x * d.x * (1 - depthModifier),
-					d.x * (1 - depthModifier),
-					-d.x * d.y * (1 - depthModifier)
-				);
-				binormal += float3(
-					-d.x * d.y * (1 - depthModifier),
-					d.y * (1 - depthModifier),
-					-d.y * d.y * (1 - depthModifier)
-				);
-			}
+			// modify depthModifier here to change slope eqn etc.
+			depthModifier *= depthModifier;
+
+			// if (depthModifier < 1){
+			// 	float slope = (1 - depthModifier); // steepness here
+			// 	float2 d = normalize(float2(-toPlayer.x, -toPlayer.z));
+			// 	tangent += float3(
+			// 		-d.x * d.x * slope,
+			// 		d.x * slope,
+			// 		-d.x * d.y * slope
+			// 	);
+			// 	binormal += float3(
+			// 		-d.x * d.y * slope,
+			// 		d.y * slope,
+			// 		-d.y * d.y * slope
+			// 	);
+			// }
 
 			return _SeaDepth * depthModifier;
 		}
