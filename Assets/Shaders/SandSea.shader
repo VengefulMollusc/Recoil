@@ -88,7 +88,7 @@
 			);
 		}
 
-		float Displacement(float3 worldPoint, float2 texCoord, inout float playerDistModifier) {
+		float Displacement(float3 worldPoint, float2 texCoord, inout float3 tangent, inout float3 binormal, inout float playerDistModifier) {
 			float depthModifier = 1;
 
 			float3 toPlayer = _PlayerPosition.xyz - worldPoint;
@@ -119,6 +119,20 @@
 				}
 			}
 
+			if (depthModifier < 1){
+				float2 d = normalize(float2(-toPlayer.x, -toPlayer.z));
+				tangent += float3(
+					-d.x * d.x * (1 - depthModifier),
+					d.x * (1 - depthModifier),
+					-d.x * d.y * (1 - depthModifier)
+				);
+				binormal += float3(
+					-d.x * d.y * (1 - depthModifier),
+					d.y * (1 - depthModifier),
+					-d.y * d.y * (1 - depthModifier)
+				);
+			}
+
 			return _SeaDepth * depthModifier;
 		}
 
@@ -131,7 +145,7 @@
 			float playerDistModifier = 1;
 
 			float3 p = gridPoint;
-			p.y += Displacement(worldPoint, vertexData.texcoord.xy, playerDistModifier);
+			p.y += Displacement(worldPoint, vertexData.texcoord.xy, tangent, binormal, playerDistModifier);
 			p += GerstnerWave(_WaveA, worldPoint, tangent, binormal, playerDistModifier);
 			p += GerstnerWave(_WaveB, worldPoint, tangent, binormal, playerDistModifier);
 			p += GerstnerWave(_WaveC, worldPoint, tangent, binormal, playerDistModifier);
