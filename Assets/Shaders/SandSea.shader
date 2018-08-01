@@ -93,7 +93,8 @@
 			float slope = 0;
 
 			float3 toPlayer = _PlayerPosition.xyz - worldPoint;
-			float yModifier = 1 - (toPlayer.y / _SeaDepth);
+			float playerDistY = toPlayer.y - worldPoint.y;
+			float yModifier = 1 - (playerDistY - _SeaDepth * 0.25) / (_SeaDepth * 0.75);
 
 			if (yModifier < 0)
 				yModifier = 0;
