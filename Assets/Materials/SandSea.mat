@@ -66,7 +66,7 @@ Material:
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
-    - _DispStrength: 0.2
+    - _DispStrength: 0.25
     - _DstBlend: 0
     - _FlatRange: 8
     - _FlatRangeExt: 5

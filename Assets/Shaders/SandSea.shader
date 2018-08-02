@@ -106,11 +106,10 @@
 					#if !defined(SHADER_API_OPENGL)
 					float relativeHeight = (pointDepth - (1 - depthFactor)) / depthFactor;
 					float noiseStrength = 1 - abs(relativeHeight * 2 - 1);
-					fixed4 dispTextSample = tex2Dlod (_DispTex, float4(texCoord, 0, 0));
-					pointDepth += (dispTextSample.r - 0.5) * _DispStrength * noiseStrength * depthFactor;
-
-					if (pointDepth > 1)
-						pointDepth = 1;
+					float2 coord = float2(texCoord.x + _Time.y * 0.1, texCoord.y);
+					fixed4 dispTexSample = tex2Dlod (_DispTex, float4(coord, 0, 0));
+					pointDepth += (dispTexSample.r - 0.5) * _DispStrength * noiseStrength * depthFactor;
+					pointDepth = saturate(pointDepth);
 					#endif
 
 					if (pointDepth < 1 && playerDistXZ > _FlatRangeExt){
