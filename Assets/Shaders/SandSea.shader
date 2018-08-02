@@ -116,15 +116,15 @@
 					// modify depth here to change slope eqn etc.
 					// depth *= depth;
 
-					// slope = 1 - abs(pointDepth * 2 - 1); // steepness here
+					slope = 1 - abs(pointDepth * (1 - depthFactor) * 2 - 1); // steepness here
 
-					// #if !defined(SHADER_API_OPENGL)
-					// fixed4 dispTextSample = tex2Dlod (_DispTex, float4(texCoord, 0, 0));
-					// pointDepth += (dispTextSample.r - 0.5) * _DispStrength * slope;
-					// #endif
+					#if !defined(SHADER_API_OPENGL)
+					fixed4 dispTextSample = tex2Dlod (_DispTex, float4(texCoord, 0, 0));
+					pointDepth += (dispTextSample.r - 0.5) * _DispStrength * slope;
+					#endif
 
-					// if (pointDepth > 1)
-					// 	pointDepth = 1;
+					if (pointDepth > 1)
+						pointDepth = 1;
 				}
 			}
 

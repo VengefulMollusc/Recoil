@@ -729,7 +729,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waveMaterial: {fileID: 2100000, guid: 76b795b15ce31f34e865097a44f4c608, type: 2}
   targetObjectTransform: {fileID: 1478165007}
-  footOffset: -1
+  footOffset: 0
 --- !u!1 &1610597454
 GameObject:
   m_ObjectHideFlags: 0
