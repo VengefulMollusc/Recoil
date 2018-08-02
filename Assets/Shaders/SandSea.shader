@@ -125,7 +125,7 @@
 					#endif
 
 					if (pointDepth < 1 && playerDistXZ > _FlatRangeExt){
-						float slope = (_SeaDepth * depthFactor) * 0.5 / _FlatRange;
+						float slope = (_SeaDepth * depthFactor) * 0.4 / _FlatRange;
 						float2 d = normalize(float2(-toPlayer.x, -toPlayer.z));
 						tangent += float3(
 							-d.x * d.x * slope,
