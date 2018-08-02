@@ -58,7 +58,8 @@
 		UNITY_INSTANCING_CBUFFER_END
 
 		float3 GerstnerWave (float4 wave, float3 p, inout float3 tangent, inout float3 binormal, float pointDepth) {
-		    float steepness = wave.z * pointDepth;
+			float waveStrength = 0.25 + 0.75 * pointDepth; // alter this to change strength of pointDepth affecting wave
+		    float steepness = wave.z * waveStrength;
 		    float wavelength = wave.w;
 		    float k = 2 * UNITY_PI / wavelength;
 			float c = sqrt(_SpeedGravity / k);
