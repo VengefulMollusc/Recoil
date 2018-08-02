@@ -91,28 +91,17 @@
 
 		float Displacement(float3 worldPoint, float2 texCoord, inout float3 tangent, inout float3 binormal, inout float pointDepth) {
 			float3 toPlayer = _PlayerPosition.xyz - worldPoint;
-			float depthFactor = 1 - ((toPlayer.y - worldPoint.y) - _SeaDepth * 0.25) / (_SeaDepth * 0.75);
-
-			if (depthFactor < 0)
-				depthFactor = 0;
-			else if (depthFactor > 1)
-				depthFactor = 1;
+			float depthFactor = saturate(1 - ((toPlayer.y - worldPoint.y) - _SeaDepth * 0.25) / (_SeaDepth * 0.75));
 
 			if (depthFactor > 0){
 				float playerDistXZ = sqrt(toPlayer.x * toPlayer.x + toPlayer.z * toPlayer.z);
 				if (playerDistXZ < (_FlatRange + _FlatRangeExt)) {
 
-					float distFactor = 1 - (playerDistXZ - _FlatRangeExt) / _FlatRange;
-
-					if (distFactor < 0)
-						distFactor = 0;
-					else if (distFactor > 1)
-						distFactor = 1;
+					float distFactor = saturate(1 - (playerDistXZ - _FlatRangeExt) / _FlatRange);
 
 					pointDepth = 1 - depthFactor * distFactor;
 
-					// modify depth here to change slope eqn etc.
-					// depth *= depth;
+					// modify pointDepth here to change slope eqn etc.
 
 					#if !defined(SHADER_API_OPENGL)
 					float relativeHeight = (pointDepth - (1 - depthFactor)) / depthFactor;
