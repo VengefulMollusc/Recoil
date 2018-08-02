@@ -13,6 +13,12 @@ public class WaveShaderPositionTracker : MonoBehaviour
     void Update()
     {
         Vector3 newPosition = targetObjectTransform.position;
+
+        // accelerate movement of y position
+        float newY = trackedPosition.y + (newPosition.y - trackedPosition.y) * Time.deltaTime * 10f;
+        trackedPosition = new Vector3(trackedPosition.x, newY, trackedPosition.z);
+
+        // smooth movement
         float distanceMoved = Vector3.SqrMagnitude(newPosition - trackedPosition);
         trackedPosition = Vector3.MoveTowards(trackedPosition, newPosition, distanceMoved * Time.deltaTime);
 
