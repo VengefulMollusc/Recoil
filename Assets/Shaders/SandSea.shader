@@ -50,6 +50,8 @@
 		float _FlatRange , _FlatRangeExt, _SeaDepth, _DispStrength;
 		sampler2D _DispTex;
 
+		float4 _DispTex_ST;
+
 		// Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
 		// See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
 		// #pragma instancing_options assumeuniformscaling
@@ -106,8 +108,10 @@
 					#if !defined(SHADER_API_OPENGL)
 					float relativeHeight = (pointDepth - (1 - depthFactor)) / depthFactor;
 					float noiseStrength = 1 - abs(relativeHeight * 2 - 1);
+
 					float2 coord = float2(texCoord.x + _Time.y * 0.1, texCoord.y);
-					fixed4 dispTexSample = tex2Dlod (_DispTex, float4(coord, 0, 0));
+
+					fixed4 dispTexSample = tex2Dlod (_DispTex, float4(coord * _DispTex_ST, 0, 0));
 					pointDepth += (dispTexSample.r - 0.5) * _DispStrength * noiseStrength * depthFactor;
 					pointDepth = saturate(pointDepth);
 					#endif
