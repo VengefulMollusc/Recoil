@@ -89,8 +89,6 @@
 		}
 
 		float Displacement(float3 worldPoint, float2 texCoord, inout float3 tangent, inout float3 binormal, inout float pointDepth) {
-			float slope = 0;
-
 			float3 toPlayer = _PlayerPosition.xyz - worldPoint;
 			float depthFactor = 1 - ((toPlayer.y - worldPoint.y) - _SeaDepth * 0.25) / (_SeaDepth * 0.75);
 
@@ -115,11 +113,6 @@
 					// modify depth here to change slope eqn etc.
 					// depth *= depth;
 
-					if (playerDistXZ > _FlatRangeExt)
-						slope = (_SeaDepth * depthFactor) / _FlatRange;
-
-					// slope = 1 - abs(pointDepth * depthFactor * 2 - 1); // slope steepness here
-
 					#if !defined(SHADER_API_OPENGL)
 					float relativeHeight = (pointDepth - (1 - depthFactor)) / depthFactor;
 					float noiseStrength = 1 - abs(relativeHeight * 2 - 1);
@@ -129,22 +122,23 @@
 					if (pointDepth > 1)
 						pointDepth = 1;
 					#endif
+
+					if (pointDepth < 1 && playerDistXZ > _FlatRangeExt){
+						float slope = (_SeaDepth * depthFactor) * 0.5 / _FlatRange;
+						float2 d = normalize(float2(-toPlayer.x, -toPlayer.z));
+						tangent += float3(
+							-d.x * d.x * slope,
+							d.x * slope,
+							-d.x * d.y * slope
+						);
+						binormal += float3(
+							-d.x * d.y * slope,
+							d.y * slope,
+							-d.y * d.y * slope
+						);
+					}
 				}
 			}
-
-			// if (pointDepth < 1){
-			// 	float2 d = normalize(float2(-toPlayer.x, -toPlayer.z));
-			// 	tangent += float3(
-			// 		-d.x * d.x * slope,
-			// 		d.x * slope,
-			// 		-d.x * d.y * slope
-			// 	);
-			// 	binormal += float3(
-			// 		-d.x * d.y * slope,
-			// 		d.y * slope,
-			// 		-d.y * d.y * slope
-			// 	);
-			// }
 
 			return _SeaDepth * pointDepth;
 		}
