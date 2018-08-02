@@ -93,30 +93,30 @@
 
 			float3 toPlayer = _PlayerPosition.xyz - worldPoint;
 			float playerDistY = toPlayer.y - worldPoint.y;
-			float depthFactor = (playerDistY - _SeaDepth * 0.25) / (_SeaDepth * 0.75);
+			float depthFactor = 1 - (playerDistY - _SeaDepth * 0.25) / (_SeaDepth * 0.75);
 
 			if (depthFactor < 0)
 				depthFactor = 0;
 			else if (depthFactor > 1)
 				depthFactor = 1;
 
-			if (depthFactor < 1){
+			if (depthFactor > 0){
 				float playerDistXZ = sqrt(toPlayer.x * toPlayer.x + toPlayer.z * toPlayer.z);
 				if (playerDistXZ < (_FlatRange + _FlatRangeExt)) {
 
-					float distFactor = (playerDistXZ - _FlatRangeExt) / _FlatRange;
+					float distFactor = 1 - (playerDistXZ - _FlatRangeExt) / _FlatRange;
 
 					if (distFactor < 0)
 						distFactor = 0;
 					else if (distFactor > 1)
 						distFactor = 1;
 
-					pointDepth = 1 - (1 - depthFactor) * (1 - distFactor);
+					pointDepth = 1 - depthFactor * distFactor;
 
 					// modify depth here to change slope eqn etc.
 					// depth *= depth;
 
-					slope = 1 - abs(pointDepth * (1 - depthFactor) * 2 - 1); // steepness here
+					slope = 1 - abs(pointDepth * depthFactor * 2 - 1); // steepness here
 
 					#if !defined(SHADER_API_OPENGL)
 					fixed4 dispTextSample = tex2Dlod (_DispTex, float4(texCoord, 0, 0));
