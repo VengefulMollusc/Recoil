@@ -94,8 +94,10 @@
 
 		float Displacement(float3 worldPoint, float2 texCoord, inout float3 tangent, inout float3 binormal, inout float pointDepth) {
 			float3 toPlayer = _PlayerPosition.xyz - worldPoint;
-			// decimals here need to add to 1
-			float depthFactor = saturate(1 - ((toPlayer.y - worldPoint.y) - _SeaDepth * _DispMaxDepth) / (_SeaDepth * (1 - _DispMaxDepth)));
+
+			// float yDiff = (toPlayer.y - worldPoint.y + _SeaDepth); // (toPlayer.y - worldPoint.y + _SeaDepth)
+			// float depthFactor = saturate(1 - (yDiff - _SeaDepth * _DispMaxDepth) / (_SeaDepth * (1 - _DispMaxDepth)));
+			float depthFactor = saturate((toPlayer.y - worldPoint.y) / (_SeaDepth * (_DispMaxDepth - 1)));
 
 			if (depthFactor > 0){
 				float playerDistXZ = sqrt(toPlayer.x * toPlayer.x + toPlayer.z * toPlayer.z);
@@ -138,7 +140,7 @@
 				}
 			}
 
-			return _SeaDepth * pointDepth;
+			return _SeaDepth * (1 - pointDepth);
 		}
 
 		void vert(inout appdata_full vertexData) {
@@ -150,7 +152,7 @@
 			float pointDepth = 1;
 
 			float3 p = gridPoint;
-			p.y += Displacement(worldPoint, vertexData.texcoord.xy, tangent, binormal, pointDepth);
+			p.y -= Displacement(worldPoint, vertexData.texcoord.xy, tangent, binormal, pointDepth);
 			p += GerstnerWave(_WaveA, worldPoint, tangent, binormal, pointDepth);
 			p += GerstnerWave(_WaveB, worldPoint, tangent, binormal, pointDepth);
 			p += GerstnerWave(_WaveC, worldPoint, tangent, binormal, pointDepth);

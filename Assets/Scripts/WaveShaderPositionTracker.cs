@@ -43,7 +43,7 @@ public class WaveShaderPositionTracker : MonoBehaviour
             Vector3 bSize = bounds.size;
 
             // TODO: extend size to account for wave height etc.
-            Vector3 boundsCenter = new Vector3(bCenter.x, bCenter.y + halfDepth, bCenter.z);
+            Vector3 boundsCenter = new Vector3(bCenter.x, bCenter.y - halfDepth, bCenter.z);
             Vector3 boundsSize = new Vector3(bSize.x, seaDepth, bSize.z);
             mesh.bounds = new Bounds(boundsCenter, boundsSize);
         }
