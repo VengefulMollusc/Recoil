@@ -115,15 +115,20 @@
 					// modify depth here to change slope eqn etc.
 					// depth *= depth;
 
-					slope = 1 - abs(pointDepth * depthFactor * 2 - 1); // slope steepness here
+					if (playerDistXZ > _FlatRangeExt)
+						slope = (_SeaDepth * depthFactor) / _FlatRange;
+
+					// slope = 1 - abs(pointDepth * depthFactor * 2 - 1); // slope steepness here
 
 					#if !defined(SHADER_API_OPENGL)
+					float relativeHeight = (pointDepth - (1 - depthFactor)) / depthFactor;
+					float noiseStrength = 1 - abs(relativeHeight * 2 - 1);
 					fixed4 dispTextSample = tex2Dlod (_DispTex, float4(texCoord, 0, 0));
-					pointDepth += (dispTextSample.r - 0.5) * _DispStrength * slope;
-					#endif
+					pointDepth += (dispTextSample.r - 0.5) * _DispStrength * noiseStrength * depthFactor;
 
 					if (pointDepth > 1)
 						pointDepth = 1;
+					#endif
 				}
 			}
 
