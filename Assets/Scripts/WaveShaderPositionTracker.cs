@@ -6,11 +6,16 @@ public class WaveShaderPositionTracker : MonoBehaviour
 {
     public Material waveMaterial;
     public Transform targetObjectTransform;
-    public float footOffset;
+    public float heightOffset;
+
+    private Vector3 trackedPosition;
 
     void Update()
     {
-        Vector3 position = targetObjectTransform.position;
-        waveMaterial.SetVector("_PlayerPosition", new Vector4(position.x, position.y + footOffset, position.z, 0));
+        Vector3 newPosition = targetObjectTransform.position;
+        float distanceMoved = Vector3.SqrMagnitude(newPosition - trackedPosition);
+        trackedPosition = Vector3.MoveTowards(trackedPosition, newPosition, distanceMoved * Time.deltaTime);
+
+        waveMaterial.SetVector("_PlayerPosition", new Vector4(trackedPosition.x, trackedPosition.y + heightOffset, trackedPosition.z, 0));
     }
 }
