@@ -57,8 +57,8 @@
 			// put more per-instance properties here
 		UNITY_INSTANCING_CBUFFER_END
 
-		float3 GerstnerWave (float4 wave, float3 p, inout float3 tangent, inout float3 binormal, float distModifier) {
-		    float steepness = wave.z * distModifier;
+		float3 GerstnerWave (float4 wave, float3 p, inout float3 tangent, inout float3 binormal, float pointDepth) {
+		    float steepness = wave.z * pointDepth;
 		    float wavelength = wave.w;
 		    float k = 2 * UNITY_PI / wavelength;
 			float c = sqrt(_SpeedGravity / k);
@@ -88,59 +88,61 @@
 			);
 		}
 
-		float Displacement(float3 worldPoint, float2 texCoord, inout float3 tangent, inout float3 binormal, inout float playerDistModifier) {
-			float depthModifier = 1;
+		float Displacement(float3 worldPoint, float2 texCoord, inout float3 tangent, inout float3 binormal, inout float pointDepth) {
 			float slope = 0;
 
 			float3 toPlayer = _PlayerPosition.xyz - worldPoint;
 			float playerDistY = toPlayer.y - worldPoint.y;
-			float yModifier = 1 - (playerDistY - _SeaDepth * 0.25) / (_SeaDepth * 0.75);
+			float depthFactor = (playerDistY - _SeaDepth * 0.25) / (_SeaDepth * 0.75);
 
-			if (yModifier < 0)
-				yModifier = 0;
-			else if (yModifier > 1)
-				yModifier = 1;
+			if (depthFactor < 0)
+				depthFactor = 0;
+			else if (depthFactor > 1)
+				depthFactor = 1;
 
-			if (yModifier > 0){
+			if (depthFactor < 1){
 				float playerDistXZ = sqrt(toPlayer.x * toPlayer.x + toPlayer.z * toPlayer.z);
-				if (playerDistXZ < (_FlatRange + _FlatRangeExt) * yModifier) {
-					playerDistModifier = (playerDistXZ - _FlatRangeExt * yModifier) / (_FlatRange * yModifier);
-					if (playerDistModifier < 0){
-						playerDistModifier = 0;
-					}
+				if (playerDistXZ < (_FlatRange + _FlatRangeExt)) {
 
-					depthModifier = playerDistModifier + (1 - yModifier);
+					float distFactor = (playerDistXZ - _FlatRangeExt) / _FlatRange;
 
-					// modify depthModifier here to change slope eqn etc.
-					// depthModifier *= depthModifier;
+					if (distFactor < 0)
+						distFactor = 0;
+					else if (distFactor > 1)
+						distFactor = 1;
 
-					slope = 1 - abs(depthModifier * 2 - 1); // steepness here
+					pointDepth = 1 - (1 - depthFactor) * (1 - distFactor);
 
-					#if !defined(SHADER_API_OPENGL)
-					fixed4 dispTextSample = tex2Dlod (_DispTex, float4(texCoord, 0, 0));
-					depthModifier += (dispTextSample.r - 0.5) * _DispStrength * slope;
-					#endif
+					// modify depth here to change slope eqn etc.
+					// depth *= depth;
 
-					if (depthModifier > 1)
-						depthModifier = 1;
+					// slope = 1 - abs(pointDepth * 2 - 1); // steepness here
+
+					// #if !defined(SHADER_API_OPENGL)
+					// fixed4 dispTextSample = tex2Dlod (_DispTex, float4(texCoord, 0, 0));
+					// pointDepth += (dispTextSample.r - 0.5) * _DispStrength * slope;
+					// #endif
+
+					// if (pointDepth > 1)
+					// 	pointDepth = 1;
 				}
 			}
 
-			if (depthModifier < 1){
-				float2 d = normalize(float2(-toPlayer.x, -toPlayer.z));
-				tangent += float3(
-					-d.x * d.x * slope,
-					d.x * slope,
-					-d.x * d.y * slope
-				);
-				binormal += float3(
-					-d.x * d.y * slope,
-					d.y * slope,
-					-d.y * d.y * slope
-				);
-			}
+			// if (pointDepth < 1){
+			// 	float2 d = normalize(float2(-toPlayer.x, -toPlayer.z));
+			// 	tangent += float3(
+			// 		-d.x * d.x * slope,
+			// 		d.x * slope,
+			// 		-d.x * d.y * slope
+			// 	);
+			// 	binormal += float3(
+			// 		-d.x * d.y * slope,
+			// 		d.y * slope,
+			// 		-d.y * d.y * slope
+			// 	);
+			// }
 
-			return _SeaDepth * depthModifier;
+			return _SeaDepth * pointDepth;
 		}
 
 		void vert(inout appdata_full vertexData) {
@@ -149,13 +151,13 @@
 			float3 tangent = float3(1, 0, 0);
 			float3 binormal = float3(0, 0, 1);
 
-			float playerDistModifier = 1;
+			float pointDepth = 1;
 
 			float3 p = gridPoint;
-			p.y += Displacement(worldPoint, vertexData.texcoord.xy, tangent, binormal, playerDistModifier);
-			p += GerstnerWave(_WaveA, worldPoint, tangent, binormal, playerDistModifier);
-			p += GerstnerWave(_WaveB, worldPoint, tangent, binormal, playerDistModifier);
-			p += GerstnerWave(_WaveC, worldPoint, tangent, binormal, playerDistModifier);
+			p.y += Displacement(worldPoint, vertexData.texcoord.xy, tangent, binormal, pointDepth);
+			p += GerstnerWave(_WaveA, worldPoint, tangent, binormal, pointDepth);
+			p += GerstnerWave(_WaveB, worldPoint, tangent, binormal, pointDepth);
+			p += GerstnerWave(_WaveC, worldPoint, tangent, binormal, pointDepth);
 			float3 normal = normalize(cross(binormal, tangent));
 			vertexData.vertex.xyz = p;
 			vertexData.normal = normal;
