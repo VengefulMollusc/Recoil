@@ -24,4 +24,14 @@ public class WaveShaderPositionTracker : MonoBehaviour
 
         waveMaterial.SetVector("_PlayerPosition", new Vector4(trackedPosition.x, trackedPosition.y + heightOffset, trackedPosition.z, 0));
     }
+
+    /*
+     * TODO
+     *
+     * use waveMaterial.GetFloat("...") etc to cache displacement and wave settings.
+     *
+     * Add methods to calculate shader depth/height/slope etc given world position.
+     *
+     *  - For interactions with sand volume
+     */
 }
