@@ -15,8 +15,9 @@
 		_WaveC ("Wave C", Vector) = (1, 1, 0.15, 4)
 
 		[Header(Player Displacement)]
-		_FlatRange ("Flat Range", Float) = 10
+		_DispRange ("Displacement Range", Float) = 10
 		_FlatRangeExt ("Flat Range Extension", Float) = 2
+		_DispMaxDepth ("Depth for max displacement", Range(0, 1)) = 1
 		_DispTex ("Displacement (B/W)", 2D) = "white" {}
 		_DispStrength ("Displacement tex strength", Float) = 0.2
 
@@ -47,7 +48,7 @@
 		float4 _WaveA, _WaveB, _WaveC;
 
 		float3 _PlayerPosition;
-		float _FlatRange , _FlatRangeExt, _SeaDepth, _DispStrength;
+		float _DispRange , _FlatRangeExt, _SeaDepth, _DispStrength, _DispMaxDepth;
 		sampler2D _DispTex;
 
 		float4 _DispTex_ST;
@@ -93,13 +94,14 @@
 
 		float Displacement(float3 worldPoint, float2 texCoord, inout float3 tangent, inout float3 binormal, inout float pointDepth) {
 			float3 toPlayer = _PlayerPosition.xyz - worldPoint;
-			float depthFactor = saturate(1 - ((toPlayer.y - worldPoint.y) - _SeaDepth * 0.25) / (_SeaDepth * 0.75));
+			// decimals here need to add to 1
+			float depthFactor = saturate(1 - ((toPlayer.y - worldPoint.y) - _SeaDepth * _DispMaxDepth) / (_SeaDepth * (1 - _DispMaxDepth)));
 
 			if (depthFactor > 0){
 				float playerDistXZ = sqrt(toPlayer.x * toPlayer.x + toPlayer.z * toPlayer.z);
-				if (playerDistXZ < (_FlatRange + _FlatRangeExt)) {
+				if (playerDistXZ < (_DispRange + _FlatRangeExt)) {
 
-					float distFactor = saturate(1 - (playerDistXZ - _FlatRangeExt) / _FlatRange);
+					float distFactor = saturate(1 - (playerDistXZ - _FlatRangeExt) / _DispRange);
 
 					pointDepth = 1 - depthFactor * distFactor;
 
@@ -120,7 +122,7 @@
 
 					// Adjust normals etc to account for displacement slope
 					if (pointDepth < 1 && playerDistXZ > _FlatRangeExt){
-						float slope = (_SeaDepth * depthFactor) * 0.4 / _FlatRange;
+						float slope = (_SeaDepth * depthFactor) * 0.4 / _DispRange;
 						float2 d = normalize(float2(-toPlayer.x, -toPlayer.z));
 						tangent += float3(
 							-d.x * d.x * slope,

@@ -66,6 +66,7 @@ Material:
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
+    - _DispRange: 8
     - _DispStrength: 0.25
     - _DstBlend: 0
     - _FlatRange: 8
@@ -87,7 +88,7 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _PlayerPosition: {r: 0.56498224, g: -0.6066589, b: 0, a: 0}
+    - _PlayerPosition: {r: 0, g: 0.000041881674, b: 0, a: 0}
     - _WaveA: {r: 1, g: 0, b: 0.5, a: 10}
     - _WaveB: {r: 0, g: 1, b: 0.25, a: 10}
     - _WaveC: {r: 1, g: 1, b: 0.15, a: 4}
