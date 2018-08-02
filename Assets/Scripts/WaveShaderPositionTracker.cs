@@ -32,6 +32,21 @@ public class WaveShaderPositionTracker : MonoBehaviour
         dispRange = waveMaterial.GetFloat("_DispRange");
         flatRangeExt = waveMaterial.GetFloat("_FlatRangeExt");
         dispMaxDepth = waveMaterial.GetFloat("_DispMaxDepth");
+
+        // Set bounds to avoid early frustum culling
+        float halfDepth = seaDepth * 0.5f;
+        foreach (MeshFilter filter in GetComponentsInChildren<MeshFilter>())
+        {
+            Mesh mesh = filter.mesh;
+            Bounds bounds = mesh.bounds;
+            Vector3 bCenter = bounds.center;
+            Vector3 bSize = bounds.size;
+
+            // TODO: extend size to account for wave height etc.
+            Vector3 boundsCenter = new Vector3(bCenter.x, bCenter.y + halfDepth, bCenter.z);
+            Vector3 boundsSize = new Vector3(bSize.x, seaDepth, bSize.z);
+            mesh.bounds = new Bounds(boundsCenter, boundsSize);
+        }
     }
 
     void Update()
