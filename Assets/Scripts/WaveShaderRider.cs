@@ -22,16 +22,11 @@ public class WaveShaderRider : MonoBehaviour
 
     void Update()
     {
-        Vector3 position = transform.position;
-        WavePositionInfo info = wave.CalculateDepthAndNormalAtPoint(position);
+        WavePositionInfo info = wave.CalculateDepthAndNormalAtPoint(transform.position);
 
-        // match this object to wave vertical position
-        transform.position = new Vector3(position.x, info.position.y, position.z);
-
-        // apply wave horizontal movement to child transform
-        if (waveMovementStrength > 0f)
-            childTransform.localPosition = new Vector3(info.movement.x * waveMovementStrength, 0f, info.movement.z * waveMovementStrength);
-
+        // match child to wave position, taking into account movementStrength for horizontal axes
+        childTransform.position = new Vector3(info.position.x * waveMovementStrength, info.position.y, info.position.z * waveMovementStrength);
+        
         // apply wave normal tilt to child transform
         if (tiltStrength > 0f)
         {
