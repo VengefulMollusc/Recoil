@@ -144,6 +144,8 @@ public class WaveShaderPositionTracker : MonoBehaviour
 
                 pointDepth = 1 - depthFactor * distFactor;
 
+                pointDepth = Mathf.SmoothStep(0f, 1, pointDepth);
+
                 // Adjust normals etc to account for displacement slope
                 if (pointDepth < 1 && playerDistXZ > flatRangeExt)
                 {

@@ -109,6 +109,7 @@
 					pointDepth = 1 - depthFactor * distFactor;
 
 					// modify pointDepth here to change slope eqn etc.
+					pointDepth = smoothstep(0, 1, pointDepth);
 
 					// THIS #if SECTION: apply noise-texture based displacement to inside of displacement area
 					#if !defined(SHADER_API_OPENGL)
