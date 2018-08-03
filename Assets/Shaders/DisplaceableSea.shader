@@ -49,9 +49,12 @@
 
 		float3 _PlayerPosition;
 		float _DispRange , _FlatRangeExt, _SeaDepth, _DispStrength, _DispMaxDepth;
-		sampler2D _DispTex;
 
+		sampler2D _DispTex;
 		float4 _DispTex_ST;
+		
+		float unityTime;
+		float timeFactor;
 
 		// Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
 		// See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -67,7 +70,7 @@
 		    float k = 2 * UNITY_PI / wavelength;
 			float c = sqrt(_SpeedGravity / k);
 			float2 d = normalize(wave.xy);
-			float f = k * (dot(d, p.xz) - c * _Time.y);
+			float f = k * (dot(d, p.xz) - c * timeFactor);
 			float a = steepness / k;
 
 			float sinF = sin(f);
@@ -95,8 +98,6 @@
 		float Displacement(float3 worldPoint, float2 texCoord, inout float3 tangent, inout float3 binormal, inout float pointDepth) {
 			float3 toPlayer = _PlayerPosition.xyz - worldPoint;
 
-			// float yDiff = (toPlayer.y - worldPoint.y + _SeaDepth); // (toPlayer.y - worldPoint.y + _SeaDepth)
-			// float depthFactor = saturate(1 - (yDiff - _SeaDepth * _DispMaxDepth) / (_SeaDepth * (1 - _DispMaxDepth)));
 			float depthFactor = saturate((toPlayer.y - worldPoint.y) / (_SeaDepth * (_DispMaxDepth - 1)));
 
 			if (depthFactor > 0){
@@ -114,7 +115,7 @@
 					float relativeHeight = (pointDepth - (1 - depthFactor)) / depthFactor;
 					float noiseStrength = 1 - abs(relativeHeight * 2 - 1);
 
-					float2 coord = float2(texCoord.x + _Time.y * 0.1, texCoord.y);
+					float2 coord = float2(texCoord.x + timeFactor * 0.1, texCoord.y);
 					fixed4 dispTexSample = tex2Dlod (_DispTex, float4(coord * _DispTex_ST, 0, 0));
 
 					// remove noiseStrength here for linear increase to bottom
@@ -144,6 +145,11 @@
 		}
 
 		void vert(inout appdata_full vertexData) {
+			if (unityTime > 0)
+				timeFactor = unityTime;
+			else 
+				timeFactor = _Time.y;
+
 			float3 gridPoint = vertexData.vertex.xyz;
 			float3 worldPoint = mul(unity_ObjectToWorld, vertexData.vertex).xyz;
 			float3 tangent = float3(1, 0, 0);

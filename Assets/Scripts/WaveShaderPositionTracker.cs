@@ -16,6 +16,7 @@ public class WaveShaderPositionTracker : MonoBehaviour
     private Vector4 waveA;
     private Vector4 waveB;
     private Vector4 waveC;
+    private float timeFactor;
 
     // Displacement settings
     private float dispRange;
@@ -32,6 +33,8 @@ public class WaveShaderPositionTracker : MonoBehaviour
         dispRange = waveMaterial.GetFloat("_DispRange");
         flatRangeExt = waveMaterial.GetFloat("_FlatRangeExt");
         dispMaxDepth = waveMaterial.GetFloat("_DispMaxDepth");
+
+        trackedPosition = targetObjectTransform.position;
 
         // Set bounds to avoid early frustum culling
         float halfDepth = seaDepth * 0.5f;
@@ -52,6 +55,9 @@ public class WaveShaderPositionTracker : MonoBehaviour
     void Update()
     {
         Vector3 newPosition = targetObjectTransform.position;
+
+        timeFactor = Time.timeSinceLevelLoad;
+        waveMaterial.SetFloat("unityTime", timeFactor);
 
         // accelerate movement of y position
         float newY = trackedPosition.y + (newPosition.y - trackedPosition.y) * Time.deltaTime * 10f;
@@ -74,12 +80,15 @@ public class WaveShaderPositionTracker : MonoBehaviour
 
         float pointDepth = 1;
 
-        Vector3 wavePosition = new Vector3(pos.x, transform.position.y, pos.z); // flatten to base of sea
-        wavePosition.y += Displacement(pos, ref tangent, ref binormal, ref pointDepth);
+        pos = new Vector3(pos.x, transform.position.y, pos.z); // flatten to base of sea
+
+        Vector3 wavePosition = pos;
+        wavePosition.y -= Displacement(pos, ref tangent, ref binormal, ref pointDepth);
         wavePosition += GerstnerWave(waveA, pos, ref tangent, ref binormal, pointDepth);
         wavePosition += GerstnerWave(waveB, pos, ref tangent, ref binormal, pointDepth);
         wavePosition += GerstnerWave(waveC, pos, ref tangent, ref binormal, pointDepth);
         Vector3 waveNormal = Vector3.Cross(binormal, tangent);
+
         return new WavePositionInfo(wavePosition, waveNormal);
     }
 
@@ -91,7 +100,7 @@ public class WaveShaderPositionTracker : MonoBehaviour
         float k = 2 * Mathf.PI / wavelength;
         float c = Mathf.Sqrt(speedGravity / k);
         Vector2 d = new Vector2(wave.x, wave.y).normalized;
-        float f = k * (Vector2.Dot(d, new Vector2(p.x, p.z)) - c * Time.timeSinceLevelLoad);
+        float f = k * (Vector2.Dot(d, new Vector2(p.x, p.z)) - c * timeFactor);
         float a = steepness / k;
 
         float sinF = Mathf.Sin(f);
@@ -119,8 +128,9 @@ public class WaveShaderPositionTracker : MonoBehaviour
     private float Displacement(Vector3 worldPoint, ref Vector3 tangent, ref Vector3 binormal, ref float pointDepth)
     {
         Vector3 toPlayer = trackedPosition - worldPoint;
+
         // decimals here need to add to 1
-        float depthFactor = Mathf.Clamp01(1 - ((toPlayer.y - worldPoint.y) - seaDepth * dispMaxDepth) / (seaDepth * (1 - dispMaxDepth)));
+        float depthFactor = Mathf.Clamp01((toPlayer.y - worldPoint.y) / (seaDepth * (dispMaxDepth - 1)));
 
         if (depthFactor > 0)
         {
@@ -151,7 +161,7 @@ public class WaveShaderPositionTracker : MonoBehaviour
             }
         }
 
-        return seaDepth * pointDepth;
+        return seaDepth * (1 - pointDepth);
     }
 }
 
