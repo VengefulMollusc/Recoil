@@ -9,6 +9,7 @@ public class WaveShaderPositionTracker : MonoBehaviour
     public float heightOffset;
 
     private Vector3 trackedPosition;
+    private MeshFilter[] childMeshes;
 
     // Wave settings
     private float seaDepth;
@@ -38,7 +39,8 @@ public class WaveShaderPositionTracker : MonoBehaviour
 
         // Set bounds to avoid early frustum culling
         float halfDepth = seaDepth * 0.5f;
-        foreach (MeshFilter filter in GetComponentsInChildren<MeshFilter>())
+        childMeshes = GetComponentsInChildren<MeshFilter>();
+        foreach (MeshFilter filter in childMeshes)
         {
             Mesh mesh = filter.mesh;
             Bounds bounds = mesh.bounds;
@@ -80,6 +82,7 @@ public class WaveShaderPositionTracker : MonoBehaviour
 
         float pointDepth = 1;
 
+        //pos = NearestVertexTo(new Vector3(pos.x, transform.position.y, pos.z)); // flatten to base of sea
         pos = new Vector3(pos.x, transform.position.y, pos.z); // flatten to base of sea
 
         Vector3 wavePosition = pos;
@@ -89,7 +92,7 @@ public class WaveShaderPositionTracker : MonoBehaviour
         wavePosition += GerstnerWave(waveC, pos, ref tangent, ref binormal, pointDepth);
         Vector3 waveNormal = Vector3.Cross(binormal, tangent);
 
-        return new WavePositionInfo(wavePosition, waveNormal);
+        return new WavePositionInfo(wavePosition, waveNormal, wavePosition - pos);
     }
 
     private Vector3 GerstnerWave(Vector4 wave, Vector3 p, ref Vector3 tangent, ref Vector3 binormal, float pointDepth)
@@ -163,16 +166,61 @@ public class WaveShaderPositionTracker : MonoBehaviour
 
         return seaDepth * (1 - pointDepth);
     }
+
+    //private Vector3 NearestVertexTo(Vector3 point)
+    //{
+    //    MeshFilter closestMesh = GetClosestWaveMesh(point);
+
+    //    // convert point to local space
+    //    point = closestMesh.transform.InverseTransformPoint(point);
+
+    //    Mesh mesh = closestMesh.mesh;
+    //    float minDistanceSqr = Mathf.Infinity;
+    //    Vector3 nearestVertex = Vector3.zero;
+    //    // scan all vertices to find nearest
+    //    foreach (Vector3 vertex in mesh.vertices)
+    //    {
+    //        Vector3 diff = point - vertex;
+    //        float distSqr = diff.sqrMagnitude;
+    //        if (distSqr < minDistanceSqr)
+    //        {
+    //            minDistanceSqr = distSqr;
+    //            nearestVertex = vertex;
+    //        }
+    //    }
+    //    // convert nearest vertex back to world space
+    //    return closestMesh.transform.TransformPoint(nearestVertex);
+    //    //return nearestVertex;
+    //}
+
+    //private MeshFilter GetClosestWaveMesh(Vector3 point)
+    //{
+    //    float minDistanceSqr = Mathf.Infinity;
+    //    MeshFilter closestMesh = null;
+    //    foreach (MeshFilter filter in childMeshes)
+    //    {
+    //        Vector3 diff = point - filter.gameObject.transform.position;
+    //        float distSqr = diff.sqrMagnitude;
+    //        if (distSqr < minDistanceSqr)
+    //        {
+    //            minDistanceSqr = distSqr;
+    //            closestMesh = filter;
+    //        }
+    //    }
+    //    return closestMesh;
+    //}
 }
 
 public class WavePositionInfo
 {
     public Vector3 position;
     public Vector3 normal;
+    public Vector3 movement;
 
-    public WavePositionInfo(Vector3 pos, Vector3 nor)
+    public WavePositionInfo(Vector3 pos, Vector3 nor, Vector3 mov)
     {
         position = pos;
         normal = nor;
+        movement = mov;
     }
 }
