@@ -81,8 +81,7 @@ public class WaveShaderPositionTracker : MonoBehaviour
         Vector3 binormal = new Vector3(0, 0, 1);
 
         float pointDepth = 1;
-
-        //pos = NearestVertexTo(new Vector3(pos.x, transform.position.y, pos.z)); // flatten to base of sea
+        
         pos = new Vector3(pos.x, transform.position.y, pos.z); // flatten to base of sea
 
         Vector3 wavePosition = pos;
@@ -166,49 +165,6 @@ public class WaveShaderPositionTracker : MonoBehaviour
 
         return seaDepth * (1 - pointDepth);
     }
-
-    //private Vector3 NearestVertexTo(Vector3 point)
-    //{
-    //    MeshFilter closestMesh = GetClosestWaveMesh(point);
-
-    //    // convert point to local space
-    //    point = closestMesh.transform.InverseTransformPoint(point);
-
-    //    Mesh mesh = closestMesh.mesh;
-    //    float minDistanceSqr = Mathf.Infinity;
-    //    Vector3 nearestVertex = Vector3.zero;
-    //    // scan all vertices to find nearest
-    //    foreach (Vector3 vertex in mesh.vertices)
-    //    {
-    //        Vector3 diff = point - vertex;
-    //        float distSqr = diff.sqrMagnitude;
-    //        if (distSqr < minDistanceSqr)
-    //        {
-    //            minDistanceSqr = distSqr;
-    //            nearestVertex = vertex;
-    //        }
-    //    }
-    //    // convert nearest vertex back to world space
-    //    return closestMesh.transform.TransformPoint(nearestVertex);
-    //    //return nearestVertex;
-    //}
-
-    //private MeshFilter GetClosestWaveMesh(Vector3 point)
-    //{
-    //    float minDistanceSqr = Mathf.Infinity;
-    //    MeshFilter closestMesh = null;
-    //    foreach (MeshFilter filter in childMeshes)
-    //    {
-    //        Vector3 diff = point - filter.gameObject.transform.position;
-    //        float distSqr = diff.sqrMagnitude;
-    //        if (distSqr < minDistanceSqr)
-    //        {
-    //            minDistanceSqr = distSqr;
-    //            closestMesh = filter;
-    //        }
-    //    }
-    //    return closestMesh;
-    //}
 }
 
 public class WavePositionInfo
