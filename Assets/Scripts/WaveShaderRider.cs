@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class WaveShaderRider : MonoBehaviour
 {
-
     public WaveShaderPositionTracker wave;
+    [Range(0, 1)] public float waveMovementStrength = 1f;
+    [Range(0, 1)] public float tiltStrength = 1f;
 
     private Transform childTransform;
 
@@ -23,12 +24,19 @@ public class WaveShaderRider : MonoBehaviour
     {
         Vector3 position = transform.position;
         WavePositionInfo info = wave.CalculateDepthAndNormalAtPoint(position);
+
+        // match this object to wave vertical position
         transform.position = new Vector3(position.x, info.position.y, position.z);
 
-        //Vector2 horMovement = new Vector2(info.position.x - position.x, info.position.z - position.z) * 0.1f;
-        //transform.position = new Vector3(position.x + horMovement.x, info.position.y, position.z + horMovement.y);
+        // apply wave horizontal movement to child transform
+        if (waveMovementStrength > 0f)
+            childTransform.localPosition = new Vector3(info.movement.x * waveMovementStrength, 0f, info.movement.z * waveMovementStrength);
 
-        childTransform.localPosition = new Vector3(info.movement.x, 0f, info.movement.z);
-        childTransform.rotation = Quaternion.LookRotation(transform.forward, info.normal);
+        // apply wave normal tilt to child transform
+        if (tiltStrength > 0f)
+        {
+            Vector3 tilt = new Vector3(info.normal.x * tiltStrength, info.normal.y, info.normal.z * tiltStrength).normalized;
+            childTransform.rotation = Quaternion.FromToRotation(transform.up, tilt);
+        }
     }
 }
