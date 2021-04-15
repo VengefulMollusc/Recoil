@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: SandWaves
-  m_Shader: {fileID: 4800000, guid: 47ad3e96aa885164ca57b4a506969032, type: 3}
+  m_Name: SandSea
+  m_Shader: {fileID: 4800000, guid: 0b27e40416d7d584ca7331d0c7d34f2a, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -34,13 +34,21 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _DispTex:
+        m_Texture: {fileID: 2800000, guid: 3325a0869228a684d8db6263f3964f47, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DisplacementTex:
+        m_Texture: {fileID: 2800000, guid: 3325a0869228a684d8db6263f3964f47, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _EmissionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: ba480febc8df8724599459a9fff99ea0, type: 3}
-        m_Scale: {x: 10, y: 10}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
@@ -58,26 +66,30 @@ Material:
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
+    - _DispMaxDepth: 0.3
+    - _DispRange: 8
+    - _DispStrength: 0.25
     - _DstBlend: 0
-    - _FlatRange: 100
-    - _FlatRangeExt: 20
+    - _FlatRange: 8
+    - _FlatRangeExt: 5
     - _GlossMapScale: 1
-    - _Glossiness: 0.5
+    - _Glossiness: 0
     - _GlossyReflections: 1
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
+    - _SeaDepth: 10
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _SpeedGravity: 0.3
+    - _SpeedGravity: 9.8
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 1, g: 0.8323529, b: 0.5808823, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _PlayerPosition: {r: -264.1957, g: 73.12925, b: 385.8301, a: 0}
-    - _WaveA: {r: 1, g: 0, b: 0.5, a: 400}
-    - _WaveB: {r: 0, g: 1, b: 0.25, a: 200}
-    - _WaveC: {r: 1, g: 1, b: 0.15, a: 100}
+    - _PlayerPosition: {r: 0, g: -10, b: 0, a: 0}
+    - _WaveA: {r: 1, g: 0, b: 0.5, a: 10}
+    - _WaveB: {r: 0, g: 1, b: 0.25, a: 10}
+    - _WaveC: {r: 1, g: 1, b: 0.15, a: 4}

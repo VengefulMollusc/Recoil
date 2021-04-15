@@ -39,7 +39,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 41ab41fb248b3c340867cba869bec748, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -60,6 +60,7 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
+    - _FlatRange: 10
     - _GlossMapScale: 1
     - _Glossiness: 0.7
     - _GlossyReflections: 1
@@ -80,6 +81,7 @@ Material:
     - _Color: {r: 0.29790226, g: 0.5493304, b: 0.6985294, a: 1}
     - _Direction: {r: 1, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _PlayerPosition: {r: 0, g: 0, b: 0, a: 0}
     - _WaveA: {r: 1, g: 1, b: 0.1, a: 200}
     - _WaveB: {r: 0.5, g: 0, b: 0.05, a: 120}
     - _WaveC: {r: 1, g: 0.25, b: 0.05, a: 80}

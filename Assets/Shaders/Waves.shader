@@ -12,6 +12,11 @@ Shader "Custom/Waves" {
 		_WaveA ("Wave A (dir, steepness, wavelength)", Vector) = (1, 0, 0.5, 10)
 		_WaveB ("Wave B", Vector) = (0, 1, 0.25, 10)
 		_WaveC ("Wave C", Vector) = (1, 1, 0.15, 4)
+
+		[HideInInspector]
+		_PlayerPosition ("Player Position", Vector) = (0, 0, 0, 0)
+		_FlatRange ("Flat Range", Float) = 10
+		_FlatRangeExt ("Flat Range Extension", Float) = 2
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" }
@@ -36,6 +41,9 @@ Shader "Custom/Waves" {
 		float _SpeedGravity;
 		float4 _WaveA, _WaveB, _WaveC;
 
+		float3 _PlayerPosition;
+		float _FlatRange , _FlatRangeExt;
+
 		// Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
 		// See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
 		// #pragma instancing_options assumeuniformscaling
@@ -43,31 +51,34 @@ Shader "Custom/Waves" {
 			// put more per-instance properties here
 		UNITY_INSTANCING_CBUFFER_END
 
-		float3 GerstnerWave (
-			float4 wave, float3 p, inout float3 tangent, inout float3 binormal
-		) {
-		    float steepness = wave.z;
+		float3 GerstnerWave (float4 wave, float3 p, inout float3 tangent, inout float3 binormal, float distModifier) {
+		    float steepness = wave.z * distModifier;
 		    float wavelength = wave.w;
 		    float k = 2 * UNITY_PI / wavelength;
-			float c = sqrt(_SpeedGravity / k); // Modify this for speed/"gravity"
+			float c = sqrt(_SpeedGravity / k);
 			float2 d = normalize(wave.xy);
 			float f = k * (dot(d, p.xz) - c * _Time.y);
 			float a = steepness / k;
 
+			float sinF = sin(f);
+			float cosF = cos(f);
+			float steepSinF = steepness * sinF;
+			float steepCosF = steepness * cosF;
+
 			tangent += float3(
-				-d.x * d.x * (steepness * sin(f)),
-				d.x * (steepness * cos(f)),
-				-d.x * d.y * (steepness * sin(f))
+				-d.x * d.x * steepSinF,
+				d.x * steepCosF,
+				-d.x * d.y * steepSinF
 			);
 			binormal += float3(
-				-d.x * d.y * (steepness * sin(f)),
-				d.y * (steepness * cos(f)),
-				-d.y * d.y * (steepness * sin(f))
+				-d.x * d.y * steepSinF,
+				d.y * steepCosF,
+				-d.y * d.y * steepSinF
 			);
 			return float3(
-				d.x * (a * cos(f)),
-				a * sin(f),
-				d.y * (a * cos(f))
+				d.x * (a * cosF),
+				a * sinF,
+				d.y * (a * cosF)
 			);
 		}
 
@@ -76,10 +87,26 @@ Shader "Custom/Waves" {
 			float3 worldPoint = mul(unity_ObjectToWorld, vertexData.vertex).xyz;
 			float3 tangent = float3(1, 0, 0);
 			float3 binormal = float3(0, 0, 1);
+
+			float playerDistModifier = 1;
+			float fullRange = _FlatRange + _FlatRangeExt;
+
+			float3 toPlayer = _PlayerPosition.xyz - worldPoint;
+			float yModifier = 1 - (toPlayer.y / fullRange);
+			if (yModifier > 0){
+				float playerDistXZ = sqrt(toPlayer.x * toPlayer.x + toPlayer.z * toPlayer.z);
+				if (playerDistXZ < fullRange * yModifier) {
+					playerDistModifier = (playerDistXZ - _FlatRangeExt * yModifier) / (_FlatRange * yModifier);
+					if (playerDistModifier < 0){
+						playerDistModifier = 0;
+					}
+				}
+			}
+
 			float3 p = gridPoint;
-			p += GerstnerWave(_WaveA, worldPoint, tangent, binormal);
-			p += GerstnerWave(_WaveB, worldPoint, tangent, binormal);
-			p += GerstnerWave(_WaveC, worldPoint, tangent, binormal);
+			p += GerstnerWave(_WaveA, worldPoint, tangent, binormal, playerDistModifier);
+			p += GerstnerWave(_WaveB, worldPoint, tangent, binormal, playerDistModifier);
+			p += GerstnerWave(_WaveC, worldPoint, tangent, binormal, playerDistModifier);
 			float3 normal = normalize(cross(binormal, tangent));
 			vertexData.vertex.xyz = p;
 			vertexData.normal = normal;
